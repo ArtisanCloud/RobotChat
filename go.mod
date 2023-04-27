@@ -1,4 +1,4 @@
-module robotchat
+module github.com/artisancloud/robotchat
 
 go 1.17
 
