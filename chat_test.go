@@ -1,7 +1,7 @@
 package robotchat
 
 import (
-	"robotchat/rbconfig"
+	"github.com/artisancloud/robotchat/rbconfig"
 	"testing"
 )
 

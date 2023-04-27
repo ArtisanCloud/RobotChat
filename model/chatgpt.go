@@ -3,7 +3,7 @@ package model
 import (
 	"github.com/artisancloud/openai"
 	v1 "github.com/artisancloud/openai/api/v1"
-	"robotchat/rbconfig"
+	"github.com/artisancloud/robotchat/rbconfig"
 )
 
 type ChatGPTModel struct {

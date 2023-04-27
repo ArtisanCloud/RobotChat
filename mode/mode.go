@@ -2,9 +2,10 @@ package mode
 
 import (
 	"errors"
+	"github.com/artisancloud/robotchat/chain"
+	"github.com/artisancloud/robotchat/chain/rbtemplate"
 	"regexp"
-	"robotchat/chain"
-	"robotchat/chain/rbtemplate"
+
 	"strings"
 )
 

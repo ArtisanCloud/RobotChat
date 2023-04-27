@@ -1,9 +1,9 @@
 package robotchat
 
 import (
-	"robotchat/mode"
-	"robotchat/model"
-	"robotchat/rbconfig"
+	"github.com/artisancloud/robotchat/mode"
+	"github.com/artisancloud/robotchat/model"
+	"github.com/artisancloud/robotchat/rbconfig"
 )
 
 type ChatRobot struct {
