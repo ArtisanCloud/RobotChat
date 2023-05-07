@@ -1,0 +1,7 @@
+{
+  "image:prompt": "我需要你帮助我生成用于图像生成的提示, 给你提供几个例子:\n1. annihilation movie style, Astral realm ruins, shiny white female robot full-body Porcelain and hammered matt silver showing cracked inner working, tiny white flowers growing from within, light from within all white,, reflecting in the mirror, flowers growing on the robot parts, , swamp, cinematic lighting, amazing composition , 3d octane render, unreal engine, hyper realistic, soft illumination, trending artstation, environmental concept art, all in grey, 4k trending on ArtStation\n2. A young female walking toward the camera. She is wearing a V neck shirt and short beige pants. Shot from above\n3. photo realistic, female fashion model, space station corridor, bokeh, hyper realistic, helmet, white, Canon R5 ISO100 F1.4\n\n请为\"{{.}}\"这句话生成提示词, 按照如下格式输出:\n\"\n1. prompt1... \\n\n(中文阐述提示词的含义)\n2. prompt2... \\n\n(中文阐述提示词的含义)\n3. prompt3... \\n\n(中文阐述提示词的含义)",
+  "text:summary": "请生成不超过原文三分之一、且字数不超过120字的摘要。原文内容为\"{{.}}\"",
+  "text:translation:zh": "请将原文\"{{.}}\"翻译成中文",
+  "text:translation:en": "请将原文\"{{.}}\"翻译成英文",
+  "code:error:suggestion": "请协助检查下列代码或日志，帮我找出错误原因并提供修复建议。请回答时使用Markdown格式，以下是代码或日志内容：\"{{.}}\""
+}

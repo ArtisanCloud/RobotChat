@@ -1,13 +1,29 @@
-package model
+package chatgpt
 
 import (
 	"github.com/artisancloud/openai"
 	v1 "github.com/artisancloud/openai/api/v1"
-	"github.com/artisancloud/robotchat/rbconfig"
 )
 
-type ChatGPTModel struct {
+type ChatGPT struct {
 	client *openai.Client
+	conf   *Config
+}
+
+func NewChatGPTModel(config Config) (*ChatGPT, error) {
+	client, err := openai.NewClient(&openai.V1Config{
+		OpenAPIKey:   config.OpenAPIKey,
+		Organization: config.Organization,
+		HttpDebug:    config.HttpDebug,
+		ProxyURL:     config.ProxyURL,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &ChatGPT{
+		client: client,
+		conf:   &config,
+	}, nil
 }
 
 type Message struct {
@@ -20,22 +36,7 @@ type Choice struct {
 	Message Message
 }
 
-func NewChatGPTModel(config rbconfig.ChatGPTConfig) (*ChatGPTModel, error) {
-	client, err := openai.NewClient(&openai.V1Config{
-		OpenAPIKey:   config.OpenAPIKey,
-		Organization: config.Organization,
-		HttpDebug:    config.HttpDebug,
-		ProxyURL:     config.ProxyURL,
-	})
-	if err != nil {
-		return nil, err
-	}
-	return &ChatGPTModel{
-		client: client,
-	}, nil
-}
-
-func (c *ChatGPTModel) Response(messages []Message) ([]Choice, error) {
+func (c *ChatGPT) Response(messages []Message) ([]Choice, error) {
 	var oMessages []v1.Message
 	for _, message := range messages {
 		oMessages = append(oMessages, v1.Message{
@@ -61,18 +62,4 @@ func (c *ChatGPTModel) Response(messages []Message) ([]Choice, error) {
 		})
 	}
 	return choices, nil
-}
-
-func (c *ChatGPTModel) HandleInput(input string) (string, error) {
-	oMessages := []Message{
-		{
-			Role:    "user",
-			Content: input,
-		},
-	}
-	choices, err := c.Response(oMessages)
-	if err != nil {
-		return "", err
-	}
-	return choices[0].Message.Content, nil
 }
