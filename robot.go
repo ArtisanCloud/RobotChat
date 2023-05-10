@@ -11,7 +11,7 @@ import (
 var tmplDir embed.FS
 
 type Robot struct {
-	textModel model.TextModel
+	TextModel model.TextModel
 }
 
 func NewRobot(conf RobotConfig) (*Robot, error) {
@@ -21,7 +21,7 @@ func NewRobot(conf RobotConfig) (*Robot, error) {
 		if err != nil {
 			return nil, err
 		}
-		robot.textModel = chatgpt.NewTextAdapter(*textModel)
+		robot.TextModel = chatgpt.NewTextAdapter(*textModel)
 	}
 	// load mode
 	tmplSlice, err := input.LoadTemplateForEmbed(tmplDir, "template/text.json")
@@ -30,7 +30,7 @@ func NewRobot(conf RobotConfig) (*Robot, error) {
 	}
 
 	for _, tmpl := range tmplSlice {
-		robot.textModel.RegisterMode(tmpl)
+		robot.TextModel.RegisterMode(tmpl)
 	}
 
 	if conf.TextModelConfig.TemplateDir != "" {
@@ -40,7 +40,7 @@ func NewRobot(conf RobotConfig) (*Robot, error) {
 		}
 
 		for _, tmpl := range tmplSlice {
-			robot.textModel.RegisterMode(tmpl)
+			robot.TextModel.RegisterMode(tmpl)
 		}
 	}
 
