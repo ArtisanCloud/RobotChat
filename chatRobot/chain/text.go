@@ -1,7 +1,7 @@
 package chain
 
 import (
-	"github.com/artisancloud/robotchat/chain/rbtemplate"
+	"github.com/artisancloud/robotchat/chatRobot/chain/rbtemplate"
 )
 
 type TextChainAdapter interface {

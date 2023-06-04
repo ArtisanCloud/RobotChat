@@ -1,13 +1,14 @@
-package robotchat
+package chatRobot
 
 import (
+	"github.com/artisancloud/robotchat/chatRobot/config"
 	"github.com/artisancloud/robotchat/rbconfig"
 	"testing"
 )
 
 func TestChatRobot_TextResponse(t *testing.T) {
 	robot, err := NewChatRobot(rbconfig.RobotConfig{
-		ChatGPT: &rbconfig.ChatGPTConfig{
+		ChatGPT: &config.ChatGPTConfig{
 			OpenAPIKey:   "key",
 			Organization: "org",
 			HttpDebug:    true,

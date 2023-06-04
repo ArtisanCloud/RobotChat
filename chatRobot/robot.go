@@ -1,8 +1,8 @@
-package robotchat
+package chatRobot
 
 import (
-	"github.com/artisancloud/robotchat/mode"
-	"github.com/artisancloud/robotchat/model"
+	"github.com/artisancloud/robotchat/chatRobot/mode"
+	"github.com/artisancloud/robotchat/chatRobot/model"
 	"github.com/artisancloud/robotchat/rbconfig"
 )
 

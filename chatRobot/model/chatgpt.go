@@ -3,7 +3,7 @@ package model
 import (
 	"github.com/artisancloud/openai"
 	v1 "github.com/artisancloud/openai/api/v1"
-	"github.com/artisancloud/robotchat/rbconfig"
+	"github.com/artisancloud/robotchat/chatRobot/config"
 )
 
 type ChatGPTModel struct {
@@ -20,7 +20,7 @@ type Choice struct {
 	Message Message
 }
 
-func NewChatGPTModel(config rbconfig.ChatGPTConfig) (*ChatGPTModel, error) {
+func NewChatGPTModel(config config.ChatGPTConfig) (*ChatGPTModel, error) {
 	client, err := openai.NewClient(&openai.V1Config{
 		OpenAPIKey:   config.OpenAPIKey,
 		Organization: config.Organization,

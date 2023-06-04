@@ -1,4 +1,4 @@
-package rbconfig
+package config
 
 import (
 	"errors"

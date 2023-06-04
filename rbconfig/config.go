@@ -1,6 +1,6 @@
 package rbconfig
 
-type Config interface {
+type ConfigInterface interface {
 	GetName() string
 	Validate() error
 }
