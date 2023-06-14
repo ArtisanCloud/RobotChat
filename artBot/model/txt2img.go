@@ -1,19 +1,19 @@
 package model
 
 import (
-	"github.com/artisancloud/robotchat/artRobot/config"
-	"github.com/artisancloud/robotchat/artRobot/driver"
-	"github.com/artisancloud/robotchat/artRobot/driver/request"
-	"github.com/artisancloud/robotchat/artRobot/driver/response"
+	"github.com/ArtisanCloud/RobotChat/artBot/config"
+	"github.com/ArtisanCloud/RobotChat/artBot/driver/Meonako"
+	"github.com/ArtisanCloud/RobotChat/artBot/driver/Meonako/request"
+	"github.com/ArtisanCloud/RobotChat/artBot/driver/Meonako/response"
 )
 
 type Txt2ImgModel struct {
-	Client *driver.Client
+	Client *Meonako.Client
 }
 
 func NewTxt2ImgModel(config config.StableDiffusionConfig) (*Txt2ImgModel, error) {
 
-	client := driver.NewClient(config)
+	client := Meonako.NewClient(config)
 
 	return &Txt2ImgModel{
 		Client: client,

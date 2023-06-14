@@ -5,10 +5,12 @@ import (
 )
 
 type ChatGPTConfig struct {
-	OpenAPIKey   string
-	Organization string
-	HttpDebug    bool
-	ProxyURL     string
+	OpenAPIKey   string `yaml:"OpenAPIKey"`
+	Organization string `yaml:"Organization"`
+	HttpDebug    bool   `yaml:"HttpDebug"`
+	BaseURL      string `yaml:"BaseURL"`
+	APIType      string `yaml:"APIType"`
+	APIVersion   string `yaml:"APIVersion"`
 }
 
 func (c *ChatGPTConfig) GetName() string {

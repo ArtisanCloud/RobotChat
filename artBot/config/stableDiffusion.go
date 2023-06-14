@@ -1,17 +1,11 @@
 package config
 
-import (
-	"github.com/artisancloud/robotchat/rbconfig"
-)
-
 type StableDiffusionConfig struct {
-	rbconfig.ConfigInterface
-
-	BaseUrl   string
-	PrefixUri string
-	Version   string
-	HttpDebug bool
-	ProxyURL  string
+	BaseUrl   string `yaml:"BaseUrl"`
+	PrefixUri string `yaml:"PrefixUri"`
+	Version   string `yaml:"Version"`
+	HttpDebug bool   `yaml:"HttpDebug"`
+	ProxyURL  string `yaml:"ProxyURL"`
 }
 
 func (c *StableDiffusionConfig) GetName() string {

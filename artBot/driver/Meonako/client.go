@@ -1,10 +1,10 @@
-package driver
+package Meonako
 
 import (
+	"github.com/ArtisanCloud/RobotChat/artBot/config"
+	"github.com/ArtisanCloud/RobotChat/artBot/driver/Meonako/request"
+	"github.com/ArtisanCloud/RobotChat/artBot/driver/Meonako/response"
 	webapi "github.com/Meonako/webui-api"
-	"github.com/artisancloud/robotchat/artRobot/config"
-	"github.com/artisancloud/robotchat/artRobot/driver/request"
-	"github.com/artisancloud/robotchat/artRobot/driver/response"
 )
 
 type Client struct {
