@@ -1,7 +1,7 @@
 package model
 
 import (
-	"github.com/ArtisanCloud/RobotChat/chatRobot/config"
+	"github.com/ArtisanCloud/RobotChat/chatBot/config"
 	"github.com/artisancloud/openai"
 	v1 "github.com/artisancloud/openai/api/v1"
 )

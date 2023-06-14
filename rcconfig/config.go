@@ -1,8 +1,8 @@
 package rcconfig
 
 import (
-	config2 "github.com/ArtisanCloud/RobotChat/artRobot/config"
-	"github.com/ArtisanCloud/RobotChat/chatRobot/config"
+	config2 "github.com/ArtisanCloud/RobotChat/artBot/config"
+	"github.com/ArtisanCloud/RobotChat/chatBot/config"
 	"gopkg.in/yaml.v2"
 	"os"
 )
@@ -12,17 +12,17 @@ type ConfigInterface interface {
 	Validate() error
 }
 
-type ArtRobot struct {
+type ArtBot struct {
 	config2.StableDiffusionConfig `yaml:"StableDiffusion"`
 }
 
-type ChatRobot struct {
+type ChatBot struct {
 	config.ChatGPTConfig `yaml:"ChatGPT"`
 }
 
 type RCConfig struct {
-	ArtRobot  `yaml:"ArtRobot"`
-	ChatRobot `yaml:"ChatRobot"`
+	ArtBot  `yaml:"ArtBot"`
+	ChatBot `yaml:"ChatBot"`
 }
 
 func LoadRCConfig() *RCConfig {

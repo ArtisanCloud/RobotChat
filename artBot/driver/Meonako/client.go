@@ -1,9 +1,9 @@
 package Meonako
 
 import (
-	"github.com/ArtisanCloud/RobotChat/artRobot/config"
-	"github.com/ArtisanCloud/RobotChat/artRobot/driver/Meonako/request"
-	"github.com/ArtisanCloud/RobotChat/artRobot/driver/Meonako/response"
+	"github.com/ArtisanCloud/RobotChat/artBot/config"
+	"github.com/ArtisanCloud/RobotChat/artBot/driver/Meonako/request"
+	"github.com/ArtisanCloud/RobotChat/artBot/driver/Meonako/response"
 	webapi "github.com/Meonako/webui-api"
 )
 

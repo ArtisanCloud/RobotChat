@@ -2,8 +2,8 @@ package mode
 
 import (
 	"errors"
-	"github.com/ArtisanCloud/RobotChat/chatRobot/driver/openai/chain"
-	"github.com/ArtisanCloud/RobotChat/chatRobot/driver/openai/chain/rbtemplate"
+	"github.com/ArtisanCloud/RobotChat/chatBot/driver/openai/chain"
+	"github.com/ArtisanCloud/RobotChat/chatBot/driver/openai/chain/rbtemplate"
 	"regexp"
 
 	"strings"

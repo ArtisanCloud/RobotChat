@@ -7,10 +7,10 @@ import (
 
 type Driver struct {
 	Client *openai.Client
-	config *rcconfig.ChatRobot
+	config *rcconfig.ChatBot
 }
 
-func NewDriver(config *rcconfig.ChatRobot) *Driver {
+func NewDriver(config *rcconfig.ChatBot) *Driver {
 	openaiConfig := openai.DefaultConfig(config.OpenAPIKey)
 	openaiConfig.BaseURL = config.BaseURL
 	openaiConfig.OrgID = config.Organization
@@ -26,9 +26,9 @@ func NewDriver(config *rcconfig.ChatRobot) *Driver {
 	return driver
 }
 
-func (d Driver) GetConfig() *rcconfig.ChatRobot {
+func (d Driver) GetConfig() *rcconfig.ChatBot {
 	return d.config
 }
-func (d Driver) SetConfig(config *rcconfig.ChatRobot) {
+func (d Driver) SetConfig(config *rcconfig.ChatBot) {
 	d.config = config
 }

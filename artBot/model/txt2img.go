@@ -1,10 +1,10 @@
 package model
 
 import (
-	"github.com/ArtisanCloud/RobotChat/artRobot/config"
-	"github.com/ArtisanCloud/RobotChat/artRobot/driver/Meonako"
-	"github.com/ArtisanCloud/RobotChat/artRobot/driver/Meonako/request"
-	"github.com/ArtisanCloud/RobotChat/artRobot/driver/Meonako/response"
+	"github.com/ArtisanCloud/RobotChat/artBot/config"
+	"github.com/ArtisanCloud/RobotChat/artBot/driver/Meonako"
+	"github.com/ArtisanCloud/RobotChat/artBot/driver/Meonako/request"
+	"github.com/ArtisanCloud/RobotChat/artBot/driver/Meonako/response"
 )
 
 type Txt2ImgModel struct {

@@ -1,16 +1,16 @@
-package chatRobot
+package chatBot
 
 import (
-	"github.com/ArtisanCloud/RobotChat/chatRobot/contract"
+	"github.com/ArtisanCloud/RobotChat/chatBot/contract"
 )
 
-type ChatRobot struct {
+type ChatBot struct {
 	Client contract.ClientInterface
 }
 
-func NewChatRobot(client contract.ClientInterface) (*ChatRobot, error) {
+func NewChatBot(client contract.ClientInterface) (*ChatBot, error) {
 
-	return &ChatRobot{
+	return &ChatBot{
 		Client: client,
 	}, nil
 }
