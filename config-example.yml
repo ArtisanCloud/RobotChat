@@ -1,0 +1,21 @@
+ArtBot:
+  StableDiffusion:
+    Token:
+    BaseUrl:
+    PrefixUri:
+    Version:
+    HttpDebug:
+    ProxyURL:
+
+ChatBot:
+  # OpenAI
+  ChatGPT:
+    OpenAPIKey:
+    Organization:
+    HttpDebug:
+    ProxyURL:
+  # 讯飞云
+  XFYun:
+    AppID:
+    APISecret:
+    APIKey:

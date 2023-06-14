@@ -1,6 +1,7 @@
 package config
 
 type StableDiffusionConfig struct {
+	Token     string `yaml:"Token"`
 	BaseUrl   string `yaml:"BaseUrl"`
 	PrefixUri string `yaml:"PrefixUri"`
 	Version   string `yaml:"Version"`
