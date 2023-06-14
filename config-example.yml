@@ -13,9 +13,13 @@ ChatBot:
     OpenAPIKey:
     Organization:
     HttpDebug:
-    ProxyURL:
+    BaseURL:
+    APIType:
+    APIVersion:
+
   # 讯飞云
   XFYun:
+    WebSocketURL: ws://spark-api.xf-yun.com/v1.1/chat
     AppID:
     APISecret:
     APIKey:
