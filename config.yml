@@ -1,0 +1,14 @@
+ArtRobot:
+  StableDiffusion:
+    BaseUrl:
+    PrefixUri:
+    Version:
+    HttpDebug:
+    ProxyURL:
+
+ChatRobot:
+  ChatGPT:
+    OpenAPIKey: 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
+    Organization: 55hudong
+    HttpDebug: true
+    ProxyURL: https://chat.kxllen.com

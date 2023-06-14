@@ -1,8 +1,8 @@
 package artRobot
 
 import (
-	"github.com/artisancloud/robotchat/artRobot/config"
-	"github.com/artisancloud/robotchat/artRobot/model"
+	"github.com/ArtisanCloud/RobotChat/artRobot/config"
+	"github.com/ArtisanCloud/RobotChat/artRobot/model"
 )
 
 type ArtRobot struct {

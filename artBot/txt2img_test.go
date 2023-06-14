@@ -1,9 +1,8 @@
 package artRobot
 
 import (
-	"github.com/artisancloud/robotchat/artRobot/config"
-	"github.com/artisancloud/robotchat/artRobot/driver/request"
-
+	"github.com/ArtisanCloud/RobotChat/artRobot/config"
+	"github.com/ArtisanCloud/RobotChat/artRobot/driver/Meonako/request"
 	"testing"
 )
 
