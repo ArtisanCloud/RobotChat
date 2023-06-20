@@ -1,21 +1,20 @@
 package artBot
 
 import (
-	"github.com/ArtisanCloud/RobotChat/artBot/config"
-	"github.com/ArtisanCloud/RobotChat/artBot/model"
+	"github.com/ArtisanCloud/RobotChat/artBot/contract"
+	"github.com/ArtisanCloud/RobotChat/kernel/controller"
 )
 
 type ArtBot struct {
-	Txt2Img *model.Txt2ImgModel
+	Client contract.ClientInterface
+
+	ConversationManager *controller.ConversationManager
 }
 
-func NewArtBot(config config.StableDiffusionConfig) (*ArtBot, error) {
-	sdModel, err := model.NewTxt2ImgModel(config)
-	if err != nil {
-		return nil, err
-	}
+func NewArtBot(client contract.ClientInterface) (*ArtBot, error) {
 
 	return &ArtBot{
-		Txt2Img: sdModel,
+		Client:              client,
+		ConversationManager: controller.NewConversationManager(),
 	}, nil
 }

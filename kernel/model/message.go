@@ -25,9 +25,9 @@ type Author struct {
 type Role string
 
 const (
-	UserRole   Role = "user"
-	AdminRole  Role = "admin"
-	SystemRole Role = "system"
+	SystemRole    Role = "system"
+	UserRole      Role = "user"
+	AssistantRole Role = "assistant"
 )
 
 func (c *Conversation) AddMessage(sessionIndex int, authorRole Role, contentParts []string) (message Message, index int) {

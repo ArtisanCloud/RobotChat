@@ -6,6 +6,7 @@ import (
 
 type ChatGPTConfig struct {
 	OpenAPIKey   string `yaml:"OpenAPIKey"`
+	Model        string `yaml:"Model"`
 	Organization string `yaml:"Organization"`
 	HttpDebug    bool   `yaml:"HttpDebug"`
 	BaseURL      string `yaml:"BaseURL"`
