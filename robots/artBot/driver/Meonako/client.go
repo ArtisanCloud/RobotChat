@@ -2,9 +2,10 @@ package Meonako
 
 import (
 	"context"
-	"github.com/ArtisanCloud/RobotChat/artBot/driver/Meonako/request"
-	"github.com/ArtisanCloud/RobotChat/artBot/driver/Meonako/response"
+	"github.com/ArtisanCloud/RobotChat/pkg/objectx"
 	"github.com/ArtisanCloud/RobotChat/rcconfig"
+	"github.com/ArtisanCloud/RobotChat/robots/artBot/driver/Meonako/request"
+	"github.com/ArtisanCloud/RobotChat/robots/artBot/driver/Meonako/response"
 	api "github.com/Meonako/webui-api"
 )
 
@@ -39,9 +40,12 @@ func (d *Driver) Text2Image(ctx context.Context, req *request.Text2Image) (*resp
 		BaseURL: d.config.BaseUrl,
 	})
 
-	rs, err := client.Text2Image(&api.Txt2Image{
-		Prompt: req.Prompt,
-	})
+	reqDriver := &api.Txt2Image{}
+	err := objectx.TransformData(req, reqDriver)
+	if err != nil {
+		return nil, err
+	}
+	rs, err := client.Text2Image(reqDriver)
 
 	return &response.Text2Image{
 		Images:        rs.Images,

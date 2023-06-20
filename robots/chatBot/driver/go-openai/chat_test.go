@@ -1,9 +1,9 @@
 package go_openai
 
 import (
-	"github.com/ArtisanCloud/RobotChat/chatBot"
 	fmt "github.com/ArtisanCloud/RobotChat/pkg/printx"
 	"github.com/ArtisanCloud/RobotChat/rcconfig"
+	"github.com/ArtisanCloud/RobotChat/robots/chatBot"
 	"testing"
 )
 

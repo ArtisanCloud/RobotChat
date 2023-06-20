@@ -1,8 +1,8 @@
 package rcconfig
 
 import (
-	config2 "github.com/ArtisanCloud/RobotChat/artBot/config"
-	"github.com/ArtisanCloud/RobotChat/chatBot/config"
+	config2 "github.com/ArtisanCloud/RobotChat/robots/artBot/config"
+	"github.com/ArtisanCloud/RobotChat/robots/chatBot/config"
 	"gopkg.in/yaml.v2"
 	"os"
 )

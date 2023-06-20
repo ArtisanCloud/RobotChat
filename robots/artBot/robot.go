@@ -1,8 +1,8 @@
 package artBot
 
 import (
-	"github.com/ArtisanCloud/RobotChat/artBot/contract"
 	"github.com/ArtisanCloud/RobotChat/kernel/controller"
+	"github.com/ArtisanCloud/RobotChat/robots/artBot/contract"
 )
 
 type ArtBot struct {
