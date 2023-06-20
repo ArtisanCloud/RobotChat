@@ -25,7 +25,7 @@ func NewChatGPTModel(config config.ChatGPTConfig) (*ChatGPTModel, error) {
 		OpenAPIKey:   config.OpenAPIKey,
 		Organization: config.Organization,
 		HttpDebug:    config.HttpDebug,
-		ProxyURL:     config.ProxyURL,
+		ProxyURL:     config.BaseURL,
 	})
 	if err != nil {
 		return nil, err

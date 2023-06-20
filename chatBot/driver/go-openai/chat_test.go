@@ -1,7 +1,7 @@
-package chatBot
+package go_openai
 
 import (
-	go_openai "github.com/ArtisanCloud/RobotChat/chatBot/driver/go-openai"
+	"github.com/ArtisanCloud/RobotChat/chatBot"
 	fmt "github.com/ArtisanCloud/RobotChat/pkg/printx"
 	"github.com/ArtisanCloud/RobotChat/rcconfig"
 	"testing"
@@ -17,9 +17,9 @@ func init() {
 
 func TestChatBot_TextResponse(t *testing.T) {
 
-	driver := go_openai.NewDriver(&testConfig.ChatBot)
+	driver := NewDriver(&testConfig.ChatBot)
 
-	robot, err := NewChatBot(driver)
+	robot, err := chatBot.NewChatBot(driver)
 	if err != nil {
 		t.Error(err)
 	}
