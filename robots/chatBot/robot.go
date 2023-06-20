@@ -1,8 +1,8 @@
 package chatBot
 
 import (
-	"github.com/ArtisanCloud/RobotChat/chatBot/contract"
 	"github.com/ArtisanCloud/RobotChat/kernel/controller"
+	"github.com/ArtisanCloud/RobotChat/robots/chatBot/contract"
 )
 
 type ChatBot struct {
