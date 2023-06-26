@@ -1,10 +1,10 @@
-package Meonako
+package ArtisanCloud
 
 import (
 	"context"
 	"github.com/ArtisanCloud/RobotChat/rcconfig"
-	"github.com/ArtisanCloud/RobotChat/robots/artBot/driver/Meonako/request"
-	"github.com/ArtisanCloud/RobotChat/robots/artBot/driver/Meonako/response"
+	"github.com/ArtisanCloud/RobotChat/robots/artBot/request"
+	"github.com/ArtisanCloud/RobotChat/robots/artBot/response"
 	api "github.com/Meonako/webui-api"
 )
 

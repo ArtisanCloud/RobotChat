@@ -5,6 +5,7 @@ import (
 	"github.com/ArtisanCloud/RobotChat/robots/chatBot/config"
 	"gopkg.in/yaml.v2"
 	"os"
+	"path/filepath"
 )
 
 type ConfigInterface interface {
@@ -12,22 +13,62 @@ type ConfigInterface interface {
 	Validate() error
 }
 
+type Database struct {
+	Driver string `yaml:"Driver"`
+	DSN    string `yaml:"DSN"`
+}
+
+type Auth struct {
+	Account  string `yaml:"Account"`
+	Password string `yaml:"Password"`
+}
+
 type ArtBot struct {
 	config2.StableDiffusionConfig `yaml:"StableDiffusion"`
+	Queue                         `yaml:"Queue"`
 }
 
 type ChatBot struct {
 	config.ChatGPTConfig `yaml:"ChatGPT"`
+	Queue                `yaml:"Queue"`
+}
+
+type Redis struct {
+	Addr       string `yaml:"Addr"`
+	ClientName string `yaml:"ClientName"`
+	Username   string `yaml:"Username"`
+	Password   string `yaml:"Password"`
+	DB         int    `yaml:"DB"`
+	MaxRetries int    `yaml:"MaxRetries"`
+}
+
+type Queue struct {
+	Driver string `yaml:"Driver"`
+	Redis  `yaml:"Redis"`
 }
 
 type RCConfig struct {
-	ArtBot  `yaml:"ArtBot"`
-	ChatBot `yaml:"ChatBot"`
+	Database `yaml:"Database"`
+	Auth     `yaml:"Auth"`
+	ArtBot   `yaml:"ArtBot"`
+	ChatBot  `yaml:"ChatBot"`
 }
 
 func LoadRCConfig() *RCConfig {
+
+	exePath, err := os.Executable()
+	if err != nil {
+		// 处理错误
+		panic(err)
+	}
+
+	// 获取配置文件所在的目录路径
+	configDir := filepath.Dir(exePath)
+
+	configPath := filepath.Join(configDir, "../config.yml")
+
 	// Read the file
-	data, err := os.ReadFile("../config.yml")
+	data, err := os.ReadFile(configPath)
 	if err != nil {
 		panic(err)
 		return nil

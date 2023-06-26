@@ -9,7 +9,7 @@ import (
 type Session struct {
 	ID         string
 	ctx        context.Context
-	Messages   []Message
+	Messages   []*Message
 	Metadata   *object.HashMap
 	StartTime  time.Time
 	EndTime    time.Time
@@ -19,7 +19,7 @@ type Session struct {
 func (c *Conversation) AddSession(ctx context.Context) (session *Session, index int) {
 	session = &Session{
 		ID:         GenerateId(),
-		Messages:   []Message{},
+		Messages:   []*Message{},
 		Metadata:   &object.HashMap{},
 		StartTime:  time.Now(),
 		IsComplete: false,
