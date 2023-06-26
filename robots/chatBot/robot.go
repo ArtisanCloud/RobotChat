@@ -1,19 +1,34 @@
 package chatBot
 
 import (
-	"github.com/ArtisanCloud/RobotChat/kernel/controller"
+	"context"
+	"errors"
 	"github.com/ArtisanCloud/RobotChat/robots/chatBot/contract"
+	queue2 "github.com/ArtisanCloud/RobotChat/robots/kernel/queue"
 )
 
 type ChatBot struct {
-	Client              contract.ClientInterface
-	ConversationManager *controller.ConversationManager
+	Client contract.ClientInterface
+	Queue  queue2.QueueInterface
 }
 
 func NewChatBot(client contract.ClientInterface) (*ChatBot, error) {
+	conf := client.GetConfig()
+	if conf == nil {
+		return nil, errors.New("config file is nil")
+	}
+
+	q, err := queue2.LoadQueueDriver(&conf.Queue)
+	if err != nil {
+		return nil, err
+	}
+	err = q.Connect(context.Background())
+	if err != nil {
+		return nil, err
+	}
 
 	return &ChatBot{
-		Client:              client,
-		ConversationManager: controller.NewConversationManager(),
+		Client: client,
+		Queue:  q,
 	}, nil
 }

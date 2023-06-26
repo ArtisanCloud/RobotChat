@@ -3,9 +3,9 @@ package go_openai
 import (
 	"context"
 	"errors"
-	"github.com/ArtisanCloud/RobotChat/kernel/model"
 	fmt "github.com/ArtisanCloud/RobotChat/pkg/printx"
 	"github.com/ArtisanCloud/RobotChat/rcconfig"
+	model2 "github.com/ArtisanCloud/RobotChat/robots/kernel/model"
 	"github.com/kr/pretty"
 	"github.com/sashabaranov/go-openai"
 	"io"
@@ -42,7 +42,7 @@ func (d *Driver) SetConfig(config *rcconfig.ChatBot) {
 }
 
 // SendMessage 向指定对话发送消息
-func (d *Driver) CreateChatCompletion(ctx context.Context, message string, role model.Role) (string, error) {
+func (d *Driver) CreateChatCompletion(ctx context.Context, message string, role model2.Role) (string, error) {
 	// 实现发送消息的逻辑
 	gptModel := openai.GPT3Dot5Turbo
 	if d.config.Model != "" {
@@ -65,7 +65,7 @@ func (d *Driver) CreateChatCompletion(ctx context.Context, message string, role 
 
 }
 
-func (d *Driver) CreateStreamCompletion(ctx context.Context, message string, role model.Role) (string, error) {
+func (d *Driver) CreateStreamCompletion(ctx context.Context, message string, role model2.Role) (string, error) {
 
 	gptModel := openai.GPT3Dot5Turbo
 	if d.config.Model != "" {
@@ -154,7 +154,7 @@ func (d *Driver) SetMaxAnswerLength(length int) error {
 }
 
 // GetConversationHistory 获取指定对话的对话历史记录
-func (d *Driver) GetConversationHistory(conversation *model.Conversation) []*model.Message {
+func (d *Driver) GetConversationHistory(conversation *model2.Conversation) []*model2.Message {
 	// 实现获取对话历史记录的逻辑
 	return nil
 }

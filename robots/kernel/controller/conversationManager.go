@@ -1,25 +1,25 @@
 package controller
 
 import (
-	"github.com/ArtisanCloud/RobotChat/kernel/model"
+	model2 "github.com/ArtisanCloud/RobotChat/robots/kernel/model"
 	"time"
 )
 
 type ConversationManager struct {
-	Conversations []*model.Conversation
+	Conversations []*model2.Conversation
 }
 
 func NewConversationManager() *ConversationManager {
 	return &ConversationManager{
-		Conversations: []*model.Conversation{},
+		Conversations: []*model2.Conversation{},
 	}
 }
 
-func (cm *ConversationManager) CreateConversation(userId string) *model.Conversation {
-	conversation := &model.Conversation{
-		ID:        model.GenerateId(),
+func (cm *ConversationManager) CreateConversation(userId string) *model2.Conversation {
+	conversation := &model2.Conversation{
+		ID:        model2.GenerateId(),
 		UserID:    userId,
-		Sessions:  []*model.Session{},
+		Sessions:  []*model2.Session{},
 		StartTime: time.Now(),
 		Status:    "active",
 	}
@@ -27,7 +27,7 @@ func (cm *ConversationManager) CreateConversation(userId string) *model.Conversa
 	return conversation
 }
 
-func (cm *ConversationManager) GetConversationByID(id string) *model.Conversation {
+func (cm *ConversationManager) GetConversationByID(id string) *model2.Conversation {
 	for _, conv := range cm.Conversations {
 		if conv.ID == id {
 			return conv
@@ -36,8 +36,8 @@ func (cm *ConversationManager) GetConversationByID(id string) *model.Conversatio
 	return nil
 }
 
-func (cm *ConversationManager) GetActiveConversations() []*model.Conversation {
-	activeConversations := []*model.Conversation{}
+func (cm *ConversationManager) GetActiveConversations() []*model2.Conversation {
+	activeConversations := []*model2.Conversation{}
 	for _, conv := range cm.Conversations {
 		if conv.IsActive() {
 			activeConversations = append(activeConversations, conv)

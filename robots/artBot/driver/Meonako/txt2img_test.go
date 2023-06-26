@@ -5,7 +5,7 @@ import (
 	"github.com/ArtisanCloud/RobotChat/rcconfig"
 	artBot2 "github.com/ArtisanCloud/RobotChat/robots/artBot"
 	"github.com/ArtisanCloud/RobotChat/robots/artBot/config"
-	"github.com/ArtisanCloud/RobotChat/robots/artBot/driver/Meonako/request"
+	"github.com/ArtisanCloud/RobotChat/robots/artBot/request"
 	api "github.com/Meonako/webui-api"
 	"testing"
 )
