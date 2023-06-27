@@ -20,7 +20,7 @@ type ArtBotService struct {
 	conversationManager *controller.ConversationManager
 }
 
-func NewArtBotService(config *rcconfig.RCConfig) (r *ArtBotService) {
+func NewArtBotService(config *rcconfig.RCConfig) (abs *ArtBotService) {
 
 	// 使用 Meonako 作为 SDK驱动
 	driver := Meonako.NewDriver(&config.ArtBot)
@@ -29,11 +29,11 @@ func NewArtBotService(config *rcconfig.RCConfig) (r *ArtBotService) {
 		panic(err)
 	}
 
-	r = &ArtBotService{
+	abs = &ArtBotService{
 		artBot: robot,
 		config: config,
 	}
-	return r
+	return abs
 }
 
 func (srv *ArtBotService) IsAwaken(ctx context.Context) error {
@@ -41,8 +41,8 @@ func (srv *ArtBotService) IsAwaken(ctx context.Context) error {
 	return err
 }
 
-func (srv *ArtBotService) WakeUp(ctx context.Context) error {
-	err := srv.artBot.WakeUp(ctx)
+func (srv *ArtBotService) Start(ctx context.Context) error {
+	err := srv.artBot.Start(ctx)
 	return err
 }
 
@@ -58,7 +58,7 @@ func (srv *ArtBotService) ChatTxt2Image(ctx context.Context, req *request2.ParaT
 	//conversation := srv.conversationManager.GetConversationByID(req.ConversationId)
 	//conversation.GetSessionById[req.SessionId]
 	msg := model.NewMessage(model.TextMessage)
-	err = srv.artBot.Send(ctx, msg)
+	_, err = srv.artBot.Send(ctx, msg)
 
 	return err
 }

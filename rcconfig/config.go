@@ -54,6 +54,29 @@ type RCConfig struct {
 	ChatBot  `yaml:"ChatBot"`
 }
 
+func LoadRCConfigByPath(configPath string) *RCConfig {
+
+	// Read the file
+	data, err := os.ReadFile(configPath)
+	if err != nil {
+		panic(err)
+		return nil
+	}
+
+	// Create a struct to hold the YAML data
+	var conf = &RCConfig{}
+
+	// Unmarshal the YAML data into the struct
+	err = yaml.Unmarshal(data, conf)
+	if err != nil {
+		panic(err)
+		return nil
+	}
+
+	// Print the data
+	return conf
+}
+
 func LoadRCConfig() *RCConfig {
 
 	exePath, err := os.Executable()
@@ -67,23 +90,6 @@ func LoadRCConfig() *RCConfig {
 
 	configPath := filepath.Join(configDir, "../config.yml")
 
-	// Read the file
-	data, err := os.ReadFile(configPath)
-	if err != nil {
-		panic(err)
-		return nil
-	}
+	return LoadRCConfigByPath(configPath)
 
-	// Create a struct to hold the YAML data
-	var config = &RCConfig{}
-
-	// Unmarshal the YAML data into the struct
-	err = yaml.Unmarshal(data, config)
-	if err != nil {
-		panic(err)
-		return nil
-	}
-
-	// Print the data
-	return config
 }

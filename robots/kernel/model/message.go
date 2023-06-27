@@ -43,7 +43,15 @@ const (
 )
 
 // Middleware 是中间件函数的类型定义
-type HandleMessageMiddleware func(ctx context.Context, input *Message) (*Message, error)
+type HandlePreSend func(ctx context.Context, message *Message) (*Message, error)
+type HandlePostReply func(ctx context.Context, job *Job) (*Job, error)
+
+type ErrReply struct {
+	Ctx context.Context
+	Job *Job
+	Err error
+}
+type HandleError func(reply *ErrReply)
 
 func NewMessage(msgType MessageType) *Message {
 	return &Message{
