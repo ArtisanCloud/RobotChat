@@ -22,9 +22,9 @@ func NewChatBot(client contract.ClientInterface) (*ChatBot, error) {
 	if err != nil {
 		return nil, err
 	}
-	err = q.Connect(context.Background())
-	if err != nil {
-		return nil, err
+	isConnected := q.IsConnected(context.Background())
+	if !isConnected {
+		return nil, errors.New("cannot connect queue driver")
 	}
 
 	return &ChatBot{
