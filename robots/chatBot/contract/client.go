@@ -3,13 +3,11 @@ package contract
 import (
 	"context"
 	"github.com/ArtisanCloud/RobotChat/rcconfig"
-	"github.com/ArtisanCloud/RobotChat/robots/kernel/contract"
 	"github.com/ArtisanCloud/RobotChat/robots/kernel/model"
 )
 
 // ClientInterface 是与 ChatBot 客户端交互的接口
 type ClientInterface interface {
-	contract.RobotInterface
 
 	// GetConfig 获取基本配置
 	GetConfig() *rcconfig.ChatBot

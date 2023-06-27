@@ -3,6 +3,7 @@ package queue
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"github.com/ArtisanCloud/RobotChat/rcconfig"
 	"github.com/ArtisanCloud/RobotChat/robots/kernel/model"
 	"github.com/redis/go-redis/v9"
@@ -47,10 +48,15 @@ func (q *RedisQueue) IsConnected(ctx context.Context) bool {
 	return pong == "PONG"
 }
 
-func (q *RedisQueue) ProduceMessage(ctx context.Context, job model.Job) error {
-	key := q.Client.Options().ClientName
+func (q *RedisQueue) ProduceMessage(ctx context.Context, job *model.Job) error {
 
-	payloadBytes, err := json.Marshal(job.Payload) // 将有效负载序列化为 JSON 字符串
+	if job == nil || job.Payload == nil {
+		return errors.New("job object is invalid")
+	}
+
+	key := q.GetQueueName()
+
+	payloadBytes, err := json.Marshal(job) // 将有效负载序列化为 JSON 字符串
 	if err != nil {
 		return err
 	}
@@ -59,15 +65,20 @@ func (q *RedisQueue) ProduceMessage(ctx context.Context, job model.Job) error {
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
 
-func (q *RedisQueue) ConsumeMessage(ctx context.Context) (interface{}, error) {
-	result, err := q.Client.BRPop(ctx, 0, "my_queue").Result()
+func (q *RedisQueue) ConsumeMessage(ctx context.Context) (*model.Job, error) {
+	key := q.GetQueueName()
+	result, err := q.Client.BRPop(ctx, 0, key).Result()
 	if err != nil {
 		return nil, err
 	}
-	return result[1], nil
+	job := &model.Job{}
+	err = json.Unmarshal([]byte(result[1]), job)
+
+	return job, err
 }
 
 func (q *RedisQueue) QueueLength(ctx context.Context) (int, error) {
@@ -87,4 +98,8 @@ func (q *RedisQueue) Close(ctx context.Context) error {
 	// 在这里可以执行其他关闭操作或处理特定的上下文取消
 
 	return nil
+}
+
+func (q *RedisQueue) GetQueueName() string {
+	return q.Client.Options().ClientName
 }
