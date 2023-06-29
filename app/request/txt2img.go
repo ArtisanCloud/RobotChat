@@ -6,9 +6,9 @@ import (
 )
 
 type ParaText2Image struct {
-	ConversationId string `json:"conversationId, optional"`
-	SessionId      string `json:"sessionId, optional"`
-	JobId          string `json:"jobId, optional"`
+	ConversationId string `json:"conversationId,optional"`
+	SessionId      string `json:"sessionId,optional"`
+	JobId          string `json:"jobId,optional"`
 	request.Text2Image
 }
 

@@ -20,5 +20,4 @@ func LoadQueueDriver(config *rcconfig.Queue) (queue QueueInterface, err error) {
 	} else {
 		return nil, errors.New("queue driver not support")
 	}
-
 }

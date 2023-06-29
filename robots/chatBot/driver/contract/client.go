@@ -6,9 +6,8 @@ import (
 	"github.com/ArtisanCloud/RobotChat/robots/kernel/model"
 )
 
-// ClientInterface 是与 ChatBot 客户端交互的接口
-type ClientInterface interface {
-
+// ChatBotClientInterface 是与 ChatBot 客户端交互的接口
+type ChatBotClientInterface interface {
 	// GetConfig 获取基本配置
 	GetConfig() *rcconfig.ChatBot
 	// SetConfig 设置基本配置

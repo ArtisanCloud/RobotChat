@@ -19,10 +19,11 @@ const (
 type Message struct {
 	RobotModel
 
-	Type     MessageType    `gorm:"comment:类型" json:"type"`
-	Author   string         `gorm:"comment:作者" json:"author"`
-	Content  datatypes.JSON `gorm:"comment:内容" json:"content"`
-	Metadata datatypes.JSON `gorm:"comment:meta" json:"metadata"`
+	ModelType   string         `gorm:"comment:模型类型" json:"modelType"`
+	MessageType MessageType    `gorm:"comment:消息类型" json:"messageType"`
+	Author      string         `gorm:"comment:作者" json:"author"`
+	Content     datatypes.JSON `gorm:"comment:内容" json:"content"`
+	Metadata    datatypes.JSON `gorm:"comment:meta" json:"metadata"`
 }
 
 type Content struct {
@@ -55,7 +56,7 @@ type HandleError func(reply *ErrReply)
 
 func NewMessage(msgType MessageType) *Message {
 	return &Message{
-		RobotModel: *NewRobotModel(),
-		Type:       msgType,
+		RobotModel:  *NewRobotModel(),
+		MessageType: msgType,
 	}
 }
