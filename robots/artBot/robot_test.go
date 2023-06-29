@@ -71,5 +71,5 @@ func TestQueue_Working(t *testing.T) {
 	bot.Stop()
 
 	// 断言机器人的工作状态已经停止
-	assert.False(t, bot.isWorking)
+	assert.False(t, bot.IsWorking)
 }

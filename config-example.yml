@@ -1,4 +1,20 @@
+Server:
+  Name: PowerX
+  Host: 0.0.0.0
+  Port: 8888
+  Timeout: 30000
+
+Auth:
+  Account: user
+  Password: pass
+
+Database:
+  Driver: postgres
+  DSN: host=localhost user=robotchat password=robotchat dbname=robotchat port=5432 sslmode=disable TimeZone=UTC
+
+
 ArtBot:
+  Channel: stableDiffusion
   StableDiffusion:
     Token:
     BaseUrl:
@@ -6,20 +22,42 @@ ArtBot:
     Version:
     HttpDebug:
     ProxyURL:
+  Queue:
+    Driver: redis
+    Redis:
+      Addr: 127.0.0.1:6379
+      ClientName: ArtBot
+      Username:
+      Password:
+      DB: 1
+      MaxRetries: 3
 
 ChatBot:
+  Channel: openAI
   # OpenAI
   ChatGPT:
-    OpenAPIKey:
-    Organization:
-    HttpDebug:
-    BaseURL:
+    OpenAPIKey: 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
+    Organization: artisan-cloud
+    Model: ada:ft-artisan-cloud-2023-06-15-05-51-27
+    HttpDebug: true
+    BaseURL: https://chat.customdomain.com/v1
     APIType:
     APIVersion:
 
   # 讯飞云
   XFYun:
     WebSocketURL: ws://spark-api.xf-yun.com/v1.1/chat
-    AppID:
-    APISecret:
-    APIKey:
+    AppID: 5555555
+    APISecret: ZjczYTFhODk5ZGU5555555555
+    APIKey: 55555300a59668082955555555555
+
+  Queue:
+    Driver: redis
+    Redis:
+      Addr: 127.0.0.1:7690
+      ClientName: ChatBot
+      Username:
+      Password:
+      DB: 2
+      MaxRetries: 3
+

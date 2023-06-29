@@ -16,5 +16,10 @@ func ArtBotIsAwaken(c *gin.Context) {
 
 func ChatBotIsAwaken(c *gin.Context) {
 
+	err := service.SrvChatBot.IsAwaken(c.Request.Context())
+	if err != nil {
+		panic(err)
+	}
+
 	c.Next()
 }

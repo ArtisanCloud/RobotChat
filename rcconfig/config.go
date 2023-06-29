@@ -24,11 +24,13 @@ type Auth struct {
 }
 
 type ArtBot struct {
+	Channel                       string `yaml:"Channel"`
 	config2.StableDiffusionConfig `yaml:"StableDiffusion"`
 	Queue                         `yaml:"Queue"`
 }
 
 type ChatBot struct {
+	Channel              string `yaml:"Channel"`
 	config.ChatGPTConfig `yaml:"ChatGPT"`
 	Queue                `yaml:"Queue"`
 }

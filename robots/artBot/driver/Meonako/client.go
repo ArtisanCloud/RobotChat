@@ -2,10 +2,10 @@ package Meonako
 
 import (
 	"context"
+	"encoding/json"
 	"github.com/ArtisanCloud/RobotChat/pkg/objectx"
 	"github.com/ArtisanCloud/RobotChat/rcconfig"
-	"github.com/ArtisanCloud/RobotChat/robots/artBot/request"
-	"github.com/ArtisanCloud/RobotChat/robots/artBot/response"
+	"github.com/ArtisanCloud/RobotChat/robots/kernel/model"
 	api "github.com/Meonako/webui-api"
 )
 
@@ -34,23 +34,28 @@ func (d *Driver) SetConfig(config *rcconfig.ArtBot) {
 	d.config = config
 }
 
-func (d *Driver) Text2Image(ctx context.Context, req *request.Text2Image) (*response.Text2Image, error) {
+func (d *Driver) Text2Image(ctx context.Context, message *model.Message) (*model.Message, error) {
 
 	client := api.New(api.Config{
 		BaseURL: d.config.BaseUrl,
 	})
 
 	reqDriver := &api.Txt2Image{}
-	err := objectx.TransformData(req, reqDriver)
+	err := objectx.TransformData(message.Content, reqDriver)
 	if err != nil {
 		return nil, err
 	}
 	rs, err := client.Text2Image(reqDriver)
+	if err != nil {
+		return nil, err
+	}
 
-	return &response.Text2Image{
-		Images:        rs.Images,
-		DecodedImages: rs.DecodedImages,
-		Parameters:    rs.Parameters,
-		Info:          rs.Info,
-	}, err
+	strRes, err := json.Marshal(rs)
+	if err != nil {
+		return nil, err
+	}
+	mesReply := model.NewMessage(model.TextMessage)
+	mesReply.Content = strRes
+
+	return mesReply, err
 }

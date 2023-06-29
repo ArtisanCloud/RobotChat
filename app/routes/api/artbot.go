@@ -15,7 +15,6 @@ func InitArtBotAPIRoutes(r *gin.Engine) {
 		{
 			apiArtBotRouter.POST("/txt2img", request.ValidateTxt2Image, controller.APITxt2Image)
 			apiArtBotRouter.POST("/chat/txt2img", request.ValidateTxt2Image, controller.APIChatTxt2Image)
-
 		}
 
 	}

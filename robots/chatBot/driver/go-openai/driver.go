@@ -3,7 +3,6 @@ package go_openai
 import (
 	"context"
 	"errors"
-	fmt "github.com/ArtisanCloud/RobotChat/pkg/printx"
 	"github.com/ArtisanCloud/RobotChat/rcconfig"
 	model2 "github.com/ArtisanCloud/RobotChat/robots/kernel/model"
 	"github.com/kr/pretty"
@@ -120,7 +119,7 @@ func (d *Driver) CreateCompletion(ctx context.Context, prompt string) (string, e
 		Prompt:    prompt,
 		MaxTokens: 30,
 	}
-	fmt.Dump(req)
+	//fmt.Dump(req)
 	res, err := d.Client.CreateCompletion(ctx, req)
 	if err != nil {
 		return "", err
