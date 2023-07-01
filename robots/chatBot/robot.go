@@ -5,6 +5,7 @@ import (
 	"errors"
 	"github.com/ArtisanCloud/RobotChat/robots"
 	"github.com/ArtisanCloud/RobotChat/robots/chatBot/driver/contract"
+	"github.com/ArtisanCloud/RobotChat/robots/kernel/logger"
 	model2 "github.com/ArtisanCloud/RobotChat/robots/kernel/model"
 	queue2 "github.com/ArtisanCloud/RobotChat/robots/kernel/queue"
 )
@@ -16,16 +17,18 @@ type ChatBot struct {
 
 func NewChatBot(client contract.ChatBotClientInterface) (*ChatBot, error) {
 
-	// 初始化机器人
-	robot, err := robots.NewRobot()
-	if err != nil {
-		return nil, err
-	}
-
 	conf := client.GetConfig()
 	if conf == nil {
 		return nil, errors.New("config file is nil")
 	}
+
+	// 初始化机器人
+	robot, err := robots.NewRobot(&robots.RobotAttributes{
+		Name:    "Joy",
+		Version: "1.0",
+		Gender:  robots.GenderFemale,
+		Type:    robots.TypeChatBot,
+	})
 
 	// 按照需求，加载队列驱动，默认是Redis
 	q, err := queue2.LoadQueueDriver(&conf.Queue)
@@ -38,6 +41,9 @@ func NewChatBot(client contract.ChatBotClientInterface) (*ChatBot, error) {
 		return nil, errors.New("cannot connect queue driver")
 	}
 	robot.Queue = q
+
+	// 初始化Logger
+	robot.Logger, err = logger.NewLogger(conf.Log)
 
 	return &ChatBot{
 		Robot:  robot,

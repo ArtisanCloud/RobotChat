@@ -17,5 +17,6 @@
 # vendor/
 
 config.yml
+*.log
 
 app/go_build_main_go

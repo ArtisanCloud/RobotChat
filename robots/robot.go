@@ -3,27 +3,64 @@ package robots
 import (
 	"context"
 	"errors"
+	"github.com/ArtisanCloud/RobotChat/robots/kernel/logger"
 	"github.com/ArtisanCloud/RobotChat/robots/kernel/model"
 	queue2 "github.com/ArtisanCloud/RobotChat/robots/kernel/queue"
 	"sync"
 )
 
-type Robot struct {
-	Queue queue2.QueueInterface
+type RobotType int8
 
+const (
+	TypeChatBot RobotType = iota
+	TypeArtBot
+)
+
+type RobotGender int8
+
+const (
+	GenderMale RobotGender = iota
+	GenderFemale
+	GenderNeutral
+)
+
+type RobotAttributes struct {
+	// attributes
+	Name    string
+	Version string
+	Gender  RobotGender
+	Type    RobotType
+}
+
+type Robot struct {
+	*RobotAttributes
+
+	// components
+	Queue  queue2.QueueInterface
+	Logger *logger.Logger
+
+	// Middlewares
 	ErrorHandler        model.HandleError
 	PreMessageHandlers  []model.HandlePreSend
 	PostMessageHandlers []model.HandlePostReply
-	IsWorking           bool
-	Mutex               sync.Mutex
-	ErrorChan           chan *model.ErrReply
+
+	// functional
+	IsWorking bool
+	Mutex     sync.Mutex
+	ErrorChan chan *model.ErrReply
+
+	// webhook
+	NotifyUrl string
 }
 
-func NewRobot() (*Robot, error) {
+func NewRobot(attributes *RobotAttributes) (*Robot, error) {
+
+	// 返回Robot
 	return &Robot{
-		IsWorking: false,
-		Mutex:     sync.Mutex{},
-		ErrorChan: make(chan *model.ErrReply),
+		RobotAttributes: attributes,
+		IsWorking:       false,
+		Mutex:           sync.Mutex{},
+		ErrorChan:       make(chan *model.ErrReply),
 	}, nil
 }
 

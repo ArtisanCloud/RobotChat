@@ -27,12 +27,14 @@ type ArtBot struct {
 	Channel                       string `yaml:"Channel"`
 	config2.StableDiffusionConfig `yaml:"StableDiffusion"`
 	Queue                         `yaml:"Queue"`
+	Log                           `yaml:"Log"`
 }
 
 type ChatBot struct {
 	Channel              string `yaml:"Channel"`
 	config.ChatGPTConfig `yaml:"ChatGPT"`
 	Queue                `yaml:"Queue"`
+	Log                  `yaml:"Log"`
 }
 
 type Redis struct {
@@ -47,6 +49,13 @@ type Redis struct {
 type Queue struct {
 	Driver string `yaml:"Driver"`
 	Redis  `yaml:"Redis"`
+}
+
+type Log struct {
+	Driver   string `yaml:"Driver"`
+	Env      string `yaml:"Env"`
+	InfoLog  string `yaml:"InfoLog"`
+	ErrorLog string `yaml:"ErrorLog"`
 }
 
 type RCConfig struct {

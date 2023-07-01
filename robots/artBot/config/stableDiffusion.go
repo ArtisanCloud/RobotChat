@@ -6,7 +6,7 @@ type StableDiffusionConfig struct {
 	PrefixUri string `yaml:"PrefixUri"`
 	Version   string `yaml:"Version"`
 	HttpDebug bool   `yaml:"HttpDebug"`
-	ProxyURL  string `yaml:"ProxyURL"`
+	ProxyUrl  string `yaml:"ProxyUrl"`
 }
 
 func (c *StableDiffusionConfig) GetName() string {

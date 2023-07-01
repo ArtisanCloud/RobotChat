@@ -13,7 +13,7 @@ func InitService(config *rcconfig.RCConfig) error {
 		return errors.New("init ArtBot Service failed")
 	}
 
-	err := SrvArtBot.Start(context.Background())
+	err := SrvArtBot.Launch(context.Background())
 	if err != nil {
 		return err
 	}
@@ -23,7 +23,7 @@ func InitService(config *rcconfig.RCConfig) error {
 	if SrvChatBot == nil {
 		return errors.New("init ChatBot Service failed")
 	}
-	err = SrvChatBot.Start(context.Background())
+	err = SrvChatBot.Launch(context.Background())
 	if err != nil {
 		return err
 	}

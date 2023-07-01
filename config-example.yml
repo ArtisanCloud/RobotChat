@@ -21,8 +21,13 @@ ArtBot:
     PrefixUri:
     Version:
     HttpDebug:
-    ProxyURL:
+    ProxyUrl:
+
+  # 异步队列
   Queue:
+    # 异步操作回调通知
+    NotifyUrl:
+
     Driver: redis
     Redis:
       Addr: 127.0.0.1:6379
@@ -51,6 +56,10 @@ ChatBot:
     APISecret: ZjczYTFhODk5ZGU5555555555
     APIKey: 55555300a59668082955555555555
 
+  # 异步操作回调通知
+  NotifyUrl:
+
+  # 异步队列
   Queue:
     Driver: redis
     Redis:

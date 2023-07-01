@@ -27,7 +27,31 @@ func APIChatTxt2Image(c *gin.Context) {
 	params, _ := c.Get("params")
 	param := params.(*request.ParaText2Image)
 
-	err := service.SrvArtBot.ChatTxt2Image(c.Request.Context(), param)
+	ctx := c.Request.Context()
+
+	req := param
+	err := service.SrvArtBot.ChatTxt2Image(ctx, req)
+	if err != nil {
+		panic(err)
+	}
+
+	param.Text2Image.Prompt += "-1"
+	req = param
+	err = service.SrvArtBot.ChatTxt2Image(ctx, req)
+	if err != nil {
+		panic(err)
+	}
+
+	param.Text2Image.Prompt += "-2"
+	req = param
+	err = service.SrvArtBot.ChatTxt2Image(ctx, req)
+	if err != nil {
+		panic(err)
+	}
+
+	param.Text2Image.Prompt += "-3"
+	req = param
+	err = service.SrvArtBot.ChatTxt2Image(ctx, req)
 	if err != nil {
 		panic(err)
 	}
