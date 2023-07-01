@@ -53,15 +53,14 @@ func (srv *ChatBotService) IsAwaken(ctx context.Context) error {
 	return err
 }
 
-func (srv *ChatBotService) Start(ctx context.Context) error {
+func (srv *ChatBotService) Launch(ctx context.Context) error {
 	// 启动机器人
 	preProcess := func(ctx context.Context, message *model.Message) (*model.Message, error) {
 		fmt.Dump("I get your message:", message.Content.String())
 		return message, nil
 	}
 	queueCallback := func(ctx context.Context, job *model.Job) (*model.Job, error) {
-		preload := job.Payload.(map[string]interface{})
-		fmt.Dump("queue has process your request:", job.Id, preload["content"])
+		fmt.Dump("queue has process your request:", job.Id, job.Payload)
 		return job, nil
 	}
 	errHandle := func(errReply *model.ErrReply) {
@@ -71,7 +70,9 @@ func (srv *ChatBotService) Start(ctx context.Context) error {
 	srv.chatBot.SetPreMessageHandler(preProcess)
 	srv.chatBot.SetPostMessageHandler(queueCallback)
 	srv.chatBot.SetErrorHandler(errHandle)
+
 	err := srv.chatBot.Start(ctx)
+
 	return err
 }
 

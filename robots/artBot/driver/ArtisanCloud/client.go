@@ -3,9 +3,7 @@ package ArtisanCloud
 import (
 	"context"
 	"github.com/ArtisanCloud/RobotChat/rcconfig"
-	"github.com/ArtisanCloud/RobotChat/robots/artBot/request"
-	"github.com/ArtisanCloud/RobotChat/robots/artBot/response"
-	api "github.com/Meonako/webui-api"
+	"github.com/ArtisanCloud/RobotChat/robots/kernel/model"
 )
 
 type Driver struct {
@@ -33,20 +31,7 @@ func (d *Driver) SetConfig(config *rcconfig.ArtBot) {
 	d.config = config
 }
 
-func (d *Driver) Text2Image(ctx context.Context, req *request.Text2Image) (*response.Text2Image, error) {
+func (d *Driver) Text2Image(ctx context.Context, message *model.Message) (*model.Message, error) {
 
-	client := api.New(api.Config{
-		BaseURL: d.config.BaseUrl,
-	})
-
-	rs, err := client.Text2Image(&api.Txt2Image{
-		Prompt: req.Prompt,
-	})
-
-	return &response.Text2Image{
-		Images:        rs.Images,
-		DecodedImages: rs.DecodedImages,
-		Parameters:    rs.Parameters,
-		Info:          rs.Info,
-	}, err
+	return nil, nil
 }

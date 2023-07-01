@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	request2 "github.com/ArtisanCloud/RobotChat/app/request"
 	"github.com/ArtisanCloud/RobotChat/pkg"
-	fmt "github.com/ArtisanCloud/RobotChat/pkg/printx"
 	"github.com/ArtisanCloud/RobotChat/rcconfig"
 	"github.com/ArtisanCloud/RobotChat/robots/artBot"
 	"github.com/ArtisanCloud/RobotChat/robots/artBot/driver/Meonako"
@@ -14,7 +13,6 @@ import (
 	"github.com/ArtisanCloud/RobotChat/robots/artBot/response"
 	"github.com/ArtisanCloud/RobotChat/robots/kernel/controller"
 	"github.com/ArtisanCloud/RobotChat/robots/kernel/model"
-	"log"
 )
 
 var SrvArtBot *ArtBotService
@@ -53,25 +51,38 @@ func (srv *ArtBotService) IsAwaken(ctx context.Context) error {
 	return err
 }
 
-func (srv *ArtBotService) Start(ctx context.Context) error {
-	// 启动机器人
+func (srv *ArtBotService) Launch(ctx context.Context) error {
+
+	// 预处理请求消息
 	preProcess := func(ctx context.Context, message *model.Message) (*model.Message, error) {
-		fmt.Dump("I get your message:", message.Content.String())
+		srv.artBot.Logger.Info("I get your message:", srv.artBot.Name, message.Content.String())
 		return message, nil
 	}
-	queueCallback := func(ctx context.Context, job *model.Job) (*model.Job, error) {
-		preload := job.Payload.(map[string]interface{})
-		fmt.Dump("queue has process your request:", job.Id, preload["content"])
+	srv.artBot.SetPreMessageHandler(preProcess)
+
+	// 错误请求处理
+	errHandle := func(errReply *model.ErrReply) {
+		srv.artBot.Logger.Error("handle error:", errReply.Job.Id, errReply.Err.Error())
+	}
+	srv.artBot.SetErrorHandler(errHandle)
+
+	// 队列回调请求
+	queuePost := func(ctx context.Context, job *model.Job) (*model.Job, error) {
+
+		srv.artBot.Logger.Info("queue has process your request:", job.Id, job.Payload.Content)
+		message, err := srv.artBot.Client.Text2Image(ctx, job.Payload)
+		if err != nil {
+			return job, err
+		}
+		job.Payload = message
+
 		return job, nil
 	}
-	errHandle := func(errReply *model.ErrReply) {
-		log.Printf("handle error: %s, %s", errReply.Job.Id, errReply.Err.Error())
-	}
+	srv.artBot.SetPostMessageHandler(queuePost)
 
-	srv.artBot.SetPreMessageHandler(preProcess)
-	srv.artBot.SetPostMessageHandler(queueCallback)
-	srv.artBot.SetErrorHandler(errHandle)
+	// 启动机器人
 	err := srv.artBot.Start(ctx)
+
 	return err
 }
 
@@ -92,8 +103,18 @@ func (srv *ArtBotService) ChatTxt2Image(ctx context.Context, req *request2.ParaT
 
 	//conversation := srv.conversationManager.GetConversationByID(req.ConversationId)
 	//conversation.GetSessionById[req.SessionId]
-	msg := model.NewMessage(model.TextMessage)
-	_, err = srv.artBot.Send(ctx, msg)
+	strReq, err := json.Marshal(req)
+	if err != nil {
+		return err
+	}
+	message := model.NewMessage(model.TextMessage)
+	message.Content = strReq
+
+	_, err = srv.artBot.Send(ctx, message)
 
 	return err
+}
+
+func (srv *ArtBotService) WebhookText(ctx context.Context, notify *request2.ParaQueueNotify) {
+	srv.artBot.Logger.Info("test notify:", "info key", notify)
 }

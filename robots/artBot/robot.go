@@ -7,6 +7,7 @@ import (
 	"github.com/ArtisanCloud/RobotChat/robots"
 	"github.com/ArtisanCloud/RobotChat/robots/artBot/driver/contract"
 	"github.com/ArtisanCloud/RobotChat/robots/artBot/response"
+	"github.com/ArtisanCloud/RobotChat/robots/kernel/logger"
 	"github.com/ArtisanCloud/RobotChat/robots/kernel/model"
 	queue2 "github.com/ArtisanCloud/RobotChat/robots/kernel/queue"
 )
@@ -18,15 +19,21 @@ type ArtBot struct {
 
 func NewArtBot(client contract.ArtBotClientInterface) (*ArtBot, error) {
 
-	// 初始化机器人
-	robot, err := robots.NewRobot()
-	if err != nil {
-		return nil, err
-	}
-
 	conf := client.GetConfig()
 	if conf == nil {
 		return nil, errors.New("config file is nil")
+	}
+
+	// 初始化机器人
+	robot, err := robots.NewRobot(&robots.RobotAttributes{
+		Name:    "Michelle",
+		Version: "1.0",
+		Gender:  robots.GenderFemale,
+		Type:    robots.TypeArtBot,
+	})
+
+	if err != nil {
+		return nil, err
 	}
 
 	// 按照需求，加载队列驱动，默认是Redis
@@ -40,6 +47,9 @@ func NewArtBot(client contract.ArtBotClientInterface) (*ArtBot, error) {
 		return nil, errors.New("cannot connect queue driver")
 	}
 	robot.Queue = q
+
+	// 初始化Logger
+	robot.Logger, err = logger.NewLogger(conf.Log)
 
 	return &ArtBot{
 		Robot:  robot,
