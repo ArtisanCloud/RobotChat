@@ -40,6 +40,7 @@ func NewChatBotService(config *rcconfig.RCConfig) (abs *ChatBotService) {
 	if err != nil {
 		panic(err)
 	}
+	robot.NotifyUrl = config.ChatBot.Queue.NotifyUrl
 
 	abs = &ChatBotService{
 		chatBot: robot,

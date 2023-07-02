@@ -34,8 +34,8 @@ func TestQueue_Working(t *testing.T) {
 		return message, nil
 	}
 	queueCallback := func(ctx context.Context, job *model.Job) (*model.Job, error) {
-		preload := job.Payload.(map[string]interface{})
-		fmt.Dump("queue has process your request:", job.Id, preload["content"])
+		preload := job.Payload
+		fmt.Dump("queue has process your request:", job.Id, preload.Content)
 		return job, nil
 	}
 	errHandle := func(errReply *model.ErrReply) {
