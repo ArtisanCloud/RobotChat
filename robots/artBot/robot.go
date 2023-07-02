@@ -41,6 +41,8 @@ func NewArtBot(client contract.ArtBotClientInterface) (*ArtBot, error) {
 	if err != nil {
 		return nil, err
 	}
+	robot.NotifyUrl = conf.NotifyUrl
+
 	// 测试连接队列驱动
 	isConnected := q.IsConnected(context.Background())
 	if !isConnected {

@@ -47,8 +47,9 @@ type Redis struct {
 }
 
 type Queue struct {
-	Driver string `yaml:"Driver"`
-	Redis  `yaml:"Redis"`
+	Driver    string `yaml:"Driver"`
+	NotifyUrl string `yaml:"NotifyUrl"`
+	Redis     `yaml:"Redis"`
 }
 
 type Log struct {

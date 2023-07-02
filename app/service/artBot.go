@@ -7,12 +7,13 @@ import (
 	"github.com/ArtisanCloud/RobotChat/pkg"
 	"github.com/ArtisanCloud/RobotChat/rcconfig"
 	"github.com/ArtisanCloud/RobotChat/robots/artBot"
-	"github.com/ArtisanCloud/RobotChat/robots/artBot/driver/Meonako"
+	"github.com/ArtisanCloud/RobotChat/robots/artBot/driver/ArtisanCloud"
 	"github.com/ArtisanCloud/RobotChat/robots/artBot/driver/contract"
 	"github.com/ArtisanCloud/RobotChat/robots/artBot/request"
 	"github.com/ArtisanCloud/RobotChat/robots/artBot/response"
 	"github.com/ArtisanCloud/RobotChat/robots/kernel/controller"
 	"github.com/ArtisanCloud/RobotChat/robots/kernel/model"
+	"github.com/artisancloud/httphelper"
 )
 
 var SrvArtBot *ArtBotService
@@ -28,7 +29,8 @@ func NewArtBotService(config *rcconfig.RCConfig) (abs *ArtBotService) {
 	var driver contract.ArtBotClientInterface
 	if config.ArtBot.Channel == "" || pkg.Lower(config.ArtBot.Channel) == "stablediffusion" {
 		// 使用 Meonako 作为 SD SDK驱动
-		driver = Meonako.NewDriver(&config.ArtBot)
+		//driver = Meonako.NewDriver(&config.ArtBot)
+		driver = ArtisanCloud.NewDriver(&config.ArtBot)
 	}
 	if driver == nil {
 		return nil
@@ -38,6 +40,7 @@ func NewArtBotService(config *rcconfig.RCConfig) (abs *ArtBotService) {
 	if err != nil {
 		panic(err)
 	}
+	robot.NotifyUrl = config.ArtBot.Queue.NotifyUrl
 
 	abs = &ArtBotService{
 		artBot: robot,
@@ -67,7 +70,7 @@ func (srv *ArtBotService) Launch(ctx context.Context) error {
 	srv.artBot.SetErrorHandler(errHandle)
 
 	// 队列回调请求
-	queuePost := func(ctx context.Context, job *model.Job) (*model.Job, error) {
+	queuePostJobHandle := func(ctx context.Context, job *model.Job) (*model.Job, error) {
 
 		srv.artBot.Logger.Info("queue has process your request:", job.Id, job.Payload.Content)
 		message, err := srv.artBot.Client.Text2Image(ctx, job.Payload)
@@ -78,7 +81,27 @@ func (srv *ArtBotService) Launch(ctx context.Context) error {
 
 		return job, nil
 	}
-	srv.artBot.SetPostMessageHandler(queuePost)
+
+	queuePostWebhook := func(ctx context.Context, job *model.Job) (*model.Job, error) {
+
+		httpClient, err := httphelper.NewRequestHelper(&httphelper.Config{
+			BaseUrl: srv.artBot.NotifyUrl,
+		})
+		if err != nil {
+			srv.artBot.Logger.Error(srv.artBot.Name, "webhook:", err.Error())
+			return job, err
+		}
+
+		_, err = httpClient.Df().WithContext(ctx).Method("POST").Json(job).Request()
+		if err != nil {
+			srv.artBot.Logger.Error(srv.artBot.Name, "webhook:", err.Error())
+			return job, err
+		}
+
+		return job, nil
+	}
+
+	srv.artBot.SetPostMessageHandler(queuePostJobHandle, queuePostWebhook)
 
 	// 启动机器人
 	err := srv.artBot.Start(ctx)
