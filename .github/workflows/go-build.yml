@@ -22,5 +22,5 @@ jobs:
         go-version: 1.20
 
     - name: Build
-      run: cd app && go build
+      run: go build -o app/main app/main.go
 
