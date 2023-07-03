@@ -1,11 +1,11 @@
 package rcconfig
 
 import (
+	"flag"
 	config2 "github.com/ArtisanCloud/RobotChat/robots/artBot/config"
 	"github.com/ArtisanCloud/RobotChat/robots/chatBot/config"
 	"gopkg.in/yaml.v2"
 	"os"
-	"path/filepath"
 )
 
 type ConfigInterface interface {
@@ -91,17 +91,11 @@ func LoadRCConfigByPath(configPath string) *RCConfig {
 
 func LoadRCConfig() *RCConfig {
 
-	exePath, err := os.Executable()
-	if err != nil {
-		// 处理错误
-		panic(err)
-	}
-
 	// 获取配置文件所在的目录路径
-	configDir := filepath.Dir(exePath)
+	configFile := flag.String("f", "config.yaml", "the config file")
+	flag.Parse()
+	//fmt.Dump(configFile)
 
-	configPath := filepath.Join(configDir, "../config.yml")
-
-	return LoadRCConfigByPath(configPath)
+	return LoadRCConfigByPath(*configFile)
 
 }

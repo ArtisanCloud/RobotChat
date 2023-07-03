@@ -7,8 +7,7 @@ ENV GOPROXY=https://goproxy.cn,direct
 # 拷贝当前目录到docker内
 WORKDIR /app
 RUN ls -l 
-COPY ./deploy /app/
-COPY ./etc/ /app/etc/
+COPY ./ /app/
 
 
 
@@ -20,13 +19,13 @@ RUN apk update && apk add build-base
 
 # 拷贝文件
 COPY --from=builder /app/Makefile /app/Makefile
-COPY --from=builder /app/robotchat /app/robotchat
+COPY --from=builder /app/robotChat /app/robotChat
 COPY --from=builder /app/etc/ /app/etc/
 
 
 WORKDIR /app
 
-EXPOSE 8888
+EXPOSE 8080
 
 # 运行可执行文件
 CMD ["make", "-f", "/app/Makefile","-C", "/app", "app-init"]
