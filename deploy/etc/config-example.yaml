@@ -10,14 +10,14 @@ Auth:
 
 Database:
   Driver: postgres
-  DSN: host=Michaels-MacBook-Pro.local user=robot password=robotchat dbname=robotchat port=54321 sslmode=disable TimeZone=UTC
+  DSN: host=host.docker.internal user=robotchat password=robotchatpw dbname=robotchat port=54321 sslmode=disable TimeZone=UTC
 
 
 ArtBot:
   Channel: stableDiffusion
   StableDiffusion:
     Token:
-    BaseUrl: http://Michaels-MacBook-Pro.local:7861
+    BaseUrl: http://host.docker.internal:7861
     PrefixUri:
     Version:
     HttpDebug:
@@ -28,9 +28,9 @@ ArtBot:
   Queue:
     Driver: redis
     # 异步操作回调通知
-    NotifyUrl: http://Michaels-MacBook-Pro.local:8080/api/v1/webhook/queue/notify
+    NotifyUrl: http://host.docker.internal:8080/api/v1/webhook/queue/notify
     Redis:
-      Addr: Michaels-MacBook-Pro.local:63791
+      Addr: host.docker.internal:63791
       ClientName: ArtBot
       Username:
       Password:
@@ -39,8 +39,8 @@ ArtBot:
   Log:
     Driver: zap
     Env: develop
-    InfoLog: ./artBot_info.log
-    ErrorLog: ./artBot_error.log
+    InfoLog: ./logs/chatBot/info.log
+    ErrorLog: ./logs/chatBot/error.log
 
 ChatBot:
   Channel: openAI
@@ -64,9 +64,9 @@ ChatBot:
   Queue:
     Driver: redis
     # 异步操作回调通知
-    NotifyUrl: http://Michaels-MacBook-Pro.local:8080/api/v1/webhook/queue/notify
+    NotifyUrl: http://host.docker.internal:8080/api/v1/webhook/queue/notify
     Redis:
-      Addr: Michaels-MacBook-Pro.local:63791
+      Addr: host.docker.internal:63791
       ClientName: ChatBot
       Username:
       Password:
@@ -75,6 +75,6 @@ ChatBot:
   Log:
     Driver: zap
     Env: develop
-    InfoLog: ./chatBot_info.log
-    ErrorLog: ./chatBot_error.log
+    InfoLog: ./logs/chatBot/info.log
+    ErrorLog: ./logs/chatBot/error.log
 

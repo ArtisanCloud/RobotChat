@@ -44,6 +44,9 @@ func NewChatBot(client contract.ChatBotClientInterface) (*ChatBot, error) {
 
 	// 初始化Logger
 	robot.Logger, err = logger.NewLogger(conf.Log)
+	if err != nil {
+		return nil, err
+	}
 
 	return &ChatBot{
 		Robot:  robot,

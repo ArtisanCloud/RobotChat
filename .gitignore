@@ -22,9 +22,11 @@ deploy/etc/config.yaml
 deploy/data
 deploy/robotChat
 deploy/robotChat.ext
+deploy/logs/
 
 config.yaml
 *.log
+logs/
 .build
 
 

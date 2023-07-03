@@ -6,6 +6,7 @@ import (
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"os"
+	"path/filepath"
 	"time"
 )
 
@@ -84,11 +85,17 @@ func newZapLogger(config *object.HashMap) (logger *zap.Logger, err error) {
 	return logger, err
 }
 
-func newFileWriteSyncer(filename string) (zapcore.WriteSyncer, error) {
-	file, err := os.OpenFile(filename, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0666)
+func newFileWriteSyncer(path string) (zapcore.WriteSyncer, error) {
+	err := os.MkdirAll(filepath.Dir(path), os.ModePerm)
 	if err != nil {
 		return nil, err
 	}
+
+	file, err := os.OpenFile(path, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		return nil, err
+	}
+
 	return zapcore.AddSync(file), nil
 }
 
