@@ -16,7 +16,17 @@
 # Dependency directories (remove the comment below to include it)
 # vendor/
 
-config.yml
+*.DS_Store
+
+deploy/etc/config.yaml
+deploy/data
+deploy/robotChat
+deploy/robotChat.ext
+
+config.yaml
 *.log
+.build
+
+
 
 app/go_build_main_go

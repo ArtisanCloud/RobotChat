@@ -1,7 +1,7 @@
 Server:
-  Name: PowerX
+  Name: RobotChat
   Host: 0.0.0.0
-  Port: 8888
+  Port: 8080
   Timeout: 30000
 
 Auth:
