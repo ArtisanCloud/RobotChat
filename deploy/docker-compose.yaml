@@ -39,6 +39,7 @@ services:
     container_name: robotChat-server
     volumes:
       - ./etc/config.yaml:/app/etc/config.yaml
+      - ./logs/:/app/logs/
     ports:
       - "8080:8080"
     networks:

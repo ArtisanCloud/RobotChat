@@ -36,6 +36,9 @@ func NewLogger(logConf rcconfig.Log) (logger *Logger, err error) {
 			"outputPath": infoLog,
 			"errorPath":  errLog,
 		})
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	logger = &Logger{

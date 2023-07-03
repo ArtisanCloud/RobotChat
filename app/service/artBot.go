@@ -92,6 +92,7 @@ func (srv *ArtBotService) Launch(ctx context.Context) error {
 			return job, err
 		}
 
+		srv.artBot.Logger.Info(srv.artBot.Name, "post url:", srv.artBot.NotifyUrl)
 		_, err = httpClient.Df().WithContext(ctx).Method("POST").Json(job).Request()
 		if err != nil {
 			srv.artBot.Logger.Error(srv.artBot.Name, "webhook:", err.Error())
