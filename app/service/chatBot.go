@@ -2,22 +2,21 @@ package service
 
 import (
 	"context"
-	"github.com/ArtisanCloud/PowerLibs/v3/object"
 	"github.com/ArtisanCloud/RobotChat/pkg"
 	fmt "github.com/ArtisanCloud/RobotChat/pkg/printx"
 	"github.com/ArtisanCloud/RobotChat/rcconfig"
-	"github.com/ArtisanCloud/RobotChat/robots/artBot/response"
 	"github.com/ArtisanCloud/RobotChat/robots/chatBot"
 	"github.com/ArtisanCloud/RobotChat/robots/chatBot/driver/contract"
 	go_openai "github.com/ArtisanCloud/RobotChat/robots/chatBot/driver/go-openai"
 	"github.com/ArtisanCloud/RobotChat/robots/chatBot/request"
+	response2 "github.com/ArtisanCloud/RobotChat/robots/chatBot/response"
 	"github.com/ArtisanCloud/RobotChat/robots/kernel/controller"
 	"github.com/ArtisanCloud/RobotChat/robots/kernel/model"
-	"gorm.io/datatypes"
 	"log"
 )
 
-var SrvChatBot *ChatBotService
+// Robot Joy is For ChatGPT
+var Joy *ChatBotService
 
 type ChatBotService struct {
 	chatBot             *chatBot.ChatBot
@@ -77,24 +76,45 @@ func (srv *ChatBotService) Launch(ctx context.Context) error {
 	return err
 }
 
-func (srv *ChatBotService) Completion(ctx context.Context, req *request.ChatCompletionRequest) (res *response.Text2Image, err error) {
+func (srv *ChatBotService) Completion(ctx context.Context, req *request.CompletionRequest) (res *response2.CompletionResponse, err error) {
 
-	//res, err = srv.chatBot.Client.Send()
+	resMes, err := srv.chatBot.Client.CreateCompletion(ctx, req.Prompt.(string))
 
-	return res, err
+	return &response2.CompletionResponse{
+		Choices: []response2.CompletionChoice{
+			{
+				Text: resMes,
+			},
+		},
+	}, err
 }
 
-func (srv *ChatBotService) ChatCompletion(ctx context.Context, req *request.ChatCompletionRequest) (err error) {
+func (srv *ChatBotService) ChatCompletion(ctx context.Context, req *request.ChatCompletionRequest) (res *response2.ChatCompletionResponse, err error) {
 
-	//conversation := srv.conversationManager.GetConversationByID(req.ConversationId)
-	//conversation.GetSessionById[req.SessionId]
-	msg := model.NewMessage(model.TextMessage)
-	strReq, err := object.JsonEncode(req)
-	if err != nil {
-		return err
-	}
-	msg.Content = datatypes.JSON(strReq)
-	_, err = srv.chatBot.Send(ctx, msg)
+	reqMsg := req.Messages[0]
 
-	return err
+	resMes, err := srv.chatBot.CreateChatCompletion(ctx, reqMsg.Content, model.Role(reqMsg.Role))
+
+	return &response2.ChatCompletionResponse{
+		Choices: []response2.ChatCompletionChoice{
+			{
+				Message: request.ChatCompletionMessage{
+					Content: resMes,
+				},
+			},
+		},
+	}, err
+}
+
+func (srv *ChatBotService) SteamCompletion(ctx context.Context, req *request.CompletionRequest) (res *response2.CompletionResponse, err error) {
+
+	resMes, err := srv.chatBot.CreateStreamCompletion(ctx, req.Prompt.(string), model.Role(req.User))
+
+	return &response2.CompletionResponse{
+		Choices: []response2.CompletionChoice{
+			{
+				Text: resMes,
+			},
+		},
+	}, err
 }

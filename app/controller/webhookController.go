@@ -14,7 +14,7 @@ func APIQueueNotify(c *gin.Context) {
 	param := params.(*request.ParaQueueNotify)
 
 	fmt.Dump(param)
-	service.SrvArtBot.WebhookText(c.Request.Context(), param)
+	service.Michelle.WebhookText(c.Request.Context(), param)
 
 	response.Success(c, param)
 	return

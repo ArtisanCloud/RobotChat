@@ -37,7 +37,7 @@ func (d *Driver) SetConfig(config *rcconfig.ArtBot) {
 func (d *Driver) Text2Image(ctx context.Context, message *model.Message) (*model.Message, error) {
 
 	client := api.New(api.Config{
-		BaseURL: d.config.BaseUrl,
+		BaseUrl: d.config.BaseUrl,
 	})
 
 	reqDriver := &api.Txt2Image{}

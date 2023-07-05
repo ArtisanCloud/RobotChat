@@ -1,22 +1,25 @@
 package api
 
 import (
-	"github.com/ArtisanCloud/RobotChat/app/controller"
+	"github.com/ArtisanCloud/RobotChat/app/controller/artBot/sd"
 	"github.com/ArtisanCloud/RobotChat/app/middleware"
-	"github.com/ArtisanCloud/RobotChat/app/request"
+	sd2 "github.com/ArtisanCloud/RobotChat/app/request/sd"
 	"github.com/gin-gonic/gin"
 )
 
 func InitArtBotAPIRoutes(r *gin.Engine) {
 	apiArtBotRouter := r.Group("/api/v1/artBot")
 	{
-		// before routes
 		apiArtBotRouter.Use(middleware.ArtBotIsAwaken)
 		{
-			apiArtBotRouter.POST("/txt2img", request.ValidateText2Image, controller.APITxt2Image)
-			apiArtBotRouter.POST("/img2img", request.ValidateImage2Image, controller.APIImage2Image)
-			apiArtBotRouter.POST("/chat/txt2img", request.ValidateText2Image, controller.APIChatTxt2Image)
-			apiArtBotRouter.POST("/chat/img2img", request.ValidateImage2Image, controller.APIChatImage2Image)
+			apiSDRouter := apiArtBotRouter.Group("/sd")
+			// before routes
+			{
+				apiSDRouter.POST("/txt2img", sd2.ValidateText2Image, sd.APITxt2Image)
+				apiSDRouter.POST("/img2img", sd2.ValidateImage2Image, sd.APIImage2Image)
+				apiSDRouter.POST("/chat/txt2img", sd2.ValidateText2Image, sd.APIChatTxt2Image)
+				apiSDRouter.POST("/chat/img2img", sd2.ValidateImage2Image, sd.APIChatImage2Image)
+			}
 		}
 
 	}

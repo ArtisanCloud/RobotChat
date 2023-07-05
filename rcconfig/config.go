@@ -31,10 +31,12 @@ type ArtBot struct {
 }
 
 type ChatBot struct {
-	Channel              string `yaml:"Channel"`
-	config.ChatGPTConfig `yaml:"ChatGPT"`
-	Queue                `yaml:"Queue"`
-	Log                  `yaml:"Log"`
+	Channel               string `yaml:"Channel"`
+	config.ChatGPTConfig  `yaml:"ChatGPT"`
+	config.XFYunConfig    `yaml:"XFYun"`
+	config.THUDMGLMConfig `yaml:"THUDM_GLM"`
+	Queue                 `yaml:"Queue"`
+	Log                   `yaml:"Log"`
 }
 
 type Redis struct {

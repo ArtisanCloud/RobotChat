@@ -45,16 +45,22 @@ ChatBot:
     Organization: artisan-cloud
     Model: ada:ft-artisan-cloud-2023-06-15-05-51-27
     HttpDebug: true
-    BaseURL: https://chat.customdomain.com/v1
+    BaseUrl: https://chat.customdomain.com/v1
     APIType:
     APIVersion:
 
   # 讯飞云
   XFYun:
-    WebSocketURL: ws://spark-api.xf-yun.com/v1.1/chat
-    AppID: 5555555
+    WebSocketUrl: ws://spark-api.xf-yun.com/v1.1/chat
+    AppId: 5555555
     APISecret: ZjczYTFhODk5ZGU5555555555
     APIKey: 55555300a59668082955555555555
+    HttpDebug: true
+
+  # 清华GLM LLM
+  THUDM_GLM:
+    BaseUrl: http://192.168.1.164:8080
+    HttpDebug: true
 
   # 异步操作回调通知
   NotifyUrl:

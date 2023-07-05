@@ -8,22 +8,22 @@ import (
 
 func InitService(config *rcconfig.RCConfig) error {
 	// 生成启动ArtBot
-	SrvArtBot = NewArtBotService(config)
-	if SrvArtBot == nil {
+	Michelle = NewArtBotService(config)
+	if Michelle == nil {
 		return errors.New("init ArtBot Service failed")
 	}
 
-	err := SrvArtBot.Launch(context.Background())
+	err := Michelle.Launch(context.Background())
 	if err != nil {
 		return err
 	}
 
 	// 生成启动ChatBot
-	SrvChatBot = NewChatBotService(config)
-	if SrvChatBot == nil {
+	Joy = NewChatBotService(config)
+	if Joy == nil {
 		return errors.New("init ChatBot Service failed")
 	}
-	err = SrvChatBot.Launch(context.Background())
+	err = Joy.Launch(context.Background())
 	if err != nil {
 		return err
 	}

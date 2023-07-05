@@ -1,21 +1,22 @@
-package request
+package openai
 
 import (
+	request2 "github.com/ArtisanCloud/RobotChat/app/request"
 	"github.com/ArtisanCloud/RobotChat/robots/chatBot/request"
 	"github.com/gin-gonic/gin"
 )
 
-type ParaPrompt struct {
+type ParaChatCompletion struct {
 	ConversationId string `json:"conversationId, optional"`
 	SessionId      string `json:"sessionId, optional"`
 	JobId          string `json:"jobId, optional"`
 	request.ChatCompletionRequest
 }
 
-func ValidatePrompt(c *gin.Context) {
-	var params ParaPrompt
+func ValidateChatCompletion(c *gin.Context) {
+	var params ParaChatCompletion
 
-	err := ValidatePara(c, &params)
+	err := request2.ValidatePara(c, &params)
 	if err != nil {
 		return
 	}
