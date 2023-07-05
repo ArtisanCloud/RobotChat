@@ -35,6 +35,29 @@ type RobotModel struct {
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 }
 
+type RobotType int8
+
+const (
+	TypeChatBot RobotType = iota
+	TypeArtBot
+)
+
+type RobotGender int8
+
+const (
+	GenderMale RobotGender = iota
+	GenderFemale
+	GenderNeutral
+)
+
+type RobotAttributes struct {
+	// attributes
+	Name    string
+	Version string
+	Gender  RobotGender
+	Type    RobotType
+}
+
 type PowerUuidModel struct {
 	Id        int64          `gorm:"autoIncrement:true;unique; column:id; ->;<-:create" json:"-"`
 	Uuid      string         `gorm:"primaryKey;autoIncrement:false;unique; column:uuid; ->;<-:create " json:"uuid" sql:"index"`

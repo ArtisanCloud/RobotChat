@@ -13,8 +13,10 @@ func InitArtBotAPIRoutes(r *gin.Engine) {
 		// before routes
 		apiArtBotRouter.Use(middleware.ArtBotIsAwaken)
 		{
-			apiArtBotRouter.POST("/txt2img", request.ValidateTxt2Image, controller.APITxt2Image)
-			apiArtBotRouter.POST("/chat/txt2img", request.ValidateTxt2Image, controller.APIChatTxt2Image)
+			apiArtBotRouter.POST("/txt2img", request.ValidateText2Image, controller.APITxt2Image)
+			apiArtBotRouter.POST("/img2img", request.ValidateImage2Image, controller.APIImage2Image)
+			apiArtBotRouter.POST("/chat/txt2img", request.ValidateText2Image, controller.APIChatTxt2Image)
+			apiArtBotRouter.POST("/chat/img2img", request.ValidateImage2Image, controller.APIChatImage2Image)
 		}
 
 	}

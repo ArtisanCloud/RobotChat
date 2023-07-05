@@ -45,3 +45,17 @@ func (cm *ConversationManager) GetActiveConversations() []*model2.Conversation {
 	}
 	return activeConversations
 }
+
+//func (cm *ConversationManager) AddMessage(sessionIndex int, msgType MessageType, authorRole Role, contentParts []string) (message *Message, index int) {
+//	message = NewMessage(msgType)
+//
+//	message.Author = string(authorRole)
+//	content, _ := object.JsonEncode(Content{ContentType: "text", Parts: contentParts})
+//	message.Content = datatypes.JSON(content)
+//	meta, _ := object.JsonEncode(object.HashMap{"sessionId": sessionIndex})
+//	message.Metadata = datatypes.JSON(meta)
+//
+//	c.Sessions[sessionIndex].Messages = append(c.Sessions[sessionIndex].Messages, message)
+//	index = len(c.Sessions) - 1 // 返回新 Session 的索引
+//	return
+//}

@@ -25,11 +25,11 @@ func NewArtBot(client contract.ArtBotClientInterface) (*ArtBot, error) {
 	}
 
 	// 初始化机器人
-	robot, err := robots.NewRobot(&robots.RobotAttributes{
+	robot, err := robots.NewRobot(&model.RobotAttributes{
 		Name:    "Michelle",
 		Version: "1.0",
-		Gender:  robots.GenderFemale,
-		Type:    robots.TypeArtBot,
+		Gender:  model.GenderFemale,
+		Type:    model.TypeArtBot,
 	})
 
 	if err != nil {

@@ -2,6 +2,7 @@ package model
 
 import (
 	"context"
+	"github.com/ArtisanCloud/PowerLibs/v3/object"
 	"gorm.io/datatypes"
 )
 
@@ -19,11 +20,11 @@ const (
 type Message struct {
 	RobotModel
 
-	ModelType   string         `gorm:"comment:模型类型" json:"modelType"`
-	MessageType MessageType    `gorm:"comment:消息类型" json:"messageType"`
-	Author      string         `gorm:"comment:作者" json:"author"`
-	Content     datatypes.JSON `gorm:"comment:内容" json:"content"`
-	Metadata    datatypes.JSON `gorm:"comment:meta" json:"metadata"`
+	ModelType   string          `gorm:"comment:模型类型" json:"modelType"`
+	MessageType MessageType     `gorm:"comment:消息类型" json:"messageType"`
+	Author      string          `gorm:"comment:作者" json:"author"`
+	Content     datatypes.JSON  `gorm:"comment:内容" json:"content"`
+	Metadata    *object.HashMap `gorm:"comment:meta" json:"metadata"`
 }
 
 type Content struct {
@@ -55,8 +56,11 @@ type ErrReply struct {
 type HandleError func(reply *ErrReply)
 
 func NewMessage(msgType MessageType) *Message {
-	return &Message{
+
+	msg := &Message{
 		RobotModel:  *NewRobotModel(),
 		MessageType: msgType,
 	}
+
+	return msg
 }

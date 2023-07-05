@@ -2,38 +2,17 @@ package robots
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
+	"github.com/ArtisanCloud/PowerLibs/v3/object"
 	"github.com/ArtisanCloud/RobotChat/robots/kernel/logger"
 	"github.com/ArtisanCloud/RobotChat/robots/kernel/model"
 	queue2 "github.com/ArtisanCloud/RobotChat/robots/kernel/queue"
 	"sync"
 )
 
-type RobotType int8
-
-const (
-	TypeChatBot RobotType = iota
-	TypeArtBot
-)
-
-type RobotGender int8
-
-const (
-	GenderMale RobotGender = iota
-	GenderFemale
-	GenderNeutral
-)
-
-type RobotAttributes struct {
-	// attributes
-	Name    string
-	Version string
-	Gender  RobotGender
-	Type    RobotType
-}
-
 type Robot struct {
-	*RobotAttributes
+	*model.RobotAttributes
 
 	// components
 	Queue  queue2.QueueInterface
@@ -53,7 +32,7 @@ type Robot struct {
 	NotifyUrl string
 }
 
-func NewRobot(attributes *RobotAttributes) (*Robot, error) {
+func NewRobot(attributes *model.RobotAttributes) (*Robot, error) {
 
 	// 返回Robot
 	return &Robot{
@@ -131,6 +110,32 @@ func (bot *Robot) Stop() {
 
 	// 设置工作状态为停止
 	bot.IsWorking = false
+}
+
+func (bot *Robot) CreateTextMessage(content interface{}) (*model.Message, error) {
+	return bot.CreateMessage(model.TextMessage, content)
+}
+
+func (bot *Robot) CreateImageMessage(content interface{}) (*model.Message, error) {
+	return bot.CreateMessage(model.ImageMessage, content)
+}
+
+func (bot *Robot) CreateMessage(messageType model.MessageType, content interface{}) (*model.Message, error) {
+	strContent, err := json.Marshal(content)
+	if err != nil {
+		return nil, err
+	}
+
+	message := model.NewMessage(messageType)
+	message.MessageType = messageType
+	message.Content = strContent
+
+	message.Metadata = &object.HashMap{
+		"robot":        bot.RobotAttributes,
+		"conversation": nil,
+	}
+
+	return message, nil
 }
 
 func (bot *Robot) Send(ctx context.Context, message *model.Message) (*model.Job, error) {
