@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	request2 "github.com/ArtisanCloud/RobotChat/app/request"
+	"github.com/ArtisanCloud/RobotChat/app/request/sd"
 	"github.com/ArtisanCloud/RobotChat/pkg"
 	"github.com/ArtisanCloud/RobotChat/rcconfig"
 	"github.com/ArtisanCloud/RobotChat/robots/artBot"
@@ -15,7 +16,8 @@ import (
 	"github.com/artisancloud/httphelper"
 )
 
-var SrvArtBot *ArtBotService
+// Robot Michelle for Stable Diffusion
+var Michelle *ArtBotService
 
 type ArtBotService struct {
 	artBot              *artBot.ArtBot
@@ -133,7 +135,7 @@ func (srv *ArtBotService) Image2Image(ctx context.Context, req *request.Image2Im
 	return res, err
 }
 
-func (srv *ArtBotService) ChatTxt2Image(ctx context.Context, req *request2.ParaText2Image) (job *model.Job, err error) {
+func (srv *ArtBotService) ChatTxt2Image(ctx context.Context, req *sd.ParaText2Image) (job *model.Job, err error) {
 
 	//conversation := srv.conversationManager.GetConversationByID(req.ConversationId)
 	//conversation.GetSessionById[req.SessionId]
@@ -148,7 +150,7 @@ func (srv *ArtBotService) ChatTxt2Image(ctx context.Context, req *request2.ParaT
 	return job, err
 }
 
-func (srv *ArtBotService) ChatImage2Image(ctx context.Context, req *request2.ParaImage2Image) (job *model.Job, err error) {
+func (srv *ArtBotService) ChatImage2Image(ctx context.Context, req *sd.ParaImage2Image) (job *model.Job, err error) {
 
 	//conversation := srv.conversationManager.GetConversationByID(req.ConversationId)
 	//conversation.GetSessionById[req.SessionId]

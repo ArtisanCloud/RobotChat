@@ -50,14 +50,14 @@ ChatBot:
     Organization: 
     Model: ada:ft-2023-06-15-05-51-27
     HttpDebug: true
-    BaseURL: 
+    BaseUrl: 
     APIType:
     APIVersion:
 
   # 讯飞云
   XFYun:
-    WebSocketURL: 
-    AppID: 
+    WebSocketUrl: 
+    AppId: 
     APISecret: 
     APIKey: 
 

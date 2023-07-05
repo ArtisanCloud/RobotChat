@@ -9,7 +9,7 @@ type ChatGPTConfig struct {
 	Model        string `yaml:"Model"`
 	Organization string `yaml:"Organization"`
 	HttpDebug    bool   `yaml:"HttpDebug"`
-	BaseURL      string `yaml:"BaseURL"`
+	BaseUrl      string `yaml:"BaseUrl"`
 	APIType      string `yaml:"APIType"`
 	APIVersion   string `yaml:"APIVersion"`
 }

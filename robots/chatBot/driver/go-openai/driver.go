@@ -18,7 +18,7 @@ type Driver struct {
 
 func NewDriver(config *rcconfig.ChatBot) *Driver {
 	openaiConfig := openai.DefaultConfig(config.OpenAPIKey)
-	openaiConfig.BaseURL = config.BaseURL
+	openaiConfig.BaseURL = config.ChatGPTConfig.BaseUrl
 	c := openai.NewClientWithConfig(openaiConfig)
 	driver := &Driver{
 		Client: c,
@@ -71,19 +71,15 @@ func (d *Driver) CreateStreamCompletion(ctx context.Context, message string, rol
 		gptModel = d.config.Model
 	}
 
-	req := openai.ChatCompletionRequest{
+	req := openai.CompletionRequest{
 		Model:     gptModel,
+		User:      string(role),
 		MaxTokens: 100,
-		Messages: []openai.ChatCompletionMessage{
-			{
-				Role:    string(role),
-				Content: message,
-			},
-		},
-		Stream: true,
+		Prompt:    message,
+		Stream:    true,
 	}
 
-	stream, err := d.Client.CreateChatCompletionStream(ctx, req)
+	stream, err := d.Client.CreateCompletionStream(ctx, req)
 	if err != nil {
 		return "", pretty.Errorf("ChatCompletionStream error: %v", err)
 	}
@@ -100,7 +96,7 @@ func (d *Driver) CreateStreamCompletion(ctx context.Context, message string, rol
 			return "", pretty.Errorf("Stream error: %v", err)
 		}
 		//fmt.Dump(response.Choices)
-		responseContent.WriteString(response.Choices[0].Delta.Content)
+		responseContent.WriteString(response.Choices[0].Text)
 	}
 
 	return responseContent.String(), nil

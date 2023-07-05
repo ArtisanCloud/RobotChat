@@ -1,7 +1,7 @@
-package controller
+package sd
 
 import (
-	"github.com/ArtisanCloud/RobotChat/app/request"
+	"github.com/ArtisanCloud/RobotChat/app/request/sd"
 	"github.com/ArtisanCloud/RobotChat/app/response"
 	"github.com/ArtisanCloud/RobotChat/app/service"
 	"github.com/gin-gonic/gin"
@@ -10,9 +10,9 @@ import (
 func APITxt2Image(c *gin.Context) {
 
 	params, _ := c.Get("params")
-	param := params.(*request.ParaText2Image)
+	param := params.(*sd.ParaText2Image)
 
-	res, err := service.SrvArtBot.Txt2Image(c.Request.Context(), &param.Text2Image)
+	res, err := service.Michelle.Txt2Image(c.Request.Context(), &param.Text2Image)
 	if err != nil {
 		panic(err)
 	}
@@ -25,9 +25,9 @@ func APITxt2Image(c *gin.Context) {
 func APIImage2Image(c *gin.Context) {
 
 	params, _ := c.Get("params")
-	param := params.(*request.ParaImage2Image)
+	param := params.(*sd.ParaImage2Image)
 
-	res, err := service.SrvArtBot.Image2Image(c.Request.Context(), &param.Image2Image)
+	res, err := service.Michelle.Image2Image(c.Request.Context(), &param.Image2Image)
 	if err != nil {
 		panic(err)
 	}
@@ -40,12 +40,12 @@ func APIImage2Image(c *gin.Context) {
 func APIChatTxt2Image(c *gin.Context) {
 
 	params, _ := c.Get("params")
-	param := params.(*request.ParaText2Image)
+	param := params.(*sd.ParaText2Image)
 
 	ctx := c.Request.Context()
 
 	req := param
-	job, err := service.SrvArtBot.ChatTxt2Image(ctx, req)
+	job, err := service.Michelle.ChatTxt2Image(ctx, req)
 	if err != nil {
 		panic(err)
 	}
@@ -57,12 +57,12 @@ func APIChatTxt2Image(c *gin.Context) {
 func APIChatImage2Image(c *gin.Context) {
 
 	params, _ := c.Get("params")
-	param := params.(*request.ParaImage2Image)
+	param := params.(*sd.ParaImage2Image)
 
 	ctx := c.Request.Context()
 
 	req := param
-	job, err := service.SrvArtBot.ChatImage2Image(ctx, req)
+	job, err := service.Michelle.ChatImage2Image(ctx, req)
 	if err != nil {
 		panic(err)
 	}

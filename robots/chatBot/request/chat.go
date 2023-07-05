@@ -22,9 +22,3 @@ type ChatCompletionRequest struct {
 	LogitBias        map[string]int          `json:"logit_bias,omitempty"`
 	User             string                  `json:"user,omitempty"`
 }
-
-type ChatCompletionChoice struct {
-	Index        int                   `json:"index"`
-	Message      ChatCompletionMessage `json:"message"`
-	FinishReason string                `json:"finish_reason"`
-}

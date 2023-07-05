@@ -6,7 +6,7 @@ import (
 )
 
 func ArtBotIsAwaken(c *gin.Context) {
-	err := service.SrvArtBot.IsAwaken(c.Request.Context())
+	err := service.Michelle.IsAwaken(c.Request.Context())
 	if err != nil {
 		panic(err)
 	}
@@ -16,7 +16,7 @@ func ArtBotIsAwaken(c *gin.Context) {
 
 func ChatBotIsAwaken(c *gin.Context) {
 
-	err := service.SrvChatBot.IsAwaken(c.Request.Context())
+	err := service.Joy.IsAwaken(c.Request.Context())
 	if err != nil {
 		panic(err)
 	}
