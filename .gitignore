@@ -21,7 +21,7 @@
 deploy/etc/config.yaml
 deploy/data
 deploy/robotChat
-deploy/robotChat.ext
+deploy/robotChat.exe
 deploy/logs/
 
 config.yaml

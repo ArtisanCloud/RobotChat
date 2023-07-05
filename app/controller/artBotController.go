@@ -22,6 +22,21 @@ func APITxt2Image(c *gin.Context) {
 
 }
 
+func APIImage2Image(c *gin.Context) {
+
+	params, _ := c.Get("params")
+	param := params.(*request.ParaImage2Image)
+
+	res, err := service.SrvArtBot.Image2Image(c.Request.Context(), &param.Image2Image)
+	if err != nil {
+		panic(err)
+	}
+
+	response.Success(c, res)
+	return
+
+}
+
 func APIChatTxt2Image(c *gin.Context) {
 
 	params, _ := c.Get("params")
@@ -30,33 +45,28 @@ func APIChatTxt2Image(c *gin.Context) {
 	ctx := c.Request.Context()
 
 	req := param
-	err := service.SrvArtBot.ChatTxt2Image(ctx, req)
+	job, err := service.SrvArtBot.ChatTxt2Image(ctx, req)
 	if err != nil {
 		panic(err)
 	}
+	response.Success(c, job)
+	return
 
-	//param.Text2Image.Prompt += "-1"
-	//req = param
-	//err = service.SrvArtBot.ChatTxt2Image(ctx, req)
-	//if err != nil {
-	//	panic(err)
-	//}
-	//
-	//param.Text2Image.Prompt += "-2"
-	//req = param
-	//err = service.SrvArtBot.ChatTxt2Image(ctx, req)
-	//if err != nil {
-	//	panic(err)
-	//}
-	//
-	//param.Text2Image.Prompt += "-3"
-	//req = param
-	//err = service.SrvArtBot.ChatTxt2Image(ctx, req)
-	//if err != nil {
-	//	panic(err)
-	//}
+}
 
-	response.Success(c, nil)
+func APIChatImage2Image(c *gin.Context) {
+
+	params, _ := c.Get("params")
+	param := params.(*request.ParaImage2Image)
+
+	ctx := c.Request.Context()
+
+	req := param
+	job, err := service.SrvArtBot.ChatImage2Image(ctx, req)
+	if err != nil {
+		panic(err)
+	}
+	response.Success(c, job)
 	return
 
 }

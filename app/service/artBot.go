@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"encoding/json"
 	request2 "github.com/ArtisanCloud/RobotChat/app/request"
 	"github.com/ArtisanCloud/RobotChat/pkg"
 	"github.com/ArtisanCloud/RobotChat/rcconfig"
@@ -112,31 +111,56 @@ func (srv *ArtBotService) Launch(ctx context.Context) error {
 
 func (srv *ArtBotService) Txt2Image(ctx context.Context, req *request.Text2Image) (res *response.Text2Image, err error) {
 
-	strReq, err := json.Marshal(req)
+	message, err := srv.artBot.CreateTextMessage(req)
 	if err != nil {
 		return nil, err
 	}
-	message := model.NewMessage(model.TextMessage)
-	message.Content = strReq
+
 	res, err = srv.artBot.SendAndWait(ctx, message)
 
 	return res, err
 }
 
-func (srv *ArtBotService) ChatTxt2Image(ctx context.Context, req *request2.ParaText2Image) (err error) {
+func (srv *ArtBotService) Image2Image(ctx context.Context, req *request.Image2Image) (res *response.Text2Image, err error) {
+
+	message, err := srv.artBot.CreateImageMessage(req)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err = srv.artBot.SendAndWait(ctx, message)
+
+	return res, err
+}
+
+func (srv *ArtBotService) ChatTxt2Image(ctx context.Context, req *request2.ParaText2Image) (job *model.Job, err error) {
 
 	//conversation := srv.conversationManager.GetConversationByID(req.ConversationId)
 	//conversation.GetSessionById[req.SessionId]
-	strReq, err := json.Marshal(req)
+
+	message, err := srv.artBot.CreateTextMessage(req)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	message := model.NewMessage(model.TextMessage)
-	message.Content = strReq
 
-	_, err = srv.artBot.Send(ctx, message)
+	job, err = srv.artBot.Send(ctx, message)
 
-	return err
+	return job, err
+}
+
+func (srv *ArtBotService) ChatImage2Image(ctx context.Context, req *request2.ParaImage2Image) (job *model.Job, err error) {
+
+	//conversation := srv.conversationManager.GetConversationByID(req.ConversationId)
+	//conversation.GetSessionById[req.SessionId]
+
+	message, err := srv.artBot.CreateImageMessage(req)
+	if err != nil {
+		return nil, err
+	}
+
+	job, err = srv.artBot.Send(ctx, message)
+
+	return job, err
 }
 
 func (srv *ArtBotService) WebhookText(ctx context.Context, notify *request2.ParaQueueNotify) {
