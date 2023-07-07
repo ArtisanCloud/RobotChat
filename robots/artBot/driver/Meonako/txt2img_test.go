@@ -6,7 +6,7 @@ import (
 	"github.com/ArtisanCloud/RobotChat/rcconfig"
 	artBot2 "github.com/ArtisanCloud/RobotChat/robots/artBot"
 	"github.com/ArtisanCloud/RobotChat/robots/artBot/config"
-	"github.com/ArtisanCloud/RobotChat/robots/artBot/request"
+	model2 "github.com/ArtisanCloud/RobotChat/robots/artBot/model"
 	"github.com/ArtisanCloud/RobotChat/robots/kernel/model"
 	api "github.com/Meonako/webui-api"
 	"testing"
@@ -23,7 +23,7 @@ func TestArtBot_Text2Image(t *testing.T) {
 		t.Error(err)
 	}
 
-	req := &request.Text2Image{
+	req := &model2.Text2ImageRequest{
 		Prompt: "long hair, skinny, narrow waist, gothic lolita, twintails",
 		NegativePrompt: api.BuildPrompt(
 			"(worst quality, low quality:1.4)",

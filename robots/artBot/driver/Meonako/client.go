@@ -87,6 +87,22 @@ func (d *Driver) Image2Image(ctx context.Context, message *model.Message) (*mode
 	return mesReply, err
 }
 
+func (d *Driver) GetModels(ctx context.Context) ([]*model2.ArtBotModel, error) {
+	client := api.New(api.Config{
+		BaseURL: d.config.BaseUrl,
+	})
+
+	res, err := client.SDModels()
+	if err != nil {
+		return nil, err
+	}
+
+	models := []*model2.ArtBotModel{}
+	err = objectx.TransformData(res, models)
+
+	return models, err
+}
+
 func (d *Driver) Progress(ctx context.Context) (*model2.ProgressResponse, error) {
 
 	client := api.New(api.Config{
@@ -103,6 +119,7 @@ func (d *Driver) Progress(ctx context.Context) (*model2.ProgressResponse, error)
 
 	return reply, err
 }
+
 func (d *Driver) GetOptions(ctx context.Context) (*model2.OptionsResponse, error) {
 	client := api.New(api.Config{
 		BaseURL: d.config.BaseUrl,

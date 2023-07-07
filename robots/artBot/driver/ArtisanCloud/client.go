@@ -3,7 +3,6 @@ package ArtisanCloud
 import (
 	"context"
 	"encoding/json"
-	"github.com/ArtisanCloud/RobotChat/pkg/objectx"
 	"github.com/ArtisanCloud/RobotChat/rcconfig"
 	model2 "github.com/ArtisanCloud/RobotChat/robots/artBot/model"
 	"github.com/ArtisanCloud/RobotChat/robots/kernel/model"
@@ -133,6 +132,19 @@ func (d *Driver) Image2Image(ctx context.Context, message *model.Message) (*mode
 	return d.Send(ctx, "/sdapi/v1/img2img", message)
 }
 
+func (d *Driver) GetModels(ctx context.Context) ([]*model2.ArtBotModel, error) {
+	res, err := d.Query(ctx, "/sdapi/v1/sd-models")
+	if err != nil {
+		return nil, err
+	}
+
+	reply := []*model2.ArtBotModel{}
+	//fmt.Dump(string(res.Content))
+	err = json.Unmarshal(res.Content, &reply)
+
+	return reply, err
+}
+
 func (d *Driver) Progress(ctx context.Context) (*model2.ProgressResponse, error) {
 	res, err := d.Query(ctx, "/sdapi/v1/progress")
 	if err != nil {
@@ -141,7 +153,7 @@ func (d *Driver) Progress(ctx context.Context) (*model2.ProgressResponse, error)
 
 	reply := &model2.ProgressResponse{}
 	//fmt.Dump(string(res.Content))
-	err = objectx.TransformData(res.Content, reply)
+	err = json.Unmarshal(res.Content, reply)
 
 	return reply, err
 }
@@ -154,7 +166,7 @@ func (d *Driver) GetOptions(ctx context.Context) (*model2.OptionsResponse, error
 
 	reply := &model2.OptionsResponse{}
 	//fmt.Dump(string(res.Content))
-	err = objectx.TransformData(res.Content, reply)
+	err = json.Unmarshal(res.Content, reply)
 
 	return reply, err
 }
