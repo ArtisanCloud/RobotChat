@@ -21,7 +21,7 @@ func InitArtBotAPIRoutes(r *gin.Engine) {
 				apiSDRouter.POST("/chat/img2img", sd2.ValidateImage2Image, sd.APIChatImage2Image)
 
 				// progress
-				apiSDRouter.POST("/progress", sd.APIProgress)
+				apiSDRouter.GET("/progress", sd.APIProgress)
 
 				// option
 				apiSDRouter.GET("/options", sd.APIGetOptions)
