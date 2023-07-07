@@ -1,4 +1,4 @@
-package chatBot
+package model
 
 type Usage struct {
 	PromptTokens     int `json:"prompt_tokens"`

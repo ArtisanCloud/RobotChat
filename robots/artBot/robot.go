@@ -6,7 +6,7 @@ import (
 	"github.com/ArtisanCloud/RobotChat/pkg/objectx"
 	"github.com/ArtisanCloud/RobotChat/robots"
 	"github.com/ArtisanCloud/RobotChat/robots/artBot/driver/contract"
-	"github.com/ArtisanCloud/RobotChat/robots/artBot/response"
+	model2 "github.com/ArtisanCloud/RobotChat/robots/artBot/model"
 	"github.com/ArtisanCloud/RobotChat/robots/kernel/logger"
 	"github.com/ArtisanCloud/RobotChat/robots/kernel/model"
 	queue2 "github.com/ArtisanCloud/RobotChat/robots/kernel/queue"
@@ -62,7 +62,7 @@ func NewArtBot(client contract.ArtBotClientInterface) (*ArtBot, error) {
 	}, nil
 }
 
-func (bot *ArtBot) SendAndWait(ctx context.Context, message *model.Message) (*response.Text2Image, error) {
+func (bot *ArtBot) SendAndWait(ctx context.Context, message *model.Message) (*model2.Text2ImageResponse, error) {
 
 	// 将消息传递给中间件处理
 	for _, middleware := range bot.PreMessageHandlers {
@@ -82,7 +82,7 @@ func (bot *ArtBot) SendAndWait(ctx context.Context, message *model.Message) (*re
 	}
 
 	// 返回格式
-	res := &response.Text2Image{}
+	res := &model2.Text2ImageResponse{}
 	err = objectx.TransformData(msgReply.Content, res)
 	if err != nil {
 		return nil, err

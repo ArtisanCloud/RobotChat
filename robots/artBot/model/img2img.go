@@ -1,6 +1,6 @@
-package request
+package model
 
-type Image2Image struct {
+type Image2ImageRequest struct {
 	InitImages        []string `json:"init_images,omitempty"`        // List of base64-encoded images to send as base/original
 	ResizeMode        int      `json:"resize_mode,omitempty"`        // I don't know If I got it right or not. See: webui-api/img2img RESIZE_MODE helper package
 	DenoisingStrength float64  `json:"denoising_strength,omitempty"` // Determines how little respect the algorithm should have for image's content. At 0, nothing will change, and at 1 you'll get an unrelated image.
@@ -67,4 +67,11 @@ type Image2Image struct {
 
 	// If true, Will Decode Images after received response from API
 	DecodeAfterResult bool `json:"-"`
+}
+
+type Image2ImageResponse struct {
+	Images        []string `json:"images"`
+	DecodedImages [][]byte
+	Parameters    Image2ImageRequest `json:"parameters"`
+	Info          string             `json:"info"`
 }

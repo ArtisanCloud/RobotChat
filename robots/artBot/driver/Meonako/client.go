@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"github.com/ArtisanCloud/RobotChat/pkg/objectx"
 	"github.com/ArtisanCloud/RobotChat/rcconfig"
+	model2 "github.com/ArtisanCloud/RobotChat/robots/artBot/model"
 	"github.com/ArtisanCloud/RobotChat/robots/kernel/model"
 	api "github.com/Meonako/webui-api"
 )
@@ -37,7 +38,7 @@ func (d *Driver) SetConfig(config *rcconfig.ArtBot) {
 func (d *Driver) Text2Image(ctx context.Context, message *model.Message) (*model.Message, error) {
 
 	client := api.New(api.Config{
-		BaseUrl: d.config.BaseUrl,
+		BaseURL: d.config.BaseUrl,
 	})
 
 	reqDriver := &api.Txt2Image{}
@@ -58,4 +59,76 @@ func (d *Driver) Text2Image(ctx context.Context, message *model.Message) (*model
 	mesReply.Content = strRes
 
 	return mesReply, err
+}
+
+func (d *Driver) Image2Image(ctx context.Context, message *model.Message) (*model.Message, error) {
+
+	client := api.New(api.Config{
+		BaseURL: d.config.BaseUrl,
+	})
+
+	reqDriver := &api.Img2Img{}
+	err := objectx.TransformData(message.Content, reqDriver)
+	if err != nil {
+		return nil, err
+	}
+	rs, err := client.Image2Image(reqDriver)
+	if err != nil {
+		return nil, err
+	}
+
+	strRes, err := json.Marshal(rs)
+	if err != nil {
+		return nil, err
+	}
+	mesReply := model.NewMessage(model.TextMessage)
+	mesReply.Content = strRes
+
+	return mesReply, err
+}
+
+func (d *Driver) Progress(ctx context.Context) (*model2.ProgressResponse, error) {
+
+	client := api.New(api.Config{
+		BaseURL: d.config.BaseUrl,
+	})
+
+	res, err := client.Progress()
+	if err != nil {
+		return nil, err
+	}
+
+	reply := &model2.ProgressResponse{}
+	err = objectx.TransformData(res, reply)
+
+	return reply, err
+}
+func (d *Driver) GetOptions(ctx context.Context) (*model2.OptionsResponse, error) {
+	client := api.New(api.Config{
+		BaseURL: d.config.BaseUrl,
+	})
+
+	res, err := client.Options()
+	if err != nil {
+		return nil, err
+	}
+
+	reply := &model2.OptionsResponse{}
+	err = objectx.TransformData(res, reply)
+
+	return reply, err
+}
+func (d *Driver) SetOptions(ctx context.Context, options *model2.OptionsRequest) error {
+	client := api.New(api.Config{
+		BaseURL: d.config.BaseUrl,
+	})
+
+	reqDriver := &api.Options{}
+	err := objectx.TransformData(options, reqDriver)
+	if err != nil {
+		return err
+	}
+	err = client.SetOptions(reqDriver)
+
+	return err
 }

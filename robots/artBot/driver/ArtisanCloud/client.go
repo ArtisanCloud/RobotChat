@@ -3,7 +3,9 @@ package ArtisanCloud
 import (
 	"context"
 	"encoding/json"
+	"github.com/ArtisanCloud/RobotChat/pkg/objectx"
 	"github.com/ArtisanCloud/RobotChat/rcconfig"
+	model2 "github.com/ArtisanCloud/RobotChat/robots/artBot/model"
 	"github.com/ArtisanCloud/RobotChat/robots/kernel/model"
 	"github.com/artisancloud/httphelper"
 	"gorm.io/datatypes"
@@ -83,7 +85,7 @@ func (d *Driver) Send(ctx context.Context, endpoint string, message *model.Messa
 	return msg, nil
 }
 
-func (d *Driver) Query(ctx context.Context, endpoint string, message *model.Message) (*model.Message, error) {
+func (d *Driver) Query(ctx context.Context, endpoint string) (*model.Message, error) {
 
 	requestUrl, err := d.GetUrlFromEndpoint(endpoint)
 	if err != nil {
@@ -93,7 +95,6 @@ func (d *Driver) Query(ctx context.Context, endpoint string, message *model.Mess
 	res, err := d.httpClient.Df().WithContext(ctx).
 		Url(requestUrl).
 		Method("GET").
-		Json(message.Content).
 		Request()
 	if err != nil {
 		return nil, err
@@ -125,9 +126,49 @@ func (d *Driver) Query(ctx context.Context, endpoint string, message *model.Mess
 }
 
 func (d *Driver) Text2Image(ctx context.Context, message *model.Message) (*model.Message, error) {
-
 	return d.Send(ctx, "/sdapi/v1/txt2img", message)
+}
 
+func (d *Driver) Image2Image(ctx context.Context, message *model.Message) (*model.Message, error) {
+	return d.Send(ctx, "/sdapi/v1/img2img", message)
+}
+
+func (d *Driver) Progress(ctx context.Context) (*model2.ProgressResponse, error) {
+	res, err := d.Query(ctx, "/sdapi/v1/progress")
+	if err != nil {
+		return nil, err
+	}
+
+	reply := &model2.ProgressResponse{}
+	//fmt.Dump(string(res.Content))
+	err = objectx.TransformData(res.Content, reply)
+
+	return reply, err
+}
+
+func (d *Driver) GetOptions(ctx context.Context) (*model2.OptionsResponse, error) {
+	res, err := d.Query(ctx, "/sdapi/v1/options")
+	if err != nil {
+		return nil, err
+	}
+
+	reply := &model2.OptionsResponse{}
+	//fmt.Dump(string(res.Content))
+	err = objectx.TransformData(res.Content, reply)
+
+	return reply, err
+}
+func (d *Driver) SetOptions(ctx context.Context, options *model2.OptionsRequest) error {
+	content, err := json.Marshal(options)
+	if err != nil {
+		return nil
+	}
+	reqMessage := model.NewMessage(model.TextMessage)
+	reqMessage.Content = content
+
+	_, err = d.Send(ctx, "/sdapi/v1/options", reqMessage)
+
+	return err
 }
 
 func (d *Driver) GetUrlFromEndpoint(endpoint string) (string, error) {
