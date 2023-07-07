@@ -2,7 +2,7 @@ package openai
 
 import (
 	request2 "github.com/ArtisanCloud/RobotChat/app/request"
-	"github.com/ArtisanCloud/RobotChat/robots/chatBot/request"
+	"github.com/ArtisanCloud/RobotChat/robots/chatBot/model"
 	"github.com/gin-gonic/gin"
 )
 
@@ -10,7 +10,7 @@ type ParaCompletion struct {
 	ConversationId string `json:"conversationId, optional"`
 	SessionId      string `json:"sessionId, optional"`
 	JobId          string `json:"jobId, optional"`
-	request.CompletionRequest
+	model.CompletionRequest
 }
 
 func ValidateCompletion(c *gin.Context) {

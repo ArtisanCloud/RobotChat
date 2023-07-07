@@ -6,15 +6,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type ParaImage2Image struct {
-	ConversationId string `json:"conversationId,optional"`
-	SessionId      string `json:"sessionId,optional"`
-	JobId          string `json:"jobId,optional"`
-	model.Image2ImageRequest
+type ParaSetOptions struct {
+	*model.OptionsRequest
 }
 
-func ValidateImage2Image(c *gin.Context) {
-	var params ParaImage2Image
+func ValidateSetOptions(c *gin.Context) {
+	var params ParaSetOptions
 
 	err := request2.ValidatePara(c, &params)
 	if err != nil {

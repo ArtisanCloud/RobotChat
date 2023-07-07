@@ -8,8 +8,7 @@ import (
 	"github.com/ArtisanCloud/RobotChat/robots/chatBot"
 	"github.com/ArtisanCloud/RobotChat/robots/chatBot/driver/contract"
 	go_openai "github.com/ArtisanCloud/RobotChat/robots/chatBot/driver/go-openai"
-	"github.com/ArtisanCloud/RobotChat/robots/chatBot/request"
-	response2 "github.com/ArtisanCloud/RobotChat/robots/chatBot/response"
+	model2 "github.com/ArtisanCloud/RobotChat/robots/chatBot/model"
 	"github.com/ArtisanCloud/RobotChat/robots/kernel/controller"
 	"github.com/ArtisanCloud/RobotChat/robots/kernel/model"
 	"log"
@@ -76,12 +75,12 @@ func (srv *ChatBotService) Launch(ctx context.Context) error {
 	return err
 }
 
-func (srv *ChatBotService) Completion(ctx context.Context, req *request.CompletionRequest) (res *response2.CompletionResponse, err error) {
+func (srv *ChatBotService) Completion(ctx context.Context, req *model2.CompletionRequest) (res *model2.CompletionResponse, err error) {
 
 	resMes, err := srv.chatBot.Client.CreateCompletion(ctx, req.Prompt.(string))
 
-	return &response2.CompletionResponse{
-		Choices: []response2.CompletionChoice{
+	return &model2.CompletionResponse{
+		Choices: []model2.CompletionChoice{
 			{
 				Text: resMes,
 			},
@@ -89,16 +88,16 @@ func (srv *ChatBotService) Completion(ctx context.Context, req *request.Completi
 	}, err
 }
 
-func (srv *ChatBotService) ChatCompletion(ctx context.Context, req *request.ChatCompletionRequest) (res *response2.ChatCompletionResponse, err error) {
+func (srv *ChatBotService) ChatCompletion(ctx context.Context, req *model2.ChatCompletionRequest) (res *model2.ChatCompletionResponse, err error) {
 
 	reqMsg := req.Messages[0]
 
 	resMes, err := srv.chatBot.CreateChatCompletion(ctx, reqMsg.Content, model.Role(reqMsg.Role))
 
-	return &response2.ChatCompletionResponse{
-		Choices: []response2.ChatCompletionChoice{
+	return &model2.ChatCompletionResponse{
+		Choices: []model2.ChatCompletionChoice{
 			{
-				Message: request.ChatCompletionMessage{
+				Message: model2.ChatCompletionMessage{
 					Content: resMes,
 				},
 			},
@@ -106,12 +105,12 @@ func (srv *ChatBotService) ChatCompletion(ctx context.Context, req *request.Chat
 	}, err
 }
 
-func (srv *ChatBotService) SteamCompletion(ctx context.Context, req *request.CompletionRequest) (res *response2.CompletionResponse, err error) {
+func (srv *ChatBotService) SteamCompletion(ctx context.Context, req *model2.CompletionRequest) (res *model2.CompletionResponse, err error) {
 
 	resMes, err := srv.chatBot.CreateStreamCompletion(ctx, req.Prompt.(string), model.Role(req.User))
 
-	return &response2.CompletionResponse{
-		Choices: []response2.CompletionChoice{
+	return &model2.CompletionResponse{
+		Choices: []model2.CompletionChoice{
 			{
 				Text: resMes,
 			},

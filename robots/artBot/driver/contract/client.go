@@ -3,6 +3,7 @@ package contract
 import (
 	"context"
 	"github.com/ArtisanCloud/RobotChat/rcconfig"
+	model2 "github.com/ArtisanCloud/RobotChat/robots/artBot/model"
 	"github.com/ArtisanCloud/RobotChat/robots/kernel/model"
 )
 
@@ -15,4 +16,8 @@ type ArtBotClientInterface interface {
 	SetConfig(config *rcconfig.ArtBot)
 
 	Text2Image(ctx context.Context, message *model.Message) (*model.Message, error)
+	Image2Image(ctx context.Context, message *model.Message) (*model.Message, error)
+	Progress(ctx context.Context) (*model2.ProgressResponse, error)
+	GetOptions(ctx context.Context) (*model2.OptionsResponse, error)
+	SetOptions(ctx context.Context, options *model2.OptionsRequest) error
 }

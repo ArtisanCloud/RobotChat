@@ -1,4 +1,4 @@
-package request
+package model
 
 type ChatCompletionMessage struct {
 	Role    string `json:"role"`
@@ -21,4 +21,20 @@ type ChatCompletionRequest struct {
 	FrequencyPenalty float32                 `json:"frequency_penalty,omitempty"`
 	LogitBias        map[string]int          `json:"logit_bias,omitempty"`
 	User             string                  `json:"user,omitempty"`
+}
+
+type ChatCompletionChoice struct {
+	Index        int                   `json:"index"`
+	Message      ChatCompletionMessage `json:"message"`
+	FinishReason string                `json:"finish_reason"`
+}
+
+// ChatCompletionResponse represents a response structure for chat completion API.
+type ChatCompletionResponse struct {
+	ID      string                 `json:"id"`
+	Object  string                 `json:"object"`
+	Created int64                  `json:"created"`
+	Model   string                 `json:"model"`
+	Choices []ChatCompletionChoice `json:"choices"`
+	Usage   Usage                  `json:"usage"`
 }

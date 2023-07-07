@@ -9,8 +9,7 @@ import (
 	"github.com/ArtisanCloud/RobotChat/robots/artBot"
 	"github.com/ArtisanCloud/RobotChat/robots/artBot/driver/ArtisanCloud"
 	"github.com/ArtisanCloud/RobotChat/robots/artBot/driver/contract"
-	"github.com/ArtisanCloud/RobotChat/robots/artBot/request"
-	"github.com/ArtisanCloud/RobotChat/robots/artBot/response"
+	model2 "github.com/ArtisanCloud/RobotChat/robots/artBot/model"
 	"github.com/ArtisanCloud/RobotChat/robots/kernel/controller"
 	"github.com/ArtisanCloud/RobotChat/robots/kernel/model"
 	"github.com/artisancloud/httphelper"
@@ -74,7 +73,17 @@ func (srv *ArtBotService) Launch(ctx context.Context) error {
 	queuePostJobHandle := func(ctx context.Context, job *model.Job) (*model.Job, error) {
 
 		srv.artBot.Logger.Info("queue has process your request:", job.Id, job.Payload.Content)
-		message, err := srv.artBot.Client.Text2Image(ctx, job.Payload)
+		var (
+			err     error
+			message *model.Message
+		)
+		if job.Payload.MessageType == model.ImageMessage {
+			message, err = srv.artBot.Client.Image2Image(ctx, job.Payload)
+		} else {
+
+			message, err = srv.artBot.Client.Text2Image(ctx, job.Payload)
+		}
+
 		if err != nil {
 			return job, err
 		}
@@ -111,7 +120,7 @@ func (srv *ArtBotService) Launch(ctx context.Context) error {
 	return err
 }
 
-func (srv *ArtBotService) Txt2Image(ctx context.Context, req *request.Text2Image) (res *response.Text2Image, err error) {
+func (srv *ArtBotService) Txt2Image(ctx context.Context, req *model2.Text2ImageRequest) (res *model2.Text2ImageResponse, err error) {
 
 	message, err := srv.artBot.CreateTextMessage(req)
 	if err != nil {
@@ -123,7 +132,7 @@ func (srv *ArtBotService) Txt2Image(ctx context.Context, req *request.Text2Image
 	return res, err
 }
 
-func (srv *ArtBotService) Image2Image(ctx context.Context, req *request.Image2Image) (res *response.Text2Image, err error) {
+func (srv *ArtBotService) Image2Image(ctx context.Context, req *model2.Image2ImageRequest) (res *model2.Text2ImageResponse, err error) {
 
 	message, err := srv.artBot.CreateImageMessage(req)
 	if err != nil {
@@ -163,6 +172,21 @@ func (srv *ArtBotService) ChatImage2Image(ctx context.Context, req *sd.ParaImage
 	job, err = srv.artBot.Send(ctx, message)
 
 	return job, err
+}
+
+func (srv *ArtBotService) Progress(ctx context.Context) (res *model2.ProgressResponse, err error) {
+	return srv.artBot.Client.Progress(ctx)
+
+}
+
+func (srv *ArtBotService) GetOptions(ctx context.Context) (res *model2.OptionsResponse, err error) {
+	return srv.artBot.Client.GetOptions(ctx)
+
+}
+
+func (srv *ArtBotService) SetOptions(ctx context.Context, options *model2.OptionsRequest) (err error) {
+	return srv.artBot.Client.SetOptions(ctx, options)
+
 }
 
 func (srv *ArtBotService) WebhookText(ctx context.Context, notify *request2.ParaQueueNotify) {
