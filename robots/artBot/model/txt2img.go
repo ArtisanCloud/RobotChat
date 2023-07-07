@@ -1,6 +1,6 @@
 package model
 
-type Text2ImageRequest struct {
+type Text2Image struct {
 	EnableHR          bool    `json:"enable_hr,omitempty"`          // Hi-res fix.
 	DenoisingStrength float64 `json:"denoising_strength,omitempty"` // Hi-res fix option. Determines how little respect the algorithm should have for image's content. At 0, nothing will change, and at 1 you'll get an unrelated image.
 	FirstphaseWidth   int     `json:"firstphase_width,omitempty"`   // Hi-res fix option. Might not work anymore
@@ -80,9 +80,13 @@ type Text2ImageRequest struct {
 	DecodeAfterResult bool `json:"-"`
 }
 
+type Text2ImageRequest struct {
+	*Text2Image
+}
+
 type Text2ImageResponse struct {
-	Images        []string          `json:"images"`     // Base64-encoded Images Data
-	DecodedImages [][]byte          `json:"-"`          // Base64-decoded Images Data store here after "DecodeAllImages()" called
-	Parameters    Text2ImageRequest `json:"parameters"` // Generation Parameters. Should be the same value as the one you pass to generate.
-	Info          string            `json:"info"`       // Info field contains generation parameters like "parameters" field but in long string instead.
+	Images        []string   `json:"images"`     // Base64-encoded Images Data
+	DecodedImages [][]byte   `json:"-"`          // Base64-decoded Images Data store here after "DecodeAllImages()" called
+	Parameters    Text2Image `json:"parameters"` // Generation Parameters. Should be the same value as the one you pass to generate.
+	Info          string     `json:"info"`       // Info field contains generation parameters like "parameters" field but in long string instead.
 }
