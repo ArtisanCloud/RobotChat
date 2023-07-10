@@ -24,48 +24,48 @@ type Auth struct {
 }
 
 type ArtBot struct {
-	Channel                       string `yaml:"Channel"`
-	config2.StableDiffusionConfig `yaml:"StableDiffusion"`
-	Queue                         `yaml:"Queue"`
-	Log                           `yaml:"Log"`
+	Channel         string                  `yaml:"Channel" json:",optional"`
+	StableDiffusion config2.StableDiffusion `yaml:"StableDiffusion" json:",optional"`
+	Queue           Queue                   `yaml:"Queue" json:",optional"`
+	Log             Log                     `yaml:"Log" json:",optional"`
 }
 
 type ChatBot struct {
-	Channel               string `yaml:"Channel"`
-	config.ChatGPTConfig  `yaml:"ChatGPT"`
-	config.XFYunConfig    `yaml:"XFYun"`
-	config.THUDMGLMConfig `yaml:"THUDM_GLM"`
-	Queue                 `yaml:"Queue"`
-	Log                   `yaml:"Log"`
+	Channel  string          `yaml:"Channel" json:",optional"`
+	ChatGPT  config.ChatGPT  `yaml:"ChatGPT" json:",optional"`
+	XFYun    config.XFYun    `yaml:"XFYun" json:",optional"`
+	THUDMGLM config.THUDMGLM `yaml:"THUDM_GLM" json:",optional"`
+	Queue    Queue           `yaml:"Queue" json:",optional"`
+	Log      Log             `yaml:"Log" json:",optional"`
 }
 
 type Redis struct {
-	Addr       string `yaml:"Addr"`
-	ClientName string `yaml:"ClientName"`
-	Username   string `yaml:"Username"`
-	Password   string `yaml:"Password"`
-	DB         int    `yaml:"DB"`
-	MaxRetries int    `yaml:"MaxRetries"`
+	Addr       string `yaml:"Addr" json:",optional"`
+	ClientName string `yaml:"ClientName" json:",optional"`
+	Username   string `yaml:"Username" json:",optional"`
+	Password   string `yaml:"Password" json:",optional"`
+	DB         int    `yaml:"DB" json:",optional"`
+	MaxRetries int    `yaml:"MaxRetries" json:",optional"`
 }
 
 type Queue struct {
-	Driver    string `yaml:"Driver"`
-	NotifyUrl string `yaml:"NotifyUrl"`
-	Redis     `yaml:"Redis"`
+	Driver    string `yaml:"Driver" json:",optional"`
+	NotifyUrl string `yaml:"NotifyUrl" json:",optional"`
+	Redis     Redis  `yaml:"Redis" json:",optional"`
 }
 
 type Log struct {
-	Driver   string `yaml:"Driver"`
-	Env      string `yaml:"Env"`
-	InfoLog  string `yaml:"InfoLog"`
-	ErrorLog string `yaml:"ErrorLog"`
+	Driver   string `yaml:"Driver" json:",optional"`
+	Env      string `yaml:"Env" json:",optional"`
+	InfoLog  string `yaml:"InfoLog" json:",optional"`
+	ErrorLog string `yaml:"ErrorLog" json:",optional"`
 }
 
 type RCConfig struct {
-	Database `yaml:"Database"`
-	Auth     `yaml:"Auth"`
-	ArtBot   `yaml:"ArtBot"`
-	ChatBot  `yaml:"ChatBot"`
+	Database Database `yaml:"Database" json:",optional"`
+	Auth     Auth     `yaml:"Auth" json:",optional"`
+	ArtBot   ArtBot   `yaml:"ArtBot" json:",optional"`
+	ChatBot  ChatBot  `yaml:"ChatBot" json:",optional"`
 }
 
 func LoadRCConfigByPath(configPath string) *RCConfig {

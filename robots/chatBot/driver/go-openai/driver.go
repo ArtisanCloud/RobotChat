@@ -17,8 +17,8 @@ type Driver struct {
 }
 
 func NewDriver(config *rcconfig.ChatBot) *Driver {
-	openaiConfig := openai.DefaultConfig(config.OpenAPIKey)
-	openaiConfig.BaseURL = config.ChatGPTConfig.BaseUrl
+	openaiConfig := openai.DefaultConfig(config.ChatGPT.OpenAPIKey)
+	openaiConfig.BaseURL = config.ChatGPT.BaseUrl
 	c := openai.NewClientWithConfig(openaiConfig)
 	driver := &Driver{
 		Client: c,
@@ -44,8 +44,8 @@ func (d *Driver) SetConfig(config *rcconfig.ChatBot) {
 func (d *Driver) CreateChatCompletion(ctx context.Context, message string, role model2.Role) (string, error) {
 	// 实现发送消息的逻辑
 	gptModel := openai.GPT3Dot5Turbo
-	if d.config.Model != "" {
-		gptModel = d.config.Model
+	if d.config.ChatGPT.Model != "" {
+		gptModel = d.config.ChatGPT.Model
 	}
 	req := openai.ChatCompletionRequest{
 		Model: gptModel,
@@ -67,8 +67,8 @@ func (d *Driver) CreateChatCompletion(ctx context.Context, message string, role 
 func (d *Driver) CreateStreamCompletion(ctx context.Context, message string, role model2.Role) (string, error) {
 
 	gptModel := openai.GPT3Dot5Turbo
-	if d.config.Model != "" {
-		gptModel = d.config.Model
+	if d.config.ChatGPT.Model != "" {
+		gptModel = d.config.ChatGPT.Model
 	}
 
 	req := openai.CompletionRequest{
@@ -107,8 +107,8 @@ func (d *Driver) CreateStreamCompletion(ctx context.Context, message string, rol
 func (d *Driver) CreateCompletion(ctx context.Context, prompt string) (string, error) {
 	// 实现生成回答的逻辑
 	gptModel := openai.GPT3Ada
-	if d.config.Model != "" {
-		gptModel = d.config.Model
+	if d.config.ChatGPT.Model != "" {
+		gptModel = d.config.ChatGPT.Model
 	}
 	req := openai.CompletionRequest{
 		Model:     gptModel,

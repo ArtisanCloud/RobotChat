@@ -71,6 +71,17 @@ func APIChatImage2Image(c *gin.Context) {
 
 }
 
+func APIGetModels(c *gin.Context) {
+	ctx := c.Request.Context()
+	res, err := service.Michelle.GetModels(ctx)
+
+	if err != nil {
+		panic(err)
+	}
+	response.Success(c, res)
+	return
+}
+
 func APIProgress(c *gin.Context) {
 	ctx := c.Request.Context()
 	res, err := service.Michelle.Progress(ctx)

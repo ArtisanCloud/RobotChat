@@ -17,6 +17,7 @@ type ArtBotClientInterface interface {
 
 	Text2Image(ctx context.Context, message *model.Message) (*model.Message, error)
 	Image2Image(ctx context.Context, message *model.Message) (*model.Message, error)
+	GetModels(ctx context.Context) ([]*model2.ArtBotModel, error)
 	Progress(ctx context.Context) (*model2.ProgressResponse, error)
 	GetOptions(ctx context.Context) (*model2.OptionsResponse, error)
 	SetOptions(ctx context.Context, options *model2.OptionsRequest) error

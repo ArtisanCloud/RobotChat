@@ -5,7 +5,6 @@ go 1.20
 require (
 	github.com/ArtisanCloud/PowerLibs/v3 v3.0.9
 	github.com/Meonako/webui-api v0.5.1
-	github.com/artisancloud/openai v0.1.1
 	github.com/gin-gonic/gin v1.9.1
 	github.com/google/uuid v1.3.0
 	github.com/kr/pretty v0.2.1

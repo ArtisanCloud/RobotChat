@@ -174,6 +174,18 @@ func (srv *ArtBotService) ChatImage2Image(ctx context.Context, req *sd.ParaImage
 	return job, err
 }
 
+func (srv *ArtBotService) GetModels(ctx context.Context) (res *model2.ArtModelsResponse, err error) {
+	models, err := srv.artBot.Client.GetModels(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model2.ArtModelsResponse{
+		Models: models,
+	}, nil
+
+}
+
 func (srv *ArtBotService) Progress(ctx context.Context) (res *model2.ProgressResponse, err error) {
 	return srv.artBot.Client.Progress(ctx)
 

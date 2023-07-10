@@ -4,7 +4,7 @@ import (
 	"errors"
 )
 
-type XFYunConfig struct {
+type XFYun struct {
 	WebSocketUrl string `yaml:"WebSocketUrl"`
 	AppId        string `yaml:"AppId"`
 	APISecret    string `yaml:"APISecret"`
@@ -12,11 +12,11 @@ type XFYunConfig struct {
 	HttpDebug    bool   `yaml:"HttpDebug"`
 }
 
-func (c *XFYunConfig) GetName() string {
+func (c *XFYun) GetName() string {
 	return "ChatGPT"
 }
 
-func (c *XFYunConfig) Validate() error {
+func (c *XFYun) Validate() error {
 	if c.WebSocketUrl == "" {
 		return errors.New("WebSocketUrl is required")
 	}
