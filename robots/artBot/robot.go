@@ -75,6 +75,14 @@ func (bot *ArtBot) SendAndWait(ctx context.Context, message *model.Message) (*mo
 		}
 	}
 
+	// 检查是否需要换模型
+	_, err := bot.CheckSwitchModel(ctx, &model.Job{
+		Payload: message,
+	})
+	if err != nil {
+		return nil, err
+	}
+
 	// 请求操作
 	msgReply, err := bot.Client.Text2Image(ctx, message)
 	if err != nil {
