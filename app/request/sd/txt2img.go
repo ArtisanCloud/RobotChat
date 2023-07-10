@@ -10,16 +10,13 @@ type ParaText2Image struct {
 	ConversationId string `json:"conversationId,optional"`
 	SessionId      string `json:"sessionId,optional"`
 	JobId          string `json:"jobId,optional"`
-	model.Text2ImageRequest
+	*model.Text2ImageRequest
 }
 
 func ValidateText2Image(c *gin.Context) {
 	var params ParaText2Image
 
-	err := request2.ValidatePara(c, &params)
-	if err != nil {
-		return
-	}
+	_ = request2.ValidatePara(c, &params)
 
 	c.Set("params", &params)
 	c.Next()
