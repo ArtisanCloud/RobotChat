@@ -4,7 +4,7 @@ import (
 	"errors"
 )
 
-type ChatGPTConfig struct {
+type ChatGPT struct {
 	OpenAPIKey   string `yaml:"OpenAPIKey"`
 	Model        string `yaml:"Model"`
 	Organization string `yaml:"Organization"`
@@ -14,11 +14,11 @@ type ChatGPTConfig struct {
 	APIVersion   string `yaml:"APIVersion"`
 }
 
-func (c *ChatGPTConfig) GetName() string {
+func (c *ChatGPT) GetName() string {
 	return "ChatGPT"
 }
 
-func (c *ChatGPTConfig) Validate() error {
+func (c *ChatGPT) Validate() error {
 	if c.OpenAPIKey == "" {
 		return errors.New("OpenAPIKey is required")
 	}

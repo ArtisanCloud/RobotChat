@@ -20,7 +20,7 @@ type Driver struct {
 func NewDriver(config *rcconfig.ArtBot) *Driver {
 
 	httpClient, _ := httphelper.NewRequestHelper(&httphelper.Config{
-		BaseUrl: config.StableDiffusionConfig.BaseUrl,
+		BaseUrl: config.StableDiffusion.BaseUrl,
 	})
 
 	driver := &Driver{
@@ -184,7 +184,7 @@ func (d *Driver) SetOptions(ctx context.Context, options *model2.OptionsRequest)
 }
 
 func (d *Driver) GetUrlFromEndpoint(endpoint string) (string, error) {
-	baseUrl := d.config.BaseUrl
+	baseUrl := d.config.StableDiffusion.BaseUrl
 	urlObj, err := url.Parse(baseUrl)
 	if err != nil {
 		return "", err
