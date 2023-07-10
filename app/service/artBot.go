@@ -69,6 +69,9 @@ func (srv *ArtBotService) Launch(ctx context.Context) error {
 	}
 	srv.artBot.SetErrorHandler(errHandle)
 
+	// 队列回调，处理是否需要切换模型
+	queuePostCheckModelHandle := srv.artBot.CheckSwitchModel
+
 	// 队列回调请求
 	queuePostJobHandle := func(ctx context.Context, job *model.Job) (*model.Job, error) {
 
@@ -112,7 +115,7 @@ func (srv *ArtBotService) Launch(ctx context.Context) error {
 		return job, nil
 	}
 
-	srv.artBot.SetPostMessageHandler(queuePostJobHandle, queuePostWebhook)
+	srv.artBot.SetPostMessageHandler(queuePostCheckModelHandle, queuePostJobHandle, queuePostWebhook)
 
 	// 启动机器人
 	err := srv.artBot.Start(ctx)

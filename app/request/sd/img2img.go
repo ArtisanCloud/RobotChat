@@ -10,7 +10,7 @@ type ParaImage2Image struct {
 	ConversationId string `json:"conversationId,optional"`
 	SessionId      string `json:"sessionId,optional"`
 	JobId          string `json:"jobId,optional"`
-	model.Image2ImageRequest
+	*model.Image2ImageRequest
 }
 
 func ValidateImage2Image(c *gin.Context) {

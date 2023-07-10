@@ -63,6 +63,8 @@ type Image2Image struct {
 
 	SaveImages bool `json:"save_iamges,omitempty"`
 
+	SdModelHash string `json:"sd_model_hash"  binding:"required"`
+
 	AlwaysOnScripts map[string]any `json:"alwayson_scripts,omitempty"`
 
 	// If true, Will Decode Images after received response from API

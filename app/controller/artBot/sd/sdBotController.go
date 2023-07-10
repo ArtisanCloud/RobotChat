@@ -12,7 +12,7 @@ func APITxt2Image(c *gin.Context) {
 	params, _ := c.Get("params")
 	param := params.(*sd.ParaText2Image)
 
-	res, err := service.Michelle.Txt2Image(c.Request.Context(), &param.Text2ImageRequest)
+	res, err := service.Michelle.Txt2Image(c.Request.Context(), param.Text2ImageRequest)
 	if err != nil {
 		panic(err)
 	}
@@ -27,7 +27,7 @@ func APIImage2Image(c *gin.Context) {
 	params, _ := c.Get("params")
 	param := params.(*sd.ParaImage2Image)
 
-	res, err := service.Michelle.Image2Image(c.Request.Context(), &param.Image2ImageRequest)
+	res, err := service.Michelle.Image2Image(c.Request.Context(), param.Image2ImageRequest)
 	if err != nil {
 		panic(err)
 	}

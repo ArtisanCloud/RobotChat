@@ -78,6 +78,8 @@ type Text2Image struct {
 
 	// If true, Will Decode Images after received response from API
 	DecodeAfterResult bool `json:"-"`
+
+	SdModelHash string `json:"sd_model_hash" binding:"required"`
 }
 
 type Text2ImageRequest struct {
