@@ -38,7 +38,7 @@ func (d *Driver) SetConfig(config *rcconfig.ArtBot) {
 func (d *Driver) Text2Image(ctx context.Context, message *model.Message) (*model.Message, error) {
 
 	client := api.New(api.Config{
-		BaseURL: d.config.BaseUrl,
+		BaseURL: d.config.StableDiffusion.BaseUrl,
 	})
 
 	reqDriver := &api.Txt2Image{}
@@ -64,7 +64,7 @@ func (d *Driver) Text2Image(ctx context.Context, message *model.Message) (*model
 func (d *Driver) Image2Image(ctx context.Context, message *model.Message) (*model.Message, error) {
 
 	client := api.New(api.Config{
-		BaseURL: d.config.BaseUrl,
+		BaseURL: d.config.StableDiffusion.BaseUrl,
 	})
 
 	reqDriver := &api.Img2Img{}
@@ -89,7 +89,7 @@ func (d *Driver) Image2Image(ctx context.Context, message *model.Message) (*mode
 
 func (d *Driver) GetModels(ctx context.Context) ([]*model2.ArtBotModel, error) {
 	client := api.New(api.Config{
-		BaseURL: d.config.BaseUrl,
+		BaseURL: d.config.StableDiffusion.BaseUrl,
 	})
 
 	res, err := client.SDModels()
@@ -103,10 +103,20 @@ func (d *Driver) GetModels(ctx context.Context) ([]*model2.ArtBotModel, error) {
 	return models, err
 }
 
+func (d *Driver) GetLoras(ctx context.Context) (*model2.ArtBotLorasResponse, error) {
+
+	return nil, nil
+}
+
+func (d *Driver) RefreshLoras(ctx context.Context) error {
+
+	return nil
+}
+
 func (d *Driver) Progress(ctx context.Context) (*model2.ProgressResponse, error) {
 
 	client := api.New(api.Config{
-		BaseURL: d.config.BaseUrl,
+		BaseURL: d.config.StableDiffusion.BaseUrl,
 	})
 
 	res, err := client.Progress()
@@ -122,7 +132,7 @@ func (d *Driver) Progress(ctx context.Context) (*model2.ProgressResponse, error)
 
 func (d *Driver) GetOptions(ctx context.Context) (*model2.OptionsResponse, error) {
 	client := api.New(api.Config{
-		BaseURL: d.config.BaseUrl,
+		BaseURL: d.config.StableDiffusion.BaseUrl,
 	})
 
 	res, err := client.Options()
@@ -137,7 +147,7 @@ func (d *Driver) GetOptions(ctx context.Context) (*model2.OptionsResponse, error
 }
 func (d *Driver) SetOptions(ctx context.Context, options *model2.OptionsRequest) error {
 	client := api.New(api.Config{
-		BaseURL: d.config.BaseUrl,
+		BaseURL: d.config.StableDiffusion.BaseUrl,
 	})
 
 	reqDriver := &api.Options{}
