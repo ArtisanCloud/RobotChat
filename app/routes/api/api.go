@@ -3,12 +3,15 @@ package api
 import (
 	"github.com/ArtisanCloud/PowerLibs/v3/object"
 	"github.com/ArtisanCloud/RobotChat/app/controller"
+	"github.com/ArtisanCloud/RobotChat/app/middleware"
 	"github.com/ArtisanCloud/RobotChat/app/request"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
 func InitializeAPIRoutes(r *gin.Engine) {
+
+	r.Use(middleware.PanicMiddleware())
 
 	InitChatBotAPIRoutes(r)
 	InitArtBotAPIRoutes(r)

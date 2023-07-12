@@ -8,6 +8,6 @@ type ArtBotModel struct {
 	Config    string `json:"config"`
 }
 
-type ArtModelsResponse struct {
+type ArtBotModelsResponse struct {
 	Models []*ArtBotModel
 }

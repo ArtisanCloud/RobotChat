@@ -3,6 +3,7 @@ package ArtisanCloud
 import (
 	"context"
 	"encoding/json"
+	fmt "github.com/ArtisanCloud/RobotChat/pkg/printx"
 	"github.com/ArtisanCloud/RobotChat/rcconfig"
 	model2 "github.com/ArtisanCloud/RobotChat/robots/artBot/model"
 	"github.com/ArtisanCloud/RobotChat/robots/kernel/model"
@@ -143,6 +144,27 @@ func (d *Driver) GetModels(ctx context.Context) ([]*model2.ArtBotModel, error) {
 	err = json.Unmarshal(res.Content, &reply)
 
 	return reply, err
+}
+
+func (d *Driver) GetLoras(ctx context.Context) (*model2.ArtBotLorasResponse, error) {
+	res, err := d.Query(ctx, "/sdapi/v1/loras")
+	if err != nil {
+		return nil, err
+	}
+
+	reply := []*model.Lora{}
+	fmt.Dump(string(res.Content))
+	err = json.Unmarshal(res.Content, &reply)
+
+	return &model2.ArtBotLorasResponse{
+		Loras: reply,
+	}, err
+}
+
+func (d *Driver) RefreshLoras(ctx context.Context) error {
+	_, err := d.Query(ctx, "/sdapi/v1/loras")
+
+	return err
 }
 
 func (d *Driver) Progress(ctx context.Context) (*model2.ProgressResponse, error) {

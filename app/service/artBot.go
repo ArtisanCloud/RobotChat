@@ -177,16 +177,24 @@ func (srv *ArtBotService) ChatImage2Image(ctx context.Context, req *sd.ParaImage
 	return job, err
 }
 
-func (srv *ArtBotService) GetModels(ctx context.Context) (res *model2.ArtModelsResponse, err error) {
+func (srv *ArtBotService) GetModels(ctx context.Context) (res *model2.ArtBotModelsResponse, err error) {
 	models, err := srv.artBot.Client.GetModels(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	return &model2.ArtModelsResponse{
+	return &model2.ArtBotModelsResponse{
 		Models: models,
 	}, nil
 
+}
+
+func (srv *ArtBotService) GetLoras(ctx context.Context) (res *model2.ArtBotLorasResponse, err error) {
+	return srv.artBot.Client.GetLoras(ctx)
+}
+
+func (srv *ArtBotService) RefreshLoras(ctx context.Context) (err error) {
+	return srv.artBot.Client.RefreshLoras(ctx)
 }
 
 func (srv *ArtBotService) Progress(ctx context.Context) (res *model2.ProgressResponse, err error) {
