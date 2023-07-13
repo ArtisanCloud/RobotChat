@@ -24,6 +24,8 @@ deploy/robotChat
 deploy/robotChat.exe
 deploy/logs/
 
+robotChat.exe
+robotChat
 config.yaml
 *.log
 logs/
