@@ -62,7 +62,9 @@ func NewArtBot(client contract.ArtBotClientInterface) (*ArtBot, error) {
 	}, nil
 }
 
-func (bot *ArtBot) SendAndWait(ctx context.Context, message *model.Message) (*model2.Text2ImageResponse, error) {
+func (bot *ArtBot) SendAndWait(ctx context.Context, message *model.Message,
+	action func(ctx context.Context, message *model.Message) (*model.Message, error),
+) (*model2.Text2ImageResponse, error) {
 
 	// 将消息传递给中间件处理
 	for _, middleware := range bot.PreMessageHandlers {
@@ -84,7 +86,7 @@ func (bot *ArtBot) SendAndWait(ctx context.Context, message *model.Message) (*mo
 	}
 
 	// 请求操作
-	msgReply, err := bot.Client.Text2Image(ctx, message)
+	msgReply, err := action(ctx, message)
 	if err != nil {
 		return nil, err
 	}

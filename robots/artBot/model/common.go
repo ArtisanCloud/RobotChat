@@ -15,6 +15,7 @@ type State struct {
 }
 
 type ProgressResponse struct {
+	SDResponse
 	Progress     float64 `json:"progress"`
 	ETA          float64 `json:"eta_relative"`
 	State        State   `json:"state"`

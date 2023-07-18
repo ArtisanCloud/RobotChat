@@ -9,5 +9,6 @@ type ArtBotModel struct {
 }
 
 type ArtBotModelsResponse struct {
+	SDResponse
 	Models []*ArtBotModel
 }
