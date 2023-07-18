@@ -130,7 +130,7 @@ func (srv *ArtBotService) Txt2Image(ctx context.Context, req *model2.Text2ImageR
 		return nil, err
 	}
 
-	res, err = srv.artBot.SendAndWait(ctx, message)
+	res, err = srv.artBot.SendAndWait(ctx, message, srv.artBot.Client.Text2Image)
 
 	return res, err
 }
@@ -142,7 +142,7 @@ func (srv *ArtBotService) Image2Image(ctx context.Context, req *model2.Image2Ima
 		return nil, err
 	}
 
-	res, err = srv.artBot.SendAndWait(ctx, message)
+	res, err = srv.artBot.SendAndWait(ctx, message, srv.artBot.Client.Image2Image)
 
 	return res, err
 }

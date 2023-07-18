@@ -1,5 +1,12 @@
 package model
 
+type SDResponse struct {
+	Error  string `json:"error,omitempty"`
+	Detail string `json:"detail,omitempty"`
+	Body   string `json:"body,omitempty"`
+	Errors string `json:"errors,omitempty"`
+}
+
 type Text2Image struct {
 	EnableHR          bool    `json:"enable_hr,omitempty"`          // Hi-res fix.
 	DenoisingStrength float64 `json:"denoising_strength,omitempty"` // Hi-res fix option. Determines how little respect the algorithm should have for image's content. At 0, nothing will change, and at 1 you'll get an unrelated image.
@@ -87,8 +94,10 @@ type Text2ImageRequest struct {
 }
 
 type Text2ImageResponse struct {
+	SDResponse
 	Images        []string   `json:"images"`     // Base64-encoded Images Data
 	DecodedImages [][]byte   `json:"-"`          // Base64-decoded Images Data store here after "DecodeAllImages()" called
 	Parameters    Text2Image `json:"parameters"` // Generation Parameters. Should be the same value as the one you pass to generate.
 	Info          string     `json:"info"`       // Info field contains generation parameters like "parameters" field but in long string instead.
+
 }

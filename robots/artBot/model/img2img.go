@@ -76,6 +76,7 @@ type Image2ImageRequest struct {
 }
 
 type Image2ImageResponse struct {
+	SDResponse
 	Images        []string `json:"images"`
 	DecodedImages [][]byte
 	Parameters    Image2Image `json:"parameters"`
