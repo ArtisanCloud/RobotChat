@@ -82,6 +82,17 @@ func APIGetModels(c *gin.Context) {
 	return
 }
 
+func APIGetSamplers(c *gin.Context) {
+	ctx := c.Request.Context()
+	res, err := service.Michelle.GetSamplers(ctx)
+
+	if err != nil {
+		panic(err)
+	}
+	response.Success(c, res)
+	return
+}
+
 func APIGetLoras(c *gin.Context) {
 	ctx := c.Request.Context()
 	res, err := service.Michelle.GetLoras(ctx)

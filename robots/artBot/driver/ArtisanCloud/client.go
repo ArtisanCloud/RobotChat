@@ -146,19 +146,30 @@ func (d *Driver) GetModels(ctx context.Context) ([]*model2.ArtBotModel, error) {
 	return reply, err
 }
 
-func (d *Driver) GetLoras(ctx context.Context) (*model2.ArtBotLorasResponse, error) {
+func (d *Driver) GetSamplers(ctx context.Context) ([]*model2.Sampler, error) {
+	res, err := d.Query(ctx, "/sdapi/v1/samplers")
+	if err != nil {
+		return nil, err
+	}
+
+	reply := []*model2.Sampler{}
+	fmt.Dump(string(res.Content))
+	err = json.Unmarshal(res.Content, &reply)
+
+	return reply, err
+}
+
+func (d *Driver) GetLoras(ctx context.Context) ([]*model.Lora, error) {
 	res, err := d.Query(ctx, "/sdapi/v1/loras")
 	if err != nil {
 		return nil, err
 	}
 
 	reply := []*model.Lora{}
-	fmt.Dump(string(res.Content))
+	//fmt.Dump(string(res.Content))
 	err = json.Unmarshal(res.Content, &reply)
 
-	return &model2.ArtBotLorasResponse{
-		Loras: reply,
-	}, err
+	return reply, err
 }
 
 func (d *Driver) RefreshLoras(ctx context.Context) error {
