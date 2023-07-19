@@ -23,6 +23,9 @@ func InitArtBotAPIRoutes(r *gin.Engine) {
 				// art models
 				apiSDRouter.GET("/models", sd.APIGetModels)
 
+				// art samplers
+				apiSDRouter.GET("/samplers", sd.APIGetSamplers)
+
 				// art Lora
 				apiSDRouter.GET("/loras", sd.APIGetLoras)
 				apiSDRouter.POST("/refresh/lora", sd.APIRefreshLoras)

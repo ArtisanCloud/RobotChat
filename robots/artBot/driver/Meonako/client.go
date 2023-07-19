@@ -103,6 +103,10 @@ func (d *Driver) GetModels(ctx context.Context) ([]*model2.ArtBotModel, error) {
 	return models, err
 }
 
+func (d *Driver) GetSamplers(ctx context.Context) ([]*model2.Sampler, error) {
+	return nil, nil
+}
+
 func (d *Driver) GetLoras(ctx context.Context) (*model2.ArtBotLorasResponse, error) {
 
 	return nil, nil

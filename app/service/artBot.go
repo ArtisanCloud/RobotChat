@@ -189,8 +189,27 @@ func (srv *ArtBotService) GetModels(ctx context.Context) (res *model2.ArtBotMode
 
 }
 
+func (srv *ArtBotService) GetSamplers(ctx context.Context) (res *model2.ArtBotSamplersResponse, err error) {
+	samplers, err := srv.artBot.Client.GetSamplers(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model2.ArtBotSamplersResponse{
+		Samplers: samplers,
+	}, nil
+
+}
+
 func (srv *ArtBotService) GetLoras(ctx context.Context) (res *model2.ArtBotLorasResponse, err error) {
-	return srv.artBot.Client.GetLoras(ctx)
+	loras, err := srv.artBot.Client.GetLoras(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model2.ArtBotLorasResponse{
+		Loras: loras,
+	}, nil
 }
 
 func (srv *ArtBotService) RefreshLoras(ctx context.Context) (err error) {
