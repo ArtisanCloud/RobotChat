@@ -28,5 +28,11 @@ func InitService(config *rcconfig.RCConfig) error {
 		return err
 	}
 
+	// 生成启动BotTrainer
+	Michael = NewBotTrainerService(config)
+	if Michael == nil {
+		return errors.New("init BotTrainer Service failed")
+	}
+
 	return nil
 }

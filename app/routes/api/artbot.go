@@ -8,7 +8,7 @@ import (
 )
 
 func InitArtBotAPIRoutes(r *gin.Engine) {
-	apiArtBotRouter := r.Group("/api/v1/artBot")
+	apiArtBotRouter := r.Group("/api/v1/art-bot")
 	{
 		apiArtBotRouter.Use(middleware.ArtBotIsAwaken)
 		{

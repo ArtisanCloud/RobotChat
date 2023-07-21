@@ -66,6 +66,30 @@ func (srv *ArtBotService) Launch(ctx context.Context) error {
 	// 错误请求处理
 	errHandle := func(errReply *model.ErrReply) {
 		srv.artBot.Logger.Error("handle error:", errReply.Job.Id, errReply.Err.Error())
+		if errReply.Err != nil {
+			(*errReply.Job.Payload.Metadata)["error"] = errReply.Err.Error()
+		} else {
+			(*errReply.Job.Payload.Metadata)["error"] = "unknown Error from error handle"
+		}
+
+		httpClient, err := httphelper.NewRequestHelper(&httphelper.Config{
+			BaseUrl: srv.artBot.NotifyUrl,
+		})
+		if err != nil {
+			srv.artBot.Logger.Error(srv.artBot.Name, "handle error new client:", err.Error())
+			return
+		}
+
+		srv.artBot.Logger.Error(srv.artBot.Name, "handle error post notify url:", srv.artBot.NotifyUrl)
+
+		_, err = httpClient.Df().WithContext(ctx).Method("POST").Json(errReply.Job).Request()
+		if err != nil {
+			srv.artBot.Logger.Error(srv.artBot.Name, "handle error request webhook error:", err.Error())
+			return
+		}
+
+		return
+
 	}
 	srv.artBot.SetErrorHandler(errHandle)
 
