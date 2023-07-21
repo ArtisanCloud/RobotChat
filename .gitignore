@@ -31,6 +31,6 @@ config.yaml
 logs/
 .build
 
-
+temp/
 
 app/go_build_main_go

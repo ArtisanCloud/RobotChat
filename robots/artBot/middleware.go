@@ -48,17 +48,16 @@ func (bot *ArtBot) CheckSwitchModel(ctx context.Context, job *model.Job) (*model
 	//fmt.Dump(shortHash, reqModelHash)
 	if shortHash != reqModelHash {
 		// switch model
-
-		//models, err := bot.Client.GetModels(ctx)
-		//if err != nil {
-		//	return job, err
-		//}
-		//model := GetModelNameFromHash(reqModelHash, models)
+		sdModels, err := bot.Client.GetModels(ctx)
+		if err != nil {
+			return job, err
+		}
+		sdModel := GetModelNameFromHash(reqModelHash, sdModels)
 
 		reqOptions := &model2.OptionsRequest{
 			Options: &model2.Options{
-				//SdModelCheckpoint: model.ModelName,
-				SdCheckpointHash: reqModelHash,
+				SdModelCheckpoint: sdModel.ModelName,
+				//SdCheckpointHash: reqModelHash,
 			},
 		}
 		//fmt.Dump(reqOptions)

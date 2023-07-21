@@ -8,7 +8,7 @@ import (
 )
 
 func InitChatBotAPIRoutes(r *gin.Engine) {
-	apiChatBotRouter := r.Group("/api/v1/chatBot")
+	apiChatBotRouter := r.Group("/api/v1/chat-bot")
 	{
 		apiChatBotRouter.Use(middleware.ChatBotIsAwaken)
 		{

@@ -1,6 +1,8 @@
 package objectx
 
-import "github.com/ArtisanCloud/PowerLibs/v3/object"
+import (
+	"github.com/ArtisanCloud/PowerLibs/v3/object"
+)
 
 func TransformData(from interface{}, to interface{}) error {
 	reqData, err := object.StructToHashMap(from)
