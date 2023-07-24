@@ -1,6 +1,7 @@
 package api
 
 import (
+	"github.com/ArtisanCloud/RobotChat/app/controller/chatBot/chatGLM"
 	"github.com/ArtisanCloud/RobotChat/app/controller/chatBot/openai"
 	"github.com/ArtisanCloud/RobotChat/app/middleware"
 	openai2 "github.com/ArtisanCloud/RobotChat/app/request/openai"
@@ -19,6 +20,12 @@ func InitChatBotAPIRoutes(r *gin.Engine) {
 				apiOpenAIRouter.POST("/stream/completion", openai2.ValidateCompletion, openai.APIStreamCompletion)
 			}
 
+			apiChatGLMRouter := apiChatBotRouter.Group("/glm")
+			{
+				apiChatGLMRouter.POST("/completion", openai2.ValidateCompletion, chatGLM.APICompletion)
+				apiChatGLMRouter.POST("/chat/completion", openai2.ValidateChatCompletion, chatGLM.APIChatCompletion)
+				apiChatGLMRouter.POST("/stream/completion", openai2.ValidateCompletion, chatGLM.APIStreamCompletion)
+			}
 		}
 	}
 }

@@ -1,4 +1,4 @@
-package openai
+package chatGLM
 
 import (
 	request2 "github.com/ArtisanCloud/RobotChat/app/request"

@@ -2,6 +2,7 @@ package go_openai
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"github.com/ArtisanCloud/RobotChat/rcconfig"
 	model2 "github.com/ArtisanCloud/RobotChat/robots/kernel/model"
@@ -41,30 +42,37 @@ func (d *Driver) SetConfig(config *rcconfig.ChatBot) {
 }
 
 // SendMessage 向指定对话发送消息
-func (d *Driver) CreateChatCompletion(ctx context.Context, message string, role model2.Role) (string, error) {
+func (d *Driver) CreateChatCompletion(ctx context.Context, message *model2.Message, role model2.Role) (*model2.Message, error) {
 	// 实现发送消息的逻辑
 	gptModel := openai.GPT3Dot5Turbo
 	if d.config.ChatGPT.Model != "" {
 		gptModel = d.config.ChatGPT.Model
+	}
+	strContent := ""
+	err := json.Unmarshal(message.Content, &strContent)
+	if err != nil {
+		return nil, err
 	}
 	req := openai.ChatCompletionRequest{
 		Model: gptModel,
 		Messages: []openai.ChatCompletionMessage{
 			{
 				Role:    string(role),
-				Content: message,
+				Content: strContent,
 			},
 		},
 	}
 	res, err := d.Client.CreateChatCompletion(ctx, req)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	return res.Choices[0].Message.Content, nil
+	return &model2.Message{
+		Content: []byte(res.Choices[0].Message.Content),
+	}, nil
 
 }
 
-func (d *Driver) CreateStreamCompletion(ctx context.Context, message string, role model2.Role) (string, error) {
+func (d *Driver) CreateStreamCompletion(ctx context.Context, message *model2.Message, role model2.Role) (*model2.Message, error) {
 
 	gptModel := openai.GPT3Dot5Turbo
 	if d.config.ChatGPT.Model != "" {
@@ -81,7 +89,7 @@ func (d *Driver) CreateStreamCompletion(ctx context.Context, message string, rol
 
 	stream, err := d.Client.CreateCompletionStream(ctx, req)
 	if err != nil {
-		return "", pretty.Errorf("ChatCompletionStream error: %v", err)
+		return nil, pretty.Errorf("ChatCompletionStream error: %v", err)
 	}
 	defer stream.Close()
 
@@ -93,18 +101,20 @@ func (d *Driver) CreateStreamCompletion(ctx context.Context, message string, rol
 			break
 		}
 		if err != nil {
-			return "", pretty.Errorf("Stream error: %v", err)
+			return nil, pretty.Errorf("Stream error: %v", err)
 		}
 		//fmt.Dump(response.Choices)
 		responseContent.WriteString(response.Choices[0].Text)
 	}
 
-	return responseContent.String(), nil
+	return &model2.Message{
+		Content: []byte(responseContent.String()),
+	}, nil
 
 }
 
 // GenerateAnswer 生成无上下文回答
-func (d *Driver) CreateCompletion(ctx context.Context, prompt string) (string, error) {
+func (d *Driver) CreateCompletion(ctx context.Context, message *model2.Message) (*model2.Message, error) {
 	// 实现生成回答的逻辑
 	gptModel := openai.GPT3Ada
 	if d.config.ChatGPT.Model != "" {
@@ -112,16 +122,18 @@ func (d *Driver) CreateCompletion(ctx context.Context, prompt string) (string, e
 	}
 	req := openai.CompletionRequest{
 		Model:     gptModel,
-		Prompt:    prompt,
+		Prompt:    message.Content,
 		MaxTokens: 30,
 	}
 	//fmt.Dump(req)
 	res, err := d.Client.CreateCompletion(ctx, req)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 	//fmt.Dump(res.Choices)
-	return res.Choices[0].Text, nil
+	return &model2.Message{
+		Content: []byte(res.Choices[0].Text),
+	}, nil
 }
 
 // StartModel 启动 ChatGPT 模型

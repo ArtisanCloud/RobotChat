@@ -55,15 +55,15 @@ func NewChatBot(client contract.ChatBotClientInterface) (*ChatBot, error) {
 }
 
 // SendMessage 向指定对话发送消息
-func (bot *ChatBot) CreateChatCompletion(ctx context.Context, message string, role model.Role) (string, error) {
+func (bot *ChatBot) CreateChatCompletion(ctx context.Context, message *model.Message, role model.Role) (*model.Message, error) {
 	return bot.Client.CreateChatCompletion(ctx, message, role)
 }
 
-func (bot *ChatBot) CreateStreamCompletion(ctx context.Context, message string, role model.Role) (string, error) {
+func (bot *ChatBot) CreateStreamCompletion(ctx context.Context, message *model.Message, role model.Role) (*model.Message, error) {
 	return bot.Client.CreateStreamCompletion(ctx, message, role)
 }
 
 // GenerateAnswer 生成无上下文回答
-func (bot *ChatBot) CreateCompletion(ctx context.Context, prompt string) (string, error) {
+func (bot *ChatBot) CreateCompletion(ctx context.Context, prompt *model.Message) (*model.Message, error) {
 	return bot.Client.CreateCompletion(ctx, prompt)
 }
