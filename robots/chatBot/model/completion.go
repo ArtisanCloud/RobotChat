@@ -37,6 +37,7 @@ type LogprobResult struct {
 
 // CompletionResponse represents a response structure for completion API.
 type CompletionResponse struct {
+	ChatResponse
 	ID      string             `json:"id"`
 	Object  string             `json:"object"`
 	Created int64              `json:"created"`

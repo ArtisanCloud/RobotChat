@@ -31,6 +31,7 @@ type ChatCompletionChoice struct {
 
 // ChatCompletionResponse represents a response structure for chat completion API.
 type ChatCompletionResponse struct {
+	ChatResponse
 	ID      string                 `json:"id"`
 	Object  string                 `json:"object"`
 	Created int64                  `json:"created"`

@@ -13,9 +13,9 @@ type ChatBotClientInterface interface {
 	// SetConfig 设置基本配置
 	SetConfig(config *rcconfig.ChatBot)
 
-	CreateChatCompletion(ctx context.Context, message string, role model.Role) (string, error)
-	CreateStreamCompletion(ctx context.Context, message string, role model.Role) (string, error)
-	CreateCompletion(ctx context.Context, prompt string) (string, error)
+	CreateChatCompletion(ctx context.Context, message *model.Message, role model.Role) (*model.Message, error)
+	CreateStreamCompletion(ctx context.Context, message *model.Message, role model.Role) (*model.Message, error)
+	CreateCompletion(ctx context.Context, message *model.Message) (*model.Message, error)
 
 	// SetTemperature 设置模型温度
 	SetTemperature(temperature float64) error

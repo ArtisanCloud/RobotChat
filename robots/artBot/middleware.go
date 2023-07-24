@@ -13,6 +13,13 @@ func (bot *ArtBot) CheckSwitchModel(ctx context.Context, job *model.Job) (*model
 	reqModelHash := ""
 	var err error
 
+	// check if current engine is available and will hang out with
+	//resProgress, err := bot.Client.Progress(ctx)
+	//if err != nil {
+	//	return job, err
+	//}
+	//if resProgress.State
+
 	// get request message model hash
 	if job.Payload.MessageType == model.ImageMessage {
 		msgImg2Img := &model2.Image2Image{}

@@ -2,10 +2,13 @@ package service
 
 import (
 	"context"
+	"errors"
 	"github.com/ArtisanCloud/RobotChat/pkg"
+	"github.com/ArtisanCloud/RobotChat/pkg/objectx"
 	fmt "github.com/ArtisanCloud/RobotChat/pkg/printx"
 	"github.com/ArtisanCloud/RobotChat/rcconfig"
 	"github.com/ArtisanCloud/RobotChat/robots/chatBot"
+	"github.com/ArtisanCloud/RobotChat/robots/chatBot/driver/ArtisanCloud/chatGLM"
 	"github.com/ArtisanCloud/RobotChat/robots/chatBot/driver/contract"
 	go_openai "github.com/ArtisanCloud/RobotChat/robots/chatBot/driver/go-openai"
 	model2 "github.com/ArtisanCloud/RobotChat/robots/chatBot/model"
@@ -26,7 +29,11 @@ type ChatBotService struct {
 func NewChatBotService(config *rcconfig.RCConfig) (abs *ChatBotService) {
 
 	var driver contract.ChatBotClientInterface
-	if config.ChatBot.Channel == "" || pkg.Lower(config.ChatBot.Channel) == "openai" {
+	configChannle := pkg.Lower(config.ChatBot.Channel)
+	if configChannle == "" || configChannle == "thudm_glm" {
+		// 使用 ArtisanCloud SDK 作为 THUDM_GLM SDK驱动
+		driver = chatGLM.NewDriver(&config.ChatBot)
+	} else if configChannle == "openai" {
 		// 使用 Go-OpenAI 作为 ChatGPT SDK驱动
 		driver = go_openai.NewDriver(&config.ChatBot)
 	}
@@ -77,28 +84,61 @@ func (srv *ChatBotService) Launch(ctx context.Context) error {
 
 func (srv *ChatBotService) Completion(ctx context.Context, req *model2.CompletionRequest) (res *model2.CompletionResponse, err error) {
 
-	resMes, err := srv.chatBot.Client.CreateCompletion(ctx, req.Prompt.(string))
+	res = &model2.CompletionResponse{
+		Choices: []model2.CompletionChoice{},
+	}
 
-	return &model2.CompletionResponse{
-		Choices: []model2.CompletionChoice{
-			{
-				Text: resMes,
-			},
+	// 创建消息
+	message, err := srv.chatBot.CreateMessage(model.TextMessage, req)
+	if err != nil {
+		return nil, err
+	}
+
+	// 请求数据
+	resMes, err := srv.chatBot.Client.CreateCompletion(ctx, message)
+	if err != nil {
+		return nil, err
+	}
+
+	// 解析数据
+	glmReply := &chatGLM.GLMResponse{}
+	err = objectx.TransformData(resMes.Content, glmReply)
+	if err != nil {
+		return nil, err
+	}
+
+	if glmReply.Status != 200 {
+		res.Detail = resMes.Content.String()
+		res.Error = "glm服务器返回错误信息"
+		return res, errors.New(res.Error)
+	}
+
+	// 返回数据
+	res.Choices = []model2.CompletionChoice{
+		{
+			Text: glmReply.Response,
 		},
-	}, err
+	}
+
+	return res, err
 }
 
 func (srv *ChatBotService) ChatCompletion(ctx context.Context, req *model2.ChatCompletionRequest) (res *model2.ChatCompletionResponse, err error) {
 
 	reqMsg := req.Messages[0]
 
-	resMes, err := srv.chatBot.CreateChatCompletion(ctx, reqMsg.Content, model.Role(reqMsg.Role))
+	message, err := srv.chatBot.CreateMessage(model.TextMessage, reqMsg.Content)
+	if err != nil {
+		return nil, err
+	}
+
+	resMes, err := srv.chatBot.CreateChatCompletion(ctx, message, model.Role(reqMsg.Role))
 
 	return &model2.ChatCompletionResponse{
 		Choices: []model2.ChatCompletionChoice{
 			{
 				Message: model2.ChatCompletionMessage{
-					Content: resMes,
+					Content: resMes.Content.String(),
 				},
 			},
 		},
@@ -107,12 +147,17 @@ func (srv *ChatBotService) ChatCompletion(ctx context.Context, req *model2.ChatC
 
 func (srv *ChatBotService) SteamCompletion(ctx context.Context, req *model2.CompletionRequest) (res *model2.CompletionResponse, err error) {
 
-	resMes, err := srv.chatBot.CreateStreamCompletion(ctx, req.Prompt.(string), model.Role(req.User))
+	message, err := srv.chatBot.CreateMessage(model.TextMessage, req.Prompt.(string))
+	if err != nil {
+		return nil, err
+	}
+
+	resMes, err := srv.chatBot.CreateStreamCompletion(ctx, message, model.Role(req.User))
 
 	return &model2.CompletionResponse{
 		Choices: []model2.CompletionChoice{
 			{
-				Text: resMes,
+				Text: resMes.Content.String(),
 			},
 		},
 	}, err
