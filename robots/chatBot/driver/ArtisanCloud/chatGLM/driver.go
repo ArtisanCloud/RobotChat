@@ -2,8 +2,10 @@ package chatGLM
 
 import (
 	"context"
+	"encoding/json"
 	"github.com/ArtisanCloud/RobotChat/rcconfig"
 	"github.com/ArtisanCloud/RobotChat/robots/chatBot/driver/ArtisanCloud"
+	"github.com/ArtisanCloud/RobotChat/robots/kernel/logger"
 	model2 "github.com/ArtisanCloud/RobotChat/robots/kernel/model"
 	"github.com/artisancloud/httphelper"
 	"net/url"
@@ -19,14 +21,20 @@ func NewDriver(config *rcconfig.ChatBot) *Driver {
 		BaseUrl: config.THUDMGLM.BaseUrl,
 	})
 
+	baseDriver := ArtisanCloud.NewDriver(config)
+	baseDriver.Config = config
+	baseDriver.HttpClient = httpClient
+
+	log, _ := logger.NewLogger(nil, config.Log)
+	baseDriver.Logger = log
+
 	driver := &Driver{
-		BaseDriver: &ArtisanCloud.BaseDriver{
-			Config:     config,
-			HttpClient: httpClient,
-		},
+		BaseDriver: baseDriver,
 	}
 
 	driver.GetUrlFromEndpoint = driver.OverrideGetUrlFromEndpoint()
+	driver.OverrideGetMiddlewares()
+	driver.RegisterHttpMiddlewares()
 
 	return driver
 }
@@ -34,7 +42,15 @@ func NewDriver(config *rcconfig.ChatBot) *Driver {
 // SendMessage 向指定对话发送消息
 func (d *Driver) CreateChatCompletion(ctx context.Context, message *model2.Message, role model2.Role) (*model2.Message, error) {
 
-	return nil, nil
+	req := GLMRequest{}
+	req.Prompt = string(message.Content)
+	strReq, err := json.Marshal(req)
+	if err != nil {
+		return nil, err
+	}
+	message.Content = strReq
+
+	return d.Send(ctx, "/", message)
 
 }
 

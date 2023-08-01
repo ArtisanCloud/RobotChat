@@ -1,7 +1,7 @@
 package logger
 
 import (
-	"github.com/ArtisanCloud/PowerLibs/v3/object"
+	"errors"
 	"github.com/ArtisanCloud/RobotChat/rcconfig"
 	"github.com/ArtisanCloud/RobotChat/robots/kernel/logger/contract"
 	"github.com/ArtisanCloud/RobotChat/robots/kernel/logger/drivers/zap"
@@ -12,33 +12,17 @@ type Logger struct {
 	Driver contract.LoggerInterface
 }
 
-func NewLogger(logConf rcconfig.Log) (logger *Logger, err error) {
+func NewLogger(driver interface{}, logConf rcconfig.Log) (logger *Logger, err error) {
 
 	var driverLogger contract.LoggerInterface
-	if logConf.Driver == "" || logConf.Driver == "zap" {
-		env := logConf.Env
-		if env == "" {
-			env = "develop"
+	if driver != nil {
+		d, ok := driver.(contract.LoggerInterface)
+		if !ok {
+			return nil, errors.New("driver is not of type contract.LoggerInterface")
 		}
-
-		infoLog := logConf.InfoLog
-		if infoLog == "" {
-			infoLog = "./robot.log"
-		}
-
-		errLog := logConf.ErrorLog
-		if errLog == "" {
-			errLog = "./robot.log"
-		}
-
-		driverLogger, err = zap.NewLogger(&object.HashMap{
-			"env":        env,
-			"outputPath": infoLog,
-			"errorPath":  errLog,
-		})
-		if err != nil {
-			return nil, err
-		}
+		driverLogger = d
+	} else {
+		driverLogger, err = zap.NewLogger(&logConf)
 	}
 
 	logger = &Logger{

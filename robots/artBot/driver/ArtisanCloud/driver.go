@@ -6,30 +6,83 @@ import (
 	fmt "github.com/ArtisanCloud/RobotChat/pkg/printx"
 	"github.com/ArtisanCloud/RobotChat/rcconfig"
 	model2 "github.com/ArtisanCloud/RobotChat/robots/artBot/model"
+	"github.com/ArtisanCloud/RobotChat/robots/kernel/logger"
+	contract2 "github.com/ArtisanCloud/RobotChat/robots/kernel/logger/contract"
 	"github.com/ArtisanCloud/RobotChat/robots/kernel/model"
+	request2 "github.com/ArtisanCloud/RobotChat/robots/kernel/request"
+	response2 "github.com/ArtisanCloud/RobotChat/robots/kernel/response"
 	"github.com/artisancloud/httphelper"
+	"github.com/artisancloud/httphelper/dataflow"
 	"gorm.io/datatypes"
 	"io"
+	"net/http"
 	"net/url"
 )
 
 type Driver struct {
 	config     *rcconfig.ArtBot
-	httpClient httphelper.Helper
+	HttpClient httphelper.Helper
+	Logger     contract2.LoggerInterface
+
+	GetMiddlewareOfLog func(logger contract2.LoggerInterface) dataflow.RequestMiddleware
 }
 
 func NewDriver(config *rcconfig.ArtBot) *Driver {
 
-	httpClient, _ := httphelper.NewRequestHelper(&httphelper.Config{
+	HttpClient, _ := httphelper.NewRequestHelper(&httphelper.Config{
 		BaseUrl: config.StableDiffusion.BaseUrl,
 	})
 
+	log, _ := logger.NewLogger(nil, config.Log)
+
 	driver := &Driver{
 		config:     config,
-		httpClient: httpClient,
+		HttpClient: HttpClient,
+		Logger:     log,
 	}
+	driver.OverrideGetMiddlewares()
+	driver.RegisterHttpMiddlewares()
 
 	return driver
+}
+
+func (d *Driver) RegisterHttpMiddlewares() {
+
+	// log
+	logMiddleware := d.GetMiddlewareOfLog
+
+	config := d.GetConfig()
+
+	d.HttpClient.WithMiddleware(
+		logMiddleware(d.Logger),
+		httphelper.HttpDebugMiddleware(config.Log.HttpDebug),
+	)
+}
+
+func (d *Driver) OverrideGetMiddlewares() {
+	d.OverrideGetMiddlewareOfLog()
+}
+
+func (d *Driver) OverrideGetMiddlewareOfLog() {
+	d.GetMiddlewareOfLog = func(logger contract2.LoggerInterface) dataflow.RequestMiddleware {
+		return dataflow.RequestMiddleware(func(handle dataflow.RequestHandle) dataflow.RequestHandle {
+			return func(request *http.Request, response *http.Response) (err error) {
+
+				// 前置中间件
+				request2.LogRequest(logger, request)
+
+				err = handle(request, response)
+				if err != nil {
+					return err
+				}
+
+				// 后置中间件
+				response2.LogResponse(logger, response)
+
+				return
+			}
+		})
+	}
 }
 
 // GetConfig 获取基本配置
@@ -51,7 +104,7 @@ func (d *Driver) Send(ctx context.Context, endpoint string, message *model.Messa
 		return nil, err
 	}
 
-	res, err := d.httpClient.Df().WithContext(ctx).
+	res, err := d.HttpClient.Df().WithContext(ctx).
 		Url(requestUrl).
 		Method("POST").
 		Json(message.Content).
@@ -92,7 +145,7 @@ func (d *Driver) Query(ctx context.Context, endpoint string) (*model.Message, er
 		return nil, err
 	}
 
-	res, err := d.httpClient.Df().WithContext(ctx).
+	res, err := d.HttpClient.Df().WithContext(ctx).
 		Url(requestUrl).
 		Method("GET").
 		Request()

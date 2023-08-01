@@ -3,8 +3,9 @@ module github.com/ArtisanCloud/RobotChat
 go 1.20
 
 require (
-	github.com/ArtisanCloud/PowerLibs/v3 v3.0.9
+	github.com/ArtisanCloud/PowerLibs/v3 v3.0.11
 	github.com/Meonako/webui-api v0.5.1
+	github.com/artisancloud/httphelper v0.1.7
 	github.com/gin-gonic/gin v1.9.1
 	github.com/google/uuid v1.3.0
 	github.com/kr/pretty v0.2.1
@@ -12,6 +13,7 @@ require (
 	github.com/redis/go-redis/v9 v9.0.3
 	github.com/sashabaranov/go-openai v1.10.1
 	github.com/stretchr/testify v1.8.3
+	github.com/xuri/excelize/v2 v2.7.1
 	go.uber.org/zap v1.21.0
 	gopkg.in/yaml.v2 v2.4.0
 	gorm.io/datatypes v1.2.0
@@ -19,7 +21,6 @@ require (
 )
 
 require (
-	github.com/artisancloud/httphelper v0.1.7 // indirect
 	github.com/bytedance/sonic v1.9.1 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20221115062448-fe3a3abad311 // indirect
@@ -49,7 +50,6 @@ require (
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.11 // indirect
 	github.com/xuri/efp v0.0.0-20220603152613-6918739fd470 // indirect
-	github.com/xuri/excelize/v2 v2.7.1 // indirect
 	github.com/xuri/nfp v0.0.0-20220409054826-5e722a1d9e22 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect

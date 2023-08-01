@@ -51,7 +51,7 @@ func NewArtBot(client contract.ArtBotClientInterface) (*ArtBot, error) {
 	robot.Queue = q
 
 	// 初始化Logger
-	robot.Logger, err = logger.NewLogger(conf.Log)
+	robot.Logger, err = logger.NewLogger(nil, conf.Log)
 	if err != nil {
 		return nil, err
 	}

@@ -1,4 +1,4 @@
-package botTrainer
+package trainerBot
 
 import (
 	"context"
@@ -7,17 +7,17 @@ import (
 	"mime/multipart"
 )
 
-type BotTrainer struct {
+type TrainerBot struct {
 	glmEfficientTune *dataformat.GLMEfficientTune
 }
 
-func NewBotTrainer() *BotTrainer {
-	return &BotTrainer{
+func NewTrainerBot() *TrainerBot {
+	return &TrainerBot{
 		glmEfficientTune: dataformat.NewGLMEfficientTune(),
 	}
 }
 
-func (bot *BotTrainer) ConvertExcelToSelfCognitionData(ctx context.Context, excelFileData *multipart.File, savedPath string) error {
+func (bot *TrainerBot) ConvertExcelToSelfCognitionData(ctx context.Context, excelFileData *multipart.File, savedPath string) error {
 
 	convertedDate, err := bot.glmEfficientTune.ConvertExcelToSelfCognitionData(ctx, excelFileData)
 	if err != nil {

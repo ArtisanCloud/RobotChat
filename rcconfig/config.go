@@ -55,10 +55,11 @@ type Queue struct {
 }
 
 type Log struct {
-	Driver   string `yaml:"Driver" json:",optional"`
-	Env      string `yaml:"Env" json:",optional"`
-	InfoLog  string `yaml:"InfoLog" json:",optional"`
-	ErrorLog string `yaml:"ErrorLog" json:",optional"`
+	Driver    string `yaml:"Driver" json:",optional"`
+	Env       string `yaml:"Env" json:",optional"`
+	InfoLog   string `yaml:"InfoLog" json:",optional"`
+	ErrorLog  string `yaml:"ErrorLog" json:",optional"`
+	HttpDebug bool   `yaml:"HttpDebug" json:",optional"`
 }
 
 type RCConfig struct {

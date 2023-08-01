@@ -4,17 +4,71 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/ArtisanCloud/RobotChat/rcconfig"
+	"github.com/ArtisanCloud/RobotChat/robots/kernel/logger"
+	contract2 "github.com/ArtisanCloud/RobotChat/robots/kernel/logger/contract"
 	"github.com/ArtisanCloud/RobotChat/robots/kernel/model"
+	request2 "github.com/ArtisanCloud/RobotChat/robots/kernel/request"
+	response2 "github.com/ArtisanCloud/RobotChat/robots/kernel/response"
 	"github.com/artisancloud/httphelper"
+	"github.com/artisancloud/httphelper/dataflow"
 	"gorm.io/datatypes"
 	"io"
+	"net/http"
 )
 
 type BaseDriver struct {
 	HttpClient httphelper.Helper
 	Config     *rcconfig.ChatBot
+	Logger     contract2.LoggerInterface
 
+	GetMiddlewareOfLog func(logger contract2.LoggerInterface) dataflow.RequestMiddleware
 	GetUrlFromEndpoint func(endpoint string) (string, error)
+}
+
+func NewDriver(config *rcconfig.ChatBot) *BaseDriver {
+	log, _ := logger.NewLogger(nil, config.Log)
+	return &BaseDriver{
+		Logger: log,
+	}
+}
+
+func (d *BaseDriver) OverrideGetMiddlewares() {
+	d.OverrideGetMiddlewareOfLog()
+}
+
+func (d *BaseDriver) RegisterHttpMiddlewares() {
+
+	// log
+	logMiddleware := d.GetMiddlewareOfLog
+
+	config := d.GetConfig()
+
+	d.HttpClient.WithMiddleware(
+		logMiddleware(d.Logger),
+		httphelper.HttpDebugMiddleware(config.Log.HttpDebug),
+	)
+}
+
+func (d *BaseDriver) OverrideGetMiddlewareOfLog() {
+	d.GetMiddlewareOfLog = func(logger contract2.LoggerInterface) dataflow.RequestMiddleware {
+		return dataflow.RequestMiddleware(func(handle dataflow.RequestHandle) dataflow.RequestHandle {
+			return func(request *http.Request, response *http.Response) (err error) {
+
+				// 前置中间件
+				request2.LogRequest(logger, request)
+
+				err = handle(request, response)
+				if err != nil {
+					return err
+				}
+
+				// 后置中间件
+				response2.LogResponse(logger, response)
+
+				return
+			}
+		})
+	}
 }
 
 // GetConfig 获取基本配置
