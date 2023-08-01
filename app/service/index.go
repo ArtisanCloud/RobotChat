@@ -28,10 +28,10 @@ func InitService(config *rcconfig.RCConfig) error {
 		return err
 	}
 
-	// 生成启动BotTrainer
-	Michael = NewBotTrainerService(config)
+	// 生成启动TrainerBot
+	Michael = NewTrainerBotService(config)
 	if Michael == nil {
-		return errors.New("init BotTrainer Service failed")
+		return errors.New("init TrainerBot Service failed")
 	}
 
 	return nil

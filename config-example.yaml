@@ -36,6 +36,12 @@ ArtBot:
       Password:
       DB: 1
       MaxRetries: 3
+  Log:
+    Driver: zap
+    Env: develop
+    InfoLog: ./logs/chatBot/info.log
+    ErrorLog: ./logs/chatBot/error.log
+    HttpDebug: true
 
 ChatBot:
   Channel: openAI
@@ -59,7 +65,7 @@ ChatBot:
 
   # 清华GLM LLM
   THUDM_GLM:
-    BaseUrl: http://192.168.1.164:8080
+    BaseUrl: http://127.0.0.1:8000
     HttpDebug: true
 
   # 异步操作回调通知
@@ -75,4 +81,9 @@ ChatBot:
       Password:
       DB: 2
       MaxRetries: 3
-
+  Log:
+    Driver: zap
+    Env: develop
+    InfoLog: ./logs/chatBot/info.log
+    ErrorLog: ./logs/chatBot/error.log
+    HttpDebug: true

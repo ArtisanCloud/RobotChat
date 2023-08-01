@@ -3,24 +3,24 @@ package service
 import (
 	"context"
 	"github.com/ArtisanCloud/RobotChat/rcconfig"
-	"github.com/ArtisanCloud/RobotChat/robots/botTrainer"
+	"github.com/ArtisanCloud/RobotChat/robots/trainerBot"
 	"mime/multipart"
 )
 
 // Bot Trainer Michael
-var Michael *BotTrainerService
+var Michael *TrainerBotService
 
-type BotTrainerService struct {
-	botTrainer *botTrainer.BotTrainer
+type TrainerBotService struct {
+	trainerBot *trainerBot.TrainerBot
 	config     *rcconfig.RCConfig
 }
 
-func NewBotTrainerService(config *rcconfig.RCConfig) (bts *BotTrainerService) {
-	return &BotTrainerService{
-		botTrainer: botTrainer.NewBotTrainer(),
+func NewTrainerBotService(config *rcconfig.RCConfig) (bts *TrainerBotService) {
+	return &TrainerBotService{
+		trainerBot: trainerBot.NewTrainerBot(),
 	}
 }
 
-func (srv *BotTrainerService) ConvertExcelToSelfCognitionData(ctx context.Context, excelFileData *multipart.File, savePath string) (err error) {
-	return srv.botTrainer.ConvertExcelToSelfCognitionData(ctx, excelFileData, savePath)
+func (srv *TrainerBotService) ConvertExcelToSelfCognitionData(ctx context.Context, excelFileData *multipart.File, savePath string) (err error) {
+	return srv.trainerBot.ConvertExcelToSelfCognitionData(ctx, excelFileData, savePath)
 }

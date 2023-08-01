@@ -86,3 +86,11 @@ func GetFileBytes(file *multipart.File) ([]byte, error) {
 
 	return buffer.Bytes(), nil
 }
+
+func CreateDirectoriesForFiles(outputFile string) error {
+	dir := filepath.Dir(outputFile)
+	if err := os.MkdirAll(dir, 0755); err != nil {
+		return err
+	}
+	return nil
+}

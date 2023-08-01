@@ -2,11 +2,11 @@ package zap
 
 import (
 	"github.com/ArtisanCloud/PowerLibs/v3/logger/contract"
-	"github.com/ArtisanCloud/PowerLibs/v3/object"
+	"github.com/ArtisanCloud/RobotChat/pkg/objectx"
+	"github.com/ArtisanCloud/RobotChat/rcconfig"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"os"
-	"path/filepath"
 	"time"
 )
 
@@ -15,7 +15,7 @@ type Logger struct {
 	sugar  *zap.SugaredLogger
 }
 
-func NewLogger(config *object.HashMap) (logger contract.LoggerInterface, err error) {
+func NewLogger(config *rcconfig.Log) (logger contract.LoggerInterface, err error) {
 
 	zapLogger, err := newZapLogger(config)
 	if err != nil {
@@ -32,8 +32,8 @@ func NewLogger(config *object.HashMap) (logger contract.LoggerInterface, err err
 	return logger, err
 }
 
-func newZapLogger(config *object.HashMap) (logger *zap.Logger, err error) {
-	env := (*config)["env"].(string)
+func newZapLogger(config *rcconfig.Log) (logger *zap.Logger, err error) {
+	env := config.Env
 	var loggerConfig zap.Config
 	if env == "production" {
 		loggerConfig = zap.NewProductionConfig()
@@ -41,8 +41,17 @@ func newZapLogger(config *object.HashMap) (logger *zap.Logger, err error) {
 		loggerConfig = zap.NewDevelopmentConfig()
 	}
 
-	outputFile := (*config)["outputPath"].(string)
-	errorFile := (*config)["errorPath"].(string)
+	outputFile := config.InfoLog
+	errorFile := config.ErrorLog
+
+	err = objectx.CreateDirectoriesForFiles(outputFile)
+	if err != nil {
+		return nil, err
+	}
+	err = objectx.CreateDirectoriesForFiles(errorFile)
+	if err != nil {
+		return nil, err
+	}
 
 	loggerConfig.OutputPaths = []string{outputFile}
 	loggerConfig.ErrorOutputPaths = []string{errorFile}
@@ -85,20 +94,13 @@ func newZapLogger(config *object.HashMap) (logger *zap.Logger, err error) {
 	return logger, err
 }
 
-func newFileWriteSyncer(path string) (zapcore.WriteSyncer, error) {
-	err := os.MkdirAll(filepath.Dir(path), os.ModePerm)
+func newFileWriteSyncer(filename string) (zapcore.WriteSyncer, error) {
+	file, err := os.OpenFile(filename, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0666)
 	if err != nil {
 		return nil, err
 	}
-
-	file, err := os.OpenFile(path, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-	if err != nil {
-		return nil, err
-	}
-
 	return zapcore.AddSync(file), nil
 }
-
 func (log *Logger) Debug(msg string, v ...interface{}) {
 	log.sugar.Debugw(msg, v...)
 }

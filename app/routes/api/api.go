@@ -15,7 +15,7 @@ func InitializeAPIRoutes(r *gin.Engine) {
 
 	InitChatBotAPIRoutes(r)
 	InitArtBotAPIRoutes(r)
-	InitBotTrainerAPIRoutes(r)
+	InitTrainerBotAPIRoutes(r)
 
 	r.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, object.HashMap{

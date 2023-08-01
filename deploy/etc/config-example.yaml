@@ -60,6 +60,10 @@ ChatBot:
     AppId: 
     APISecret: 
     APIKey: 
+  # 清华GLM LLM
+  THUDM_GLM:
+    BaseUrl: http://127.0.0.1:8000
+    HttpDebug: true
 
   Queue:
     Driver: redis

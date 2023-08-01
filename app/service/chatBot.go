@@ -29,11 +29,11 @@ type ChatBotService struct {
 func NewChatBotService(config *rcconfig.RCConfig) (abs *ChatBotService) {
 
 	var driver contract.ChatBotClientInterface
-	configChannle := pkg.Lower(config.ChatBot.Channel)
-	if configChannle == "" || configChannle == "thudm_glm" {
+	configChannel := pkg.Lower(config.ChatBot.Channel)
+	if configChannel == "" || configChannel == "thudm_glm" {
 		// 使用 ArtisanCloud SDK 作为 THUDM_GLM SDK驱动
 		driver = chatGLM.NewDriver(&config.ChatBot)
-	} else if configChannle == "openai" {
+	} else if configChannel == "openai" {
 		// 使用 Go-OpenAI 作为 ChatGPT SDK驱动
 		driver = go_openai.NewDriver(&config.ChatBot)
 	}
@@ -133,12 +133,29 @@ func (srv *ChatBotService) ChatCompletion(ctx context.Context, req *model2.ChatC
 	}
 
 	resMes, err := srv.chatBot.CreateChatCompletion(ctx, message, model.Role(reqMsg.Role))
+	if err != nil {
+		return nil, err
+	}
+	fmt.Dump(resMes)
+
+	// 解析数据
+	glmReply := &chatGLM.GLMResponse{}
+	err = objectx.TransformData(resMes.Content, glmReply)
+	if err != nil {
+		return nil, err
+	}
+
+	if glmReply.Status != 200 {
+		res.Detail = resMes.Content.String()
+		res.Error = "glm服务器返回错误信息"
+		return res, errors.New(res.Error)
+	}
 
 	return &model2.ChatCompletionResponse{
 		Choices: []model2.ChatCompletionChoice{
 			{
 				Message: model2.ChatCompletionMessage{
-					Content: resMes.Content.String(),
+					Content: glmReply.Response,
 				},
 			},
 		},
