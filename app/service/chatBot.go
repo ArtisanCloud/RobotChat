@@ -5,7 +5,6 @@ import (
 	"errors"
 	"github.com/ArtisanCloud/RobotChat/pkg"
 	"github.com/ArtisanCloud/RobotChat/pkg/objectx"
-	fmt "github.com/ArtisanCloud/RobotChat/pkg/printx"
 	"github.com/ArtisanCloud/RobotChat/rcconfig"
 	"github.com/ArtisanCloud/RobotChat/robots/chatBot"
 	"github.com/ArtisanCloud/RobotChat/robots/chatBot/driver/ArtisanCloud/chatGLM"
@@ -14,19 +13,19 @@ import (
 	model2 "github.com/ArtisanCloud/RobotChat/robots/chatBot/model"
 	"github.com/ArtisanCloud/RobotChat/robots/kernel/controller"
 	"github.com/ArtisanCloud/RobotChat/robots/kernel/model"
-	"log"
+	"github.com/artisancloud/httphelper"
 )
 
 // Robot Joy is For ChatGPT
-var Joy *ChatBotService
+var Joy *chatBotService
 
-type ChatBotService struct {
+type chatBotService struct {
 	chatBot             *chatBot.ChatBot
 	config              *rcconfig.RCConfig
 	conversationManager *controller.ConversationManager
 }
 
-func NewChatBotService(config *rcconfig.RCConfig) (abs *ChatBotService) {
+func NewChatBotService(config *rcconfig.RCConfig) (abs *chatBotService) {
 
 	var driver contract.ChatBotClientInterface
 	configChannel := pkg.Lower(config.ChatBot.Channel)
@@ -47,42 +46,99 @@ func NewChatBotService(config *rcconfig.RCConfig) (abs *ChatBotService) {
 	}
 	robot.NotifyUrl = config.ChatBot.Queue.NotifyUrl
 
-	abs = &ChatBotService{
+	abs = &chatBotService{
 		chatBot: robot,
 		config:  config,
 	}
 	return abs
 }
 
-func (srv *ChatBotService) IsAwaken(ctx context.Context) error {
+func (srv *chatBotService) IsAwaken(ctx context.Context) error {
 	err := srv.chatBot.IsAwaken(ctx)
 	return err
 }
 
-func (srv *ChatBotService) Launch(ctx context.Context) error {
-	// 启动机器人
+func (srv *chatBotService) Launch(ctx context.Context) error {
+
+	// 预处理请求消息
 	preProcess := func(ctx context.Context, message *model.Message) (*model.Message, error) {
-		fmt.Dump("I get your message:", message.Content.String())
+		srv.chatBot.Logger.Info(srv.chatBot.Name, "I get your message:", message.Content.String())
 		return message, nil
 	}
-	queueCallback := func(ctx context.Context, job *model.Job) (*model.Job, error) {
-		fmt.Dump("queue has process your request:", job.Id, job.Payload)
+	srv.chatBot.SetMessagePreHandler(preProcess)
+
+	// 错误请求处理
+	errHandle := func(errReply *model.ErrReply) {
+		srv.chatBot.Logger.Error("handle error:", errReply.Job.Id, errReply.Err.Error())
+		if errReply.Err != nil {
+			(*errReply.Job.Payload.Metadata)["error"] = errReply.Err.Error()
+		} else {
+			(*errReply.Job.Payload.Metadata)["error"] = "unknown Error from error handle"
+		}
+
+		httpClient, err := httphelper.NewRequestHelper(&httphelper.Config{
+			BaseUrl: srv.chatBot.NotifyUrl,
+		})
+		if err != nil {
+			srv.chatBot.Logger.Error(srv.chatBot.Name, "handle error new client:", err.Error())
+			return
+		}
+
+		srv.chatBot.Logger.Error(srv.chatBot.Name, "handle error post notify url:", srv.chatBot.NotifyUrl)
+
+		_, err = httpClient.Df().WithContext(ctx).Method("POST").Json(errReply.Job).Request()
+		if err != nil {
+			srv.chatBot.Logger.Error(srv.chatBot.Name, "handle error request webhook error:", err.Error())
+			return
+		}
+		return
+	}
+	srv.chatBot.SetErrorHandler(errHandle)
+
+	// 队列回调请求
+	queuePostJobHandle := func(ctx context.Context, job *model.Job) (*model.Job, error) {
+		srv.chatBot.Logger.Info("queue has process your request:", job.Id, job.Payload.Content)
+		var (
+			err     error
+			message *model.Message
+		)
+		message, err = srv.chatBot.Client.CreateChatCompletion(ctx, job.Payload, model.Role(job.Payload.Author))
+
+		if err != nil {
+			return job, err
+		}
+		job.Payload = message
+
 		return job, nil
 	}
-	errHandle := func(errReply *model.ErrReply) {
-		log.Printf("handle error: %s, %s", errReply.Job.Id, errReply.Err.Error())
-	}
 
-	srv.chatBot.SetPreMessageHandler(preProcess)
-	srv.chatBot.SetPostMessageHandler(queueCallback)
-	srv.chatBot.SetErrorHandler(errHandle)
+	queuePostWebhook := func(ctx context.Context, job *model.Job) (*model.Job, error) {
+
+		httpClient, err := httphelper.NewRequestHelper(&httphelper.Config{
+			BaseUrl: srv.chatBot.NotifyUrl,
+		})
+		if err != nil {
+			srv.chatBot.Logger.Error(srv.chatBot.Name, "webhook:", err.Error())
+			return job, err
+		}
+
+		srv.chatBot.Logger.Info(srv.chatBot.Name, "post url:", srv.chatBot.NotifyUrl)
+		_, err = httpClient.Df().WithContext(ctx).Method("POST").Json(job).Request()
+		if err != nil {
+			srv.chatBot.Logger.Error(srv.chatBot.Name, "webhook:", err.Error())
+			return job, err
+		}
+
+		return job, nil
+	}
+	srv.chatBot.SetPostMessageHandler(queuePostJobHandle, queuePostWebhook)
 
 	err := srv.chatBot.Start(ctx)
 
 	return err
 }
 
-func (srv *ChatBotService) Completion(ctx context.Context, req *model2.CompletionRequest) (res *model2.CompletionResponse, err error) {
+func (srv *chatBotService) Completion(ctx context.Context, req *model2.CompletionRequest) (res *model2.CompletionResponse, err error) {
 
 	res = &model2.CompletionResponse{
 		Choices: []model2.CompletionChoice{},
@@ -123,7 +179,7 @@ func (srv *ChatBotService) Completion(ctx context.Context, req *model2.Completio
 	return res, err
 }
 
-func (srv *ChatBotService) ChatCompletion(ctx context.Context, req *model2.ChatCompletionRequest) (res *model2.ChatCompletionResponse, err error) {
+func (srv *chatBotService) ChatCompletion(ctx context.Context, req *model2.ChatCompletionRequest) (job *model.Job, err error) {
 
 	reqMsg := req.Messages[0]
 
@@ -131,38 +187,12 @@ func (srv *ChatBotService) ChatCompletion(ctx context.Context, req *model2.ChatC
 	if err != nil {
 		return nil, err
 	}
+	job, err = srv.chatBot.Send(ctx, message)
 
-	resMes, err := srv.chatBot.CreateChatCompletion(ctx, message, model.Role(reqMsg.Role))
-	if err != nil {
-		return nil, err
-	}
-	fmt.Dump(resMes)
-
-	// 解析数据
-	glmReply := &chatGLM.GLMResponse{}
-	err = objectx.TransformData(resMes.Content, glmReply)
-	if err != nil {
-		return nil, err
-	}
-
-	if glmReply.Status != 200 {
-		res.Detail = resMes.Content.String()
-		res.Error = "glm服务器返回错误信息"
-		return res, errors.New(res.Error)
-	}
-
-	return &model2.ChatCompletionResponse{
-		Choices: []model2.ChatCompletionChoice{
-			{
-				Message: model2.ChatCompletionMessage{
-					Content: glmReply.Response,
-				},
-			},
-		},
-	}, err
+	return job, err
 }
 
-func (srv *ChatBotService) SteamCompletion(ctx context.Context, req *model2.CompletionRequest) (res *model2.CompletionResponse, err error) {
+func (srv *chatBotService) SteamCompletion(ctx context.Context, req *model2.CompletionRequest) (res *model2.CompletionResponse, err error) {
 
 	message, err := srv.chatBot.CreateMessage(model.TextMessage, req.Prompt.(string))
 	if err != nil {

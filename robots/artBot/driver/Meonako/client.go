@@ -107,7 +107,7 @@ func (d *Driver) GetSamplers(ctx context.Context) ([]*model2.Sampler, error) {
 	return nil, nil
 }
 
-func (d *Driver) GetLoras(ctx context.Context) (*model2.ArtBotLorasResponse, error) {
+func (d *Driver) GetLoras(ctx context.Context) ([]*model.Lora, error) {
 
 	return nil, nil
 }

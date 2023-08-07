@@ -58,10 +58,10 @@ func (srv *ArtBotService) Launch(ctx context.Context) error {
 
 	// 预处理请求消息
 	preProcess := func(ctx context.Context, message *model.Message) (*model.Message, error) {
-		srv.artBot.Logger.Info("I get your message:", srv.artBot.Name, message.Content.String())
+		srv.artBot.Logger.Info(srv.artBot.Name, "I get your message:", srv.artBot.Name, message.Content.String())
 		return message, nil
 	}
-	srv.artBot.SetPreMessageHandler(preProcess)
+	srv.artBot.SetMessagePreHandler(preProcess)
 
 	// 错误请求处理
 	errHandle := func(errReply *model.ErrReply) {
@@ -147,7 +147,7 @@ func (srv *ArtBotService) Launch(ctx context.Context) error {
 	return err
 }
 
-func (srv *ArtBotService) Txt2Image(ctx context.Context, req *model2.Text2ImageRequest) (res *model2.Text2ImageResponse, err error) {
+func (srv *ArtBotService) Txt2Image(ctx context.Context, req *model2.Text2ImageRequest) (res *model2.Image2ImageResponse, err error) {
 
 	message, err := srv.artBot.CreateTextMessage(req)
 	if err != nil {
@@ -159,7 +159,7 @@ func (srv *ArtBotService) Txt2Image(ctx context.Context, req *model2.Text2ImageR
 	return res, err
 }
 
-func (srv *ArtBotService) Image2Image(ctx context.Context, req *model2.Image2ImageRequest) (res *model2.Text2ImageResponse, err error) {
+func (srv *ArtBotService) Image2Image(ctx context.Context, req *model2.Image2ImageRequest) (res *model2.Image2ImageResponse, err error) {
 
 	message, err := srv.artBot.CreateImageMessage(req)
 	if err != nil {

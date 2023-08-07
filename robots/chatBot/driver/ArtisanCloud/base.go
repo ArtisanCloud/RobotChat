@@ -3,6 +3,7 @@ package ArtisanCloud
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"github.com/ArtisanCloud/RobotChat/rcconfig"
 	"github.com/ArtisanCloud/RobotChat/robots/kernel/logger"
 	contract2 "github.com/ArtisanCloud/RobotChat/robots/kernel/logger/contract"
@@ -96,29 +97,38 @@ func (d *BaseDriver) Send(ctx context.Context, endpoint string, message *model.M
 		Json(message.Content).
 		Request()
 	if err != nil {
-		return nil, err
+		return message, err
 	}
+
 	msg := model.NewMessage(model.TextMessage)
 
 	// 转化返回的Body
 	body, err := io.ReadAll(res.Body)
 	if err != nil {
-		return nil, err
+		return message, err
 	}
 	var bodyData datatypes.JSON
 	err = json.Unmarshal(body, &bodyData)
+	if err != nil {
+		return message, err
+	}
 	msg.Content = bodyData
 
 	// 转化返回的Header
 	headerJSON, err := json.Marshal(res.Header)
 	if err != nil {
-		return nil, err
+		return message, err
 	}
 
 	var headerDataJSON datatypes.JSON
 	err = json.Unmarshal(headerJSON, &headerDataJSON)
 	if err != nil {
-		return nil, err
+		return message, err
+	}
+
+	// 如果返回的接口不是200状态位
+	if res.StatusCode != http.StatusOK {
+		return message, errors.New(string(msg.Content))
 	}
 
 	return msg, nil
