@@ -42,7 +42,7 @@ func TestQueue_Working(t *testing.T) {
 		log.Printf("handle error: %s, %s", errReply.Job.Id, errReply.Err.Error())
 	}
 
-	bot.SetPreMessageHandler(preProcess)
+	bot.SetMessagePreHandler(preProcess)
 	bot.SetPostMessageHandler(queueCallback)
 	bot.SetErrorHandler(errHandle)
 	err = bot.Start(ctx)

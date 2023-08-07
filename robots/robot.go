@@ -43,7 +43,7 @@ func NewRobot(attributes *model.RobotAttributes) (*Robot, error) {
 	}, nil
 }
 
-func (bot *Robot) SetPreMessageHandler(handles ...model.HandlePreSend) {
+func (bot *Robot) SetMessagePreHandler(handles ...model.HandlePreSend) {
 	bot.PreMessageHandlers = append(bot.PreMessageHandlers, handles...)
 }
 

@@ -5,11 +5,11 @@ import (
 )
 
 type XFYun struct {
-	WebSocketUrl string `yaml:"WebSocketUrl"`
-	AppId        string `yaml:"AppId"`
-	APISecret    string `yaml:"APISecret"`
-	APIKey       string `yaml:"APIKey"`
-	HttpDebug    bool   `yaml:"HttpDebug"`
+	WebSocketUrl string `yaml:"WebSocketUrl" json:",optional"`
+	AppId        string `yaml:"AppId" json:",optional"`
+	APISecret    string `yaml:"APISecret" json:",optional"`
+	APIKey       string `yaml:"APIKey" json:",optional"`
+	HttpDebug    bool   `yaml:"HttpDebug" json:",optional"`
 }
 
 func (c *XFYun) GetName() string {

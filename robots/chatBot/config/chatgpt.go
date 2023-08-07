@@ -5,13 +5,13 @@ import (
 )
 
 type ChatGPT struct {
-	OpenAPIKey   string `yaml:"OpenAPIKey"`
-	Model        string `yaml:"Model"`
-	Organization string `yaml:"Organization"`
-	HttpDebug    bool   `yaml:"HttpDebug"`
-	BaseUrl      string `yaml:"BaseUrl"`
-	APIType      string `yaml:"APIType"`
-	APIVersion   string `yaml:"APIVersion"`
+	OpenAPIKey   string `yaml:"OpenAPIKey" json:",optional"`
+	Model        string `yaml:"Model" json:",optional"`
+	Organization string `yaml:"Organization" json:",optional"`
+	HttpDebug    bool   `yaml:"HttpDebug" json:",optional"`
+	BaseUrl      string `yaml:"BaseUrl" json:",optional"`
+	APIType      string `yaml:"APIType" json:",optional"`
+	APIVersion   string `yaml:"APIVersion" json:",optional"`
 }
 
 func (c *ChatGPT) GetName() string {

@@ -5,8 +5,8 @@ import (
 )
 
 type THUDMGLM struct {
-	HttpDebug bool   `yaml:"HttpDebug"`
-	BaseUrl   string `yaml:"BaseUrl"`
+	HttpDebug bool   `yaml:"HttpDebug" json:",optional"`
+	BaseUrl   string `yaml:"BaseUrl" json:",optional"`
 }
 
 func (c *THUDMGLM) GetName() string {
