@@ -6,6 +6,7 @@ import (
 	fmt "github.com/ArtisanCloud/RobotChat/pkg/printx"
 	"github.com/ArtisanCloud/RobotChat/rcconfig"
 	model2 "github.com/ArtisanCloud/RobotChat/robots/artBot/model"
+	"github.com/ArtisanCloud/RobotChat/robots/artBot/model/controlNet"
 	"github.com/ArtisanCloud/RobotChat/robots/kernel/logger"
 	contract2 "github.com/ArtisanCloud/RobotChat/robots/kernel/logger/contract"
 	"github.com/ArtisanCloud/RobotChat/robots/kernel/model"
@@ -280,4 +281,64 @@ func (d *Driver) GetUrlFromEndpoint(endpoint string) (string, error) {
 	finalUrl := urlObj.String()
 
 	return finalUrl, nil
+}
+
+func (d *Driver) GetControlNetModelList(ctx context.Context) (*controlNet.ControlNetModel, error) {
+
+	res, err := d.Query(ctx, "/controlnet/model_list")
+	if err != nil {
+		return nil, err
+	}
+
+	reply := &controlNet.ControlNetModel{}
+	//fmt.Dump(string(res.Content))
+	err = json.Unmarshal(res.Content, &reply)
+
+	return reply, err
+}
+func (d *Driver) GetControlNetModuleList(ctx context.Context) (*controlNet.Modules, error) {
+	res, err := d.Query(ctx, "/controlnet/module_list")
+	if err != nil {
+		return nil, err
+	}
+
+	reply := &controlNet.Modules{}
+	//fmt.Dump(string(res.Content))
+	err = json.Unmarshal(res.Content, &reply)
+
+	return reply, err
+}
+func (d *Driver) GetControlNetVersion(ctx context.Context) (*controlNet.ControlNetVersion, error) {
+	res, err := d.Query(ctx, "/controlnet/version")
+	if err != nil {
+		return nil, err
+	}
+
+	reply := &controlNet.ControlNetVersion{}
+	//fmt.Dump(string(res.Content))
+	err = json.Unmarshal(res.Content, &reply)
+
+	return reply, err
+}
+func (d *Driver) GetControlNetSettings(ctx context.Context) (*controlNet.ControlNetSettings, error) {
+	res, err := d.Query(ctx, "/controlnet/settings")
+	if err != nil {
+		return nil, err
+	}
+
+	reply := &controlNet.ControlNetSettings{}
+	//fmt.Dump(string(res.Content))
+	err = json.Unmarshal(res.Content, &reply)
+
+	return reply, err
+}
+func (d *Driver) DetectControlNet(ctx context.Context, info *controlNet.DetectInfo) (interface{}, error) {
+	content, err := json.Marshal(info)
+	if err != nil {
+		return nil, err
+	}
+	reqMessage := model.NewMessage(model.TextMessage)
+	reqMessage.Content = content
+
+	return d.Send(ctx, "/controlnet/detect", reqMessage)
 }

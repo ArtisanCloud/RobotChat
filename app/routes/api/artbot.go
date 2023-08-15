@@ -21,14 +21,21 @@ func InitArtBotAPIRoutes(r *gin.Engine) {
 				apiSDRouter.POST("/chat/img2img", sd2.ValidateImage2Image, sd.APIChatImage2Image)
 
 				// art models
-				apiSDRouter.GET("/models", sd.APIGetModels)
+				apiSDRouter.GET("/model/list", sd.APIGetModels)
 
 				// art samplers
-				apiSDRouter.GET("/samplers", sd.APIGetSamplers)
+				apiSDRouter.GET("/sampler/list", sd.APIGetSamplers)
 
 				// art Lora
-				apiSDRouter.GET("/loras", sd.APIGetLoras)
-				apiSDRouter.POST("/refresh/lora", sd.APIRefreshLoras)
+				apiSDRouter.GET("/lora/list", sd.APIGetLoras)
+				apiSDRouter.POST("/lora/refresh", sd.APIRefreshLoras)
+
+				// art controlnet
+				apiSDRouter.GET("/controlnet/model/list", sd.APIGetControlNetModels)
+				apiSDRouter.GET("/controlnet/module/list", sd.APIGetControlNetModules)
+				apiSDRouter.GET("/controlnet/settings", sd.APIGetControlNetSettings)
+				apiSDRouter.GET("/controlnet/version", sd.APIGetVersion)
+				apiSDRouter.POST("/controlnet/detect", sd.APIDetect)
 
 				// progress
 				apiSDRouter.GET("/progress", sd.APIProgress)

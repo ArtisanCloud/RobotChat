@@ -6,6 +6,7 @@ import (
 	"github.com/ArtisanCloud/RobotChat/pkg/objectx"
 	"github.com/ArtisanCloud/RobotChat/rcconfig"
 	model2 "github.com/ArtisanCloud/RobotChat/robots/artBot/model"
+	"github.com/ArtisanCloud/RobotChat/robots/artBot/model/controlNet"
 	"github.com/ArtisanCloud/RobotChat/robots/kernel/model"
 	api "github.com/Meonako/webui-api"
 )
@@ -162,4 +163,20 @@ func (d *Driver) SetOptions(ctx context.Context, options *model2.OptionsRequest)
 	err = client.SetOptions(reqDriver)
 
 	return err
+}
+
+func (d *Driver) GetControlNetModelList(ctx context.Context) (*controlNet.ControlNetModel, error) {
+	return nil, nil
+}
+func (d *Driver) GetControlNetModuleList(ctx context.Context) (*controlNet.Modules, error) {
+	return nil, nil
+}
+func (d *Driver) GetControlNetVersion(ctx context.Context) (*controlNet.ControlNetVersion, error) {
+	return nil, nil
+}
+func (d *Driver) GetControlNetSettings(ctx context.Context) (*controlNet.ControlNetSettings, error) {
+	return nil, nil
+}
+func (d *Driver) DetectControlNet(ctx context.Context, info *controlNet.DetectInfo) (interface{}, error) {
+	return nil, nil
 }
