@@ -10,6 +10,7 @@ import (
 	"github.com/ArtisanCloud/RobotChat/robots/artBot/driver/ArtisanCloud"
 	"github.com/ArtisanCloud/RobotChat/robots/artBot/driver/contract"
 	model2 "github.com/ArtisanCloud/RobotChat/robots/artBot/model"
+	"github.com/ArtisanCloud/RobotChat/robots/artBot/model/controlNet"
 	"github.com/ArtisanCloud/RobotChat/robots/kernel/controller"
 	"github.com/ArtisanCloud/RobotChat/robots/kernel/model"
 	"github.com/artisancloud/httphelper"
@@ -257,4 +258,59 @@ func (srv *ArtBotService) SetOptions(ctx context.Context, options *model2.Option
 
 func (srv *ArtBotService) WebhookText(ctx context.Context, notify *request2.ParaQueueNotify) {
 	srv.artBot.Logger.Info("test notify:", "info key", notify)
+}
+
+func (srv *ArtBotService) GetControlNetModelList(ctx context.Context) (res *controlNet.ArtBotControlNetModelResponse, err error) {
+	models, err := srv.artBot.Client.GetControlNetModelList(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return &controlNet.ArtBotControlNetModelResponse{
+		ControlNetModel: models,
+	}, nil
+}
+
+func (srv *ArtBotService) GetControlNetModuleList(ctx context.Context) (res *controlNet.ArtBotControlNetModuleResponse, err error) {
+	modules, err := srv.artBot.Client.GetControlNetModuleList(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return &controlNet.ArtBotControlNetModuleResponse{
+		Modules: modules,
+	}, nil
+}
+
+func (srv *ArtBotService) GetControlNetSettings(ctx context.Context) (res *controlNet.ArtBotControlNetSettingsResponse, err error) {
+	settings, err := srv.artBot.Client.GetControlNetSettings(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return &controlNet.ArtBotControlNetSettingsResponse{
+		ControlNetSettings: settings,
+	}, nil
+}
+
+func (srv *ArtBotService) GetControlNetVersion(ctx context.Context) (res *controlNet.ArtBotControlNetVersionResponse, err error) {
+	version, err := srv.artBot.Client.GetControlNetVersion(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return &controlNet.ArtBotControlNetVersionResponse{
+		ControlNetVersion: version,
+	}, nil
+}
+
+func (srv *ArtBotService) DetectControlNet(ctx context.Context, req *sd.ParaControlNetDetectInfo) (res *controlNet.ArtBotControlNetDetectResponse, err error) {
+	result, err := srv.artBot.Client.DetectControlNet(ctx, req.DetectInfo)
+	if err != nil {
+		return nil, err
+	}
+
+	return &controlNet.ArtBotControlNetDetectResponse{
+		Res: result,
+	}, nil
 }
