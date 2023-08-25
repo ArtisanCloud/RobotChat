@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 	request2 "github.com/ArtisanCloud/RobotChat/app/request"
 	"github.com/ArtisanCloud/RobotChat/app/request/sd"
 	"github.com/ArtisanCloud/RobotChat/pkg"
@@ -58,9 +59,9 @@ func (srv *ArtBotService) IsAwaken(ctx context.Context) error {
 func (srv *ArtBotService) Launch(ctx context.Context) error {
 
 	// 预处理请求消息
-	preProcess := func(ctx context.Context, message *model.Message) (*model.Message, error) {
-		srv.artBot.Logger.Info(srv.artBot.Name, "I get your message:", srv.artBot.Name, message.Content.String())
-		return message, nil
+	preProcess := func(ctx context.Context, job *model.Job) (*model.Job, error) {
+		srv.artBot.Logger.Info(srv.artBot.Name, fmt.Sprintf("I get your message:%s,%v", job.Id, job.Payload.Metadata))
+		return job, nil
 	}
 	srv.artBot.SetMessagePreHandler(preProcess)
 
@@ -68,9 +69,9 @@ func (srv *ArtBotService) Launch(ctx context.Context) error {
 	errHandle := func(errReply *model.ErrReply) {
 		srv.artBot.Logger.Error("handle error:", errReply.Job.Id, errReply.Err.Error())
 		if errReply.Err != nil {
-			(*errReply.Job.Payload.Metadata)["error"] = errReply.Err.Error()
+			errReply.Job.Payload.Metadata.ErrMsg = errReply.Err.Error()
 		} else {
-			(*errReply.Job.Payload.Metadata)["error"] = "unknown Error from error handle"
+			errReply.Job.Payload.Metadata.ErrMsg = "unknown Error from error handle"
 		}
 
 		httpClient, err := httphelper.NewRequestHelper(&httphelper.Config{
@@ -267,7 +268,7 @@ func (srv *ArtBotService) GetControlNetModelList(ctx context.Context) (res *cont
 	}
 
 	return &controlNet.ArtBotControlNetModelResponse{
-		ControlNetModel: models,
+		ControlNetModels: models,
 	}, nil
 }
 
@@ -279,6 +280,17 @@ func (srv *ArtBotService) GetControlNetModuleList(ctx context.Context) (res *con
 
 	return &controlNet.ArtBotControlNetModuleResponse{
 		Modules: modules,
+	}, nil
+}
+
+func (srv *ArtBotService) GetControlNetControlTypesList(ctx context.Context) (res *controlNet.ArtBotControlNetControlTypeResponse, err error) {
+	controlTypes, err := srv.artBot.Client.GetControlNetControlTypesList(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return &controlNet.ArtBotControlNetControlTypeResponse{
+		ControlNetTypes: controlTypes,
 	}, nil
 }
 

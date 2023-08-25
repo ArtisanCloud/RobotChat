@@ -1,8 +1,10 @@
 package model
 
+import "github.com/ArtisanCloud/RobotChat/robots/kernel/model"
+
 type ChatCompletionMessage struct {
-	Role    string `json:"role"`
-	Content string `json:"content"`
+	Role    model.Role `json:"role"`
+	Content string     `json:"content"`
 
 	Name string `json:"name,omitempty"`
 }

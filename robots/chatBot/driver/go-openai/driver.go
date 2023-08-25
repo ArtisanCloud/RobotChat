@@ -41,6 +41,76 @@ func (d *Driver) SetConfig(config *rcconfig.ChatBot) {
 	d.config = config
 }
 
+// GenerateAnswer 生成无上下文回答
+func (d *Driver) CreateCompletion(ctx context.Context, message *model2.Message) (*model2.Message, error) {
+	// 实现生成回答的逻辑
+	gptModel := openai.GPT3Ada
+	if d.config.ChatGPT.Model != "" {
+		gptModel = d.config.ChatGPT.Model
+	}
+	req := openai.CompletionRequest{
+		Model:     gptModel,
+		Prompt:    message.Content,
+		MaxTokens: 30,
+	}
+	//fmt.Dump(req)
+	res, err := d.Client.CreateCompletion(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	//fmt.Dump(res.Choices)
+	return &model2.Message{
+		Content: []byte(res.Choices[0].Text),
+	}, nil
+}
+
+func (d *Driver) CreateCompletionStream(ctx context.Context, message *model2.Message, role model2.Role, processStreamData func(data string) error) (*model2.Message, error) {
+
+	gptModel := openai.GPT3Ada
+	if d.config.ChatGPT.Model != "" {
+		gptModel = d.config.ChatGPT.Model
+	}
+
+	strContent := ""
+	err := json.Unmarshal(message.Content, &strContent)
+	if err != nil {
+		return nil, err
+	}
+	req := openai.CompletionRequest{
+		Model:     gptModel,
+		User:      string(role),
+		MaxTokens: 100,
+		Prompt:    strContent,
+		Stream:    true,
+	}
+
+	stream, err := d.Client.CreateCompletionStream(ctx, req)
+	if err != nil {
+		return nil, pretty.Errorf("CompletionStream error: %v", err)
+	}
+	defer stream.Close()
+
+	var responseContent strings.Builder
+
+	for {
+		response, err := stream.Recv()
+		if errors.Is(err, io.EOF) {
+			break
+		}
+		if err != nil {
+			return nil, pretty.Errorf("Stream error: %v", err)
+		}
+		//fmt.Dump(response.Choices)
+		responseContent.WriteString(response.Choices[0].Text)
+		_ = processStreamData(response.Choices[0].Text)
+	}
+
+	return &model2.Message{
+		Content: []byte(responseContent.String()),
+	}, nil
+
+}
+
 // SendMessage 向指定对话发送消息
 func (d *Driver) CreateChatCompletion(ctx context.Context, message *model2.Message, role model2.Role) (*model2.Message, error) {
 	// 实现发送消息的逻辑
@@ -72,22 +142,28 @@ func (d *Driver) CreateChatCompletion(ctx context.Context, message *model2.Messa
 
 }
 
-func (d *Driver) CreateStreamCompletion(ctx context.Context, message *model2.Message, role model2.Role) (*model2.Message, error) {
-
+func (d *Driver) CreateChatCompletionStream(ctx context.Context, message *model2.Message, role model2.Role, processStreamData func(data string) error) (*model2.Message, error) {
+	// 实现发送消息的逻辑
 	gptModel := openai.GPT3Dot5Turbo
 	if d.config.ChatGPT.Model != "" {
 		gptModel = d.config.ChatGPT.Model
 	}
-
-	req := openai.CompletionRequest{
-		Model:     gptModel,
-		User:      string(role),
-		MaxTokens: 100,
-		Prompt:    message,
-		Stream:    true,
+	strContent := ""
+	err := json.Unmarshal(message.Content, &strContent)
+	if err != nil {
+		return nil, err
 	}
-
-	stream, err := d.Client.CreateCompletionStream(ctx, req)
+	req := openai.ChatCompletionRequest{
+		Model: gptModel,
+		Messages: []openai.ChatCompletionMessage{
+			{
+				Role:    string(role),
+				Content: strContent,
+			},
+		},
+		Stream: true,
+	}
+	stream, err := d.Client.CreateChatCompletionStream(ctx, req)
 	if err != nil {
 		return nil, pretty.Errorf("ChatCompletionStream error: %v", err)
 	}
@@ -104,35 +180,12 @@ func (d *Driver) CreateStreamCompletion(ctx context.Context, message *model2.Mes
 			return nil, pretty.Errorf("Stream error: %v", err)
 		}
 		//fmt.Dump(response.Choices)
-		responseContent.WriteString(response.Choices[0].Text)
+		responseContent.WriteString(response.Choices[0].Delta.Content)
+		_ = processStreamData(response.Choices[0].Delta.Content)
 	}
 
 	return &model2.Message{
 		Content: []byte(responseContent.String()),
-	}, nil
-
-}
-
-// GenerateAnswer 生成无上下文回答
-func (d *Driver) CreateCompletion(ctx context.Context, message *model2.Message) (*model2.Message, error) {
-	// 实现生成回答的逻辑
-	gptModel := openai.GPT3Ada
-	if d.config.ChatGPT.Model != "" {
-		gptModel = d.config.ChatGPT.Model
-	}
-	req := openai.CompletionRequest{
-		Model:     gptModel,
-		Prompt:    message.Content,
-		MaxTokens: 30,
-	}
-	//fmt.Dump(req)
-	res, err := d.Client.CreateCompletion(ctx, req)
-	if err != nil {
-		return nil, err
-	}
-	//fmt.Dump(res.Choices)
-	return &model2.Message{
-		Content: []byte(res.Choices[0].Text),
 	}, nil
 }
 

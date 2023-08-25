@@ -66,11 +66,16 @@ func (bot *ArtBot) SendAndWait(ctx context.Context, message *model.Message,
 	action func(ctx context.Context, message *model.Message) (*model.Message, error),
 ) (*model2.Image2ImageResponse, error) {
 
+	job := &model.Job{
+		Id:      model.GenerateId(),
+		Payload: message,
+	}
+
 	// 将消息传递给中间件处理
 	for _, middleware := range bot.PreMessageHandlers {
 		var err error
 		// 执行中间件处理逻辑
-		message, err = middleware(ctx, message)
+		job, err = middleware(ctx, job)
 		if err != nil {
 			// 如果中间件返回错误，可以选择处理错误或直接返回
 			return nil, err

@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"github.com/ArtisanCloud/PowerLibs/v3/object"
 	"github.com/ArtisanCloud/RobotChat/robots/kernel/logger"
 	"github.com/ArtisanCloud/RobotChat/robots/kernel/model"
 	queue2 "github.com/ArtisanCloud/RobotChat/robots/kernel/queue"
@@ -130,9 +129,9 @@ func (bot *Robot) CreateMessage(messageType model.MessageType, content interface
 	message.MessageType = messageType
 	message.Content = strContent
 
-	message.Metadata = &object.HashMap{
-		"robot":        bot.RobotAttributes,
-		"conversation": nil,
+	message.Metadata = model.MetaData{
+		Robot:        bot.RobotAttributes,
+		Conversation: nil,
 	}
 
 	return message, nil
@@ -140,21 +139,22 @@ func (bot *Robot) CreateMessage(messageType model.MessageType, content interface
 
 func (bot *Robot) Send(ctx context.Context, message *model.Message) (*model.Job, error) {
 
+	job := &model.Job{
+		Id:      model.GenerateId(),
+		Payload: message,
+	}
+
 	// 将消息传递给中间件处理
 	for _, middleware := range bot.PreMessageHandlers {
 		var err error
 		// 执行中间件处理逻辑
-		message, err = middleware(ctx, message)
+		job, err = middleware(ctx, job)
 		if err != nil {
 			// 如果中间件返回错误，可以选择处理错误或直接返回
 			return nil, err
 		}
 	}
 
-	job := &model.Job{
-		Id:      model.GenerateId(),
-		Payload: message,
-	}
 	err := bot.Queue.ProduceMessage(ctx, job)
 	if err != nil {
 		return nil, err

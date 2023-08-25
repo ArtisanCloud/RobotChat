@@ -31,6 +31,36 @@
 
 该接口是异步请求
 
+```go
+
+type ArtBotClientInterface interface {
+
+	// GetConfig 获取基本配置
+	GetConfig() *rcconfig.ArtBot
+	// SetConfig 设置基本配置
+	SetConfig(config *rcconfig.ArtBot)
+
+	Text2Image(ctx context.Context, message *model.Message) (*model.Message, error)
+	Image2Image(ctx context.Context, message *model.Message) (*model.Message, error)
+	GetModels(ctx context.Context) ([]*model2.ArtBotModel, error)
+	GetSamplers(ctx context.Context) ([]*model2.Sampler, error)
+	GetLoras(ctx context.Context) ([]*model.Lora, error)
+	RefreshLoras(ctx context.Context) error
+	Progress(ctx context.Context) (*model2.ProgressResponse, error)
+	GetOptions(ctx context.Context) (*model2.OptionsResponse, error)
+	SetOptions(ctx context.Context, options *model2.OptionsRequest) error
+
+	GetControlNetModelList(ctx context.Context) (*controlNet.ControlNetModels, error)
+	GetControlNetModuleList(ctx context.Context) (*controlNet.Modules, error)
+	GetControlNetControlTypesList(ctx context.Context) (*controlNet.ControlNetTypes, error)
+	GetControlNetVersion(ctx context.Context) (*controlNet.ControlNetVersion, error)
+	GetControlNetSettings(ctx context.Context) (*controlNet.ControlNetSettings, error)
+	DetectControlNet(ctx context.Context, info *controlNet.DetectInfo) (interface{}, error)
+}
+
+
+```
+
 # ChatBot
 现在基于GPT的接口对接应用
 

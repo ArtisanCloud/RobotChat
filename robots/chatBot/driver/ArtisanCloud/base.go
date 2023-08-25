@@ -56,7 +56,9 @@ func (d *BaseDriver) OverrideGetMiddlewareOfLog() {
 			return func(request *http.Request, response *http.Response) (err error) {
 
 				// 前置中间件
-				request2.LogRequest(logger, request)
+				if d.Config.Log.HttpDebug {
+					request2.LogRequest(logger, request)
+				}
 
 				err = handle(request, response)
 				if err != nil {
@@ -64,7 +66,9 @@ func (d *BaseDriver) OverrideGetMiddlewareOfLog() {
 				}
 
 				// 后置中间件
-				response2.LogResponse(logger, response)
+				if d.Config.Log.HttpDebug {
+					response2.LogResponse(logger, response)
+				}
 
 				return
 			}

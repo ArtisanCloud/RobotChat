@@ -3,6 +3,7 @@ package config
 type StableDiffusion struct {
 	Token     string `yaml:"Token" json:",optional"`
 	BaseUrl   string `yaml:"BaseUrl" json:",optional"`
+	Timeout   int64  `yaml:"Timeout" json:",optional"`
 	PrefixUri string `yaml:"PrefixUri" json:",optional"`
 	Version   string `yaml:"Version" json:",optional"`
 	HttpDebug bool   `yaml:"HttpDebug" json:",optional"`

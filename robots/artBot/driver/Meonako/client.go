@@ -165,10 +165,13 @@ func (d *Driver) SetOptions(ctx context.Context, options *model2.OptionsRequest)
 	return err
 }
 
-func (d *Driver) GetControlNetModelList(ctx context.Context) (*controlNet.ControlNetModel, error) {
+func (d *Driver) GetControlNetModelList(ctx context.Context) (*controlNet.ControlNetModels, error) {
 	return nil, nil
 }
 func (d *Driver) GetControlNetModuleList(ctx context.Context) (*controlNet.Modules, error) {
+	return nil, nil
+}
+func (d *Driver) GetControlNetControlTypesList(ctx context.Context) (*controlNet.ControlNetTypes, error) {
 	return nil, nil
 }
 func (d *Driver) GetControlNetVersion(ctx context.Context) (*controlNet.ControlNetVersion, error) {

@@ -14,7 +14,7 @@ import (
 
 func TestArtBot_Text2Image(t *testing.T) {
 	driver := NewDriver(&rcconfig.ArtBot{
-		StableDiffusionConfig: config.StableDiffusionConfig{
+		StableDiffusion: config.StableDiffusion{
 			BaseUrl: "http://127.0.0.1:7861",
 		},
 	})
@@ -24,15 +24,17 @@ func TestArtBot_Text2Image(t *testing.T) {
 	}
 
 	req := &model2.Text2ImageRequest{
-		Prompt: "long hair, skinny, narrow waist, gothic lolita, twintails",
-		NegativePrompt: api.BuildPrompt(
-			"(worst quality, low quality:1.4)",
-			"simple background, white background",
-		),
-		DoNotSendImages: true,
-		BatchSize:       1,
-		BatchCount:      1,
-		Steps:           5,
+		Text2Image: &model2.Text2Image{
+			Prompt: "long hair, skinny, narrow waist, gothic lolita, twintails",
+			NegativePrompt: api.BuildPrompt(
+				"(worst quality, low quality:1.4)",
+				"simple background, white background",
+			),
+			DoNotSendImages: true,
+			BatchSize:       1,
+			BatchCount:      1,
+			Steps:           5,
+		},
 	}
 	strReq, err := json.Marshal(req)
 	if err != nil {

@@ -29,6 +29,17 @@ func APIGetControlNetModules(c *gin.Context) {
 	return
 }
 
+func APIGetControlNetControlTypesList(c *gin.Context) {
+	ctx := c.Request.Context()
+	res, err := service.Michelle.GetControlNetControlTypesList(ctx)
+
+	if err != nil {
+		panic(err)
+	}
+	response.Success(c, res)
+	return
+}
+
 func APIGetControlNetSettings(c *gin.Context) {
 	ctx := c.Request.Context()
 	res, err := service.Michelle.GetControlNetSettings(ctx)
