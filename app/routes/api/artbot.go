@@ -33,6 +33,7 @@ func InitArtBotAPIRoutes(r *gin.Engine) {
 				// art controlnet
 				apiSDRouter.GET("/controlnet/model/list", sd.APIGetControlNetModels)
 				apiSDRouter.GET("/controlnet/module/list", sd.APIGetControlNetModules)
+				apiSDRouter.GET("/controlnet/control-type/list", sd.APIGetControlNetControlTypesList)
 				apiSDRouter.GET("/controlnet/settings", sd.APIGetControlNetSettings)
 				apiSDRouter.GET("/controlnet/version", sd.APIGetVersion)
 				apiSDRouter.POST("/controlnet/detect", sd.APIDetect)

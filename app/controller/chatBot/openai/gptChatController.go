@@ -22,6 +22,21 @@ func APICompletion(c *gin.Context) {
 
 }
 
+func APICompletionStream(c *gin.Context) {
+
+	params, _ := c.Get("params")
+	param := params.(*openai.ParaChatCompletion)
+
+	res, err := service.Joy.CompletionStream(c.Request.Context(), &param.ChatCompletionRequest)
+	if err != nil {
+		panic(err)
+	}
+
+	response.Success(c, res.Content.String())
+	return
+
+}
+
 func APIChatCompletion(c *gin.Context) {
 
 	params, _ := c.Get("params")
@@ -32,22 +47,22 @@ func APIChatCompletion(c *gin.Context) {
 		panic(err)
 	}
 
-	response.Success(c, res)
+	response.Success(c, res.Content.String())
 	return
 
 }
 
-func APIStreamCompletion(c *gin.Context) {
+func APIChatCompletionStream(c *gin.Context) {
 
 	params, _ := c.Get("params")
-	param := params.(*openai.ParaCompletion)
+	param := params.(*openai.ParaChatCompletion)
 
-	res, err := service.Joy.SteamCompletion(c.Request.Context(), &param.CompletionRequest)
+	res, err := service.Joy.ChatCompletionStream(c.Request.Context(), &param.ChatCompletionRequest)
 	if err != nil {
 		panic(err)
 	}
 
-	response.Success(c, res)
+	response.Success(c, res.Content.String())
 	return
 
 }

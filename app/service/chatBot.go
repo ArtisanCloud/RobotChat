@@ -3,8 +3,10 @@ package service
 import (
 	"context"
 	"errors"
+	"fmt"
 	"github.com/ArtisanCloud/RobotChat/pkg"
 	"github.com/ArtisanCloud/RobotChat/pkg/objectx"
+	fmt2 "github.com/ArtisanCloud/RobotChat/pkg/printx"
 	"github.com/ArtisanCloud/RobotChat/rcconfig"
 	"github.com/ArtisanCloud/RobotChat/robots/chatBot"
 	"github.com/ArtisanCloud/RobotChat/robots/chatBot/driver/ArtisanCloud/chatGLM"
@@ -32,7 +34,7 @@ func NewChatBotService(config *rcconfig.RCConfig) (abs *chatBotService) {
 	if configChannel == "" || configChannel == "thudm_glm" {
 		// 使用 ArtisanCloud SDK 作为 THUDM_GLM SDK驱动
 		driver = chatGLM.NewDriver(&config.ChatBot)
-	} else if configChannel == "openai" {
+	} else if configChannel == "chatgpt" {
 		// 使用 Go-OpenAI 作为 ChatGPT SDK驱动
 		driver = go_openai.NewDriver(&config.ChatBot)
 	}
@@ -61,9 +63,9 @@ func (srv *chatBotService) IsAwaken(ctx context.Context) error {
 func (srv *chatBotService) Launch(ctx context.Context) error {
 
 	// 预处理请求消息
-	preProcess := func(ctx context.Context, message *model.Message) (*model.Message, error) {
-		srv.chatBot.Logger.Info(srv.chatBot.Name, "I get your message:", message.Content.String())
-		return message, nil
+	preProcess := func(ctx context.Context, job *model.Job) (*model.Job, error) {
+		srv.chatBot.Logger.Info(srv.chatBot.Name, fmt.Sprintf("I get your message:%s,%v", job.Id, job.Payload.Metadata))
+		return job, nil
 	}
 	srv.chatBot.SetMessagePreHandler(preProcess)
 
@@ -71,9 +73,9 @@ func (srv *chatBotService) Launch(ctx context.Context) error {
 	errHandle := func(errReply *model.ErrReply) {
 		srv.chatBot.Logger.Error("handle error:", errReply.Job.Id, errReply.Err.Error())
 		if errReply.Err != nil {
-			(*errReply.Job.Payload.Metadata)["error"] = errReply.Err.Error()
+			errReply.Job.Payload.Metadata.ErrMsg = errReply.Err.Error()
 		} else {
-			(*errReply.Job.Payload.Metadata)["error"] = "unknown Error from error handle"
+			errReply.Job.Payload.Metadata.ErrMsg = "unknown Error from error handle"
 		}
 
 		httpClient, err := httphelper.NewRequestHelper(&httphelper.Config{
@@ -165,7 +167,7 @@ func (srv *chatBotService) Completion(ctx context.Context, req *model2.Completio
 
 	if glmReply.Status != 200 {
 		res.Detail = resMes.Content.String()
-		res.Error = "glm服务器返回错误信息"
+		res.Error = "服务器返回错误信息"
 		return res, errors.New(res.Error)
 	}
 
@@ -179,33 +181,47 @@ func (srv *chatBotService) Completion(ctx context.Context, req *model2.Completio
 	return res, err
 }
 
-func (srv *chatBotService) ChatCompletion(ctx context.Context, req *model2.ChatCompletionRequest) (job *model.Job, err error) {
+func (srv *chatBotService) CompletionStream(ctx context.Context, req *model2.ChatCompletionRequest) (message *model.Message, err error) {
+	reqMsg := req.Messages[0]
+
+	message, err = srv.chatBot.CreateMessage(model.TextMessage, reqMsg.Content)
+	if err != nil {
+		return nil, err
+	}
+
+	message, err = srv.chatBot.CreateCompletionStream(ctx, message, reqMsg.Role, func(data string) error {
+		fmt2.Dump(data)
+		return nil
+	})
+
+	return message, err
+}
+
+func (srv *chatBotService) ChatCompletion(ctx context.Context, req *model2.ChatCompletionRequest) (message *model.Message, err error) {
 
 	reqMsg := req.Messages[0]
 
-	message, err := srv.chatBot.CreateMessage(model.TextMessage, reqMsg.Content)
+	message, err = srv.chatBot.CreateMessage(model.TextMessage, reqMsg.Content)
 	if err != nil {
 		return nil, err
 	}
-	job, err = srv.chatBot.Send(ctx, message)
+	message, err = srv.chatBot.CreateChatCompletion(ctx, message, reqMsg.Role)
 
-	return job, err
+	return message, err
 }
 
-func (srv *chatBotService) SteamCompletion(ctx context.Context, req *model2.CompletionRequest) (res *model2.CompletionResponse, err error) {
+func (srv *chatBotService) ChatCompletionStream(ctx context.Context, req *model2.ChatCompletionRequest) (message *model.Message, err error) {
+	reqMsg := req.Messages[0]
 
-	message, err := srv.chatBot.CreateMessage(model.TextMessage, req.Prompt.(string))
+	message, err = srv.chatBot.CreateMessage(model.TextMessage, reqMsg.Content)
 	if err != nil {
 		return nil, err
 	}
 
-	resMes, err := srv.chatBot.CreateStreamCompletion(ctx, message, model.Role(req.User))
+	message, err = srv.chatBot.CreateChatCompletionStream(ctx, message, reqMsg.Role, func(data string) error {
+		fmt2.Dump(data)
+		return nil
+	})
 
-	return &model2.CompletionResponse{
-		Choices: []model2.CompletionChoice{
-			{
-				Text: resMes.Content.String(),
-			},
-		},
-	}, err
+	return message, err
 }

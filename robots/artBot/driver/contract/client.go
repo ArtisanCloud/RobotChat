@@ -26,8 +26,9 @@ type ArtBotClientInterface interface {
 	GetOptions(ctx context.Context) (*model2.OptionsResponse, error)
 	SetOptions(ctx context.Context, options *model2.OptionsRequest) error
 
-	GetControlNetModelList(ctx context.Context) (*controlNet.ControlNetModel, error)
+	GetControlNetModelList(ctx context.Context) (*controlNet.ControlNetModels, error)
 	GetControlNetModuleList(ctx context.Context) (*controlNet.Modules, error)
+	GetControlNetControlTypesList(ctx context.Context) (*controlNet.ControlNetTypes, error)
 	GetControlNetVersion(ctx context.Context) (*controlNet.ControlNetVersion, error)
 	GetControlNetSettings(ctx context.Context) (*controlNet.ControlNetSettings, error)
 	DetectControlNet(ctx context.Context, info *controlNet.DetectInfo) (interface{}, error)

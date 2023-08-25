@@ -54,16 +54,20 @@ func NewChatBot(client contract.ChatBotClientInterface) (*ChatBot, error) {
 	}, nil
 }
 
+// GenerateAnswer 生成无上下文回答
+func (bot *ChatBot) CreateCompletion(ctx context.Context, prompt *model.Message) (*model.Message, error) {
+	return bot.Client.CreateCompletion(ctx, prompt)
+}
+
+func (bot *ChatBot) CreateCompletionStream(ctx context.Context, message *model.Message, role model.Role, processStreamData func(data string) error) (*model.Message, error) {
+	return bot.Client.CreateCompletionStream(ctx, message, role, processStreamData)
+}
+
 // SendMessage 向指定对话发送消息
 func (bot *ChatBot) CreateChatCompletion(ctx context.Context, message *model.Message, role model.Role) (*model.Message, error) {
 	return bot.Client.CreateChatCompletion(ctx, message, role)
 }
 
-func (bot *ChatBot) CreateStreamCompletion(ctx context.Context, message *model.Message, role model.Role) (*model.Message, error) {
-	return bot.Client.CreateStreamCompletion(ctx, message, role)
-}
-
-// GenerateAnswer 生成无上下文回答
-func (bot *ChatBot) CreateCompletion(ctx context.Context, prompt *model.Message) (*model.Message, error) {
-	return bot.Client.CreateCompletion(ctx, prompt)
+func (bot *ChatBot) CreateChatCompletionStream(ctx context.Context, message *model.Message, role model.Role, processStreamData func(data string) error) (*model.Message, error) {
+	return bot.Client.CreateChatCompletionStream(ctx, message, role, processStreamData)
 }

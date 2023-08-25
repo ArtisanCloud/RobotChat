@@ -54,7 +54,7 @@ func (d *Driver) CreateChatCompletion(ctx context.Context, message *model2.Messa
 
 }
 
-func (d *Driver) CreateStreamCompletion(ctx context.Context, message *model2.Message, role model2.Role) (*model2.Message, error) {
+func (d *Driver) CreateChatCompletionStream(ctx context.Context, message *model2.Message, role model2.Role, processStreamData func(data string) error) (*model2.Message, error) {
 	return nil, nil
 }
 
@@ -62,6 +62,10 @@ func (d *Driver) CreateStreamCompletion(ctx context.Context, message *model2.Mes
 func (d *Driver) CreateCompletion(ctx context.Context, message *model2.Message) (*model2.Message, error) {
 	return d.Send(ctx, "/", message)
 
+}
+
+func (d *Driver) CreateCompletionStream(ctx context.Context, message *model2.Message, role model2.Role, processStreamData func(data string) error) (*model2.Message, error) {
+	return nil, nil
 }
 
 // StartModel 启动 ChatGPT 模型

@@ -9,7 +9,7 @@ type ControlNetVersion struct {
 	Version string `json:"vesion"`
 }
 
-type ControlNetModel struct {
+type ControlNetModels struct {
 	ModelList []string `json:"model_list"`
 }
 
@@ -33,13 +33,19 @@ type DetectInfo struct {
 type ArtBotControlNetModelResponse struct {
 	model.SDResponse
 
-	*ControlNetModel
+	*ControlNetModels
 }
 
 type ArtBotControlNetModuleResponse struct {
 	model.SDResponse
 
 	*Modules
+}
+
+type ArtBotControlNetControlTypeResponse struct {
+	model.SDResponse
+
+	*ControlNetTypes
 }
 
 type ArtBotControlNetSettingsResponse struct {

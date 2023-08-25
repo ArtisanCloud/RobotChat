@@ -13,11 +13,13 @@ import (
 	request2 "github.com/ArtisanCloud/RobotChat/robots/kernel/request"
 	response2 "github.com/ArtisanCloud/RobotChat/robots/kernel/response"
 	"github.com/artisancloud/httphelper"
+	"github.com/artisancloud/httphelper/client"
 	"github.com/artisancloud/httphelper/dataflow"
 	"gorm.io/datatypes"
 	"io"
 	"net/http"
 	"net/url"
+	"time"
 )
 
 type Driver struct {
@@ -32,6 +34,9 @@ func NewDriver(config *rcconfig.ArtBot) *Driver {
 
 	HttpClient, _ := httphelper.NewRequestHelper(&httphelper.Config{
 		BaseUrl: config.StableDiffusion.BaseUrl,
+		Config: &client.Config{
+			Timeout: time.Duration(config.StableDiffusion.Timeout) * time.Second,
+		},
 	})
 
 	log, _ := logger.NewLogger(nil, config.Log)
@@ -70,7 +75,9 @@ func (d *Driver) OverrideGetMiddlewareOfLog() {
 			return func(request *http.Request, response *http.Response) (err error) {
 
 				// 前置中间件
-				request2.LogRequest(logger, request)
+				if d.config.Log.HttpDebug {
+					request2.LogRequest(logger, request)
+				}
 
 				err = handle(request, response)
 				if err != nil {
@@ -78,7 +85,9 @@ func (d *Driver) OverrideGetMiddlewareOfLog() {
 				}
 
 				// 后置中间件
-				response2.LogResponse(logger, response)
+				if d.config.Log.HttpDebug {
+					response2.LogResponse(logger, response)
+				}
 
 				return
 			}
@@ -100,11 +109,13 @@ func (d *Driver) SetConfig(config *rcconfig.ArtBot) {
 
 func (d *Driver) Send(ctx context.Context, endpoint string, message *model.Message) (*model.Message, error) {
 
+	// 获取请求地址
 	requestUrl, err := d.GetUrlFromEndpoint(endpoint)
 	if err != nil {
 		return nil, err
 	}
 
+	// 请求数据
 	res, err := d.HttpClient.Df().WithContext(ctx).
 		Url(requestUrl).
 		Method("POST").
@@ -113,7 +124,7 @@ func (d *Driver) Send(ctx context.Context, endpoint string, message *model.Messa
 	if err != nil {
 		return nil, err
 	}
-	msg := model.NewMessage(model.TextMessage)
+	msg := model.CopyMessage(message)
 
 	// 转化返回的Body
 	body, err := io.ReadAll(res.Body)
@@ -283,14 +294,14 @@ func (d *Driver) GetUrlFromEndpoint(endpoint string) (string, error) {
 	return finalUrl, nil
 }
 
-func (d *Driver) GetControlNetModelList(ctx context.Context) (*controlNet.ControlNetModel, error) {
+func (d *Driver) GetControlNetModelList(ctx context.Context) (*controlNet.ControlNetModels, error) {
 
 	res, err := d.Query(ctx, "/controlnet/model_list")
 	if err != nil {
 		return nil, err
 	}
 
-	reply := &controlNet.ControlNetModel{}
+	reply := &controlNet.ControlNetModels{}
 	//fmt.Dump(string(res.Content))
 	err = json.Unmarshal(res.Content, &reply)
 
@@ -308,6 +319,20 @@ func (d *Driver) GetControlNetModuleList(ctx context.Context) (*controlNet.Modul
 
 	return reply, err
 }
+
+func (d *Driver) GetControlNetControlTypesList(ctx context.Context) (*controlNet.ControlNetTypes, error) {
+	res, err := d.Query(ctx, "/controlnet/control_types")
+	if err != nil {
+		return nil, err
+	}
+
+	reply := &controlNet.ControlNetTypes{}
+	//fmt.Dump(string(res.Content))
+	err = json.Unmarshal(res.Content, &reply)
+
+	return reply, err
+}
+
 func (d *Driver) GetControlNetVersion(ctx context.Context) (*controlNet.ControlNetVersion, error) {
 	res, err := d.Query(ctx, "/controlnet/version")
 	if err != nil {

@@ -29,9 +29,9 @@ func TestQueue_Working(t *testing.T) {
 
 	// 启动机器人
 	ctx := context.Background()
-	preProcess := func(ctx context.Context, message *model.Message) (*model.Message, error) {
-		fmt.Dump("I get your message:", message.Content.String())
-		return message, nil
+	preProcess := func(ctx context.Context, job *model.Job) (*model.Job, error) {
+		fmt.Dump("I get your message:", job.Payload.Content.String())
+		return job, nil
 	}
 	queueCallback := func(ctx context.Context, job *model.Job) (*model.Job, error) {
 		preload := job.Payload

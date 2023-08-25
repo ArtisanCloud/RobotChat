@@ -16,15 +16,17 @@ func InitChatBotAPIRoutes(r *gin.Engine) {
 			apiOpenAIRouter := apiChatBotRouter.Group("/openai")
 			{
 				apiOpenAIRouter.POST("/completion", openai2.ValidateCompletion, openai.APICompletion)
+				apiOpenAIRouter.POST("/completion/stream", openai2.ValidateChatCompletion, openai.APICompletionStream)
 				apiOpenAIRouter.POST("/chat/completion", openai2.ValidateChatCompletion, openai.APIChatCompletion)
-				apiOpenAIRouter.POST("/stream/completion", openai2.ValidateCompletion, openai.APIStreamCompletion)
+				apiOpenAIRouter.POST("/chat/completion/stream", openai2.ValidateChatCompletion, openai.APIChatCompletionStream)
 			}
 
 			apiChatGLMRouter := apiChatBotRouter.Group("/glm")
 			{
 				apiChatGLMRouter.POST("/completion", openai2.ValidateCompletion, chatGLM.APICompletion)
+				apiChatGLMRouter.POST("/completion/stream", openai2.ValidateChatCompletion, chatGLM.APICompletionStream)
 				apiChatGLMRouter.POST("/chat/completion", openai2.ValidateChatCompletion, chatGLM.APIChatCompletion)
-				apiChatGLMRouter.POST("/stream/completion", openai2.ValidateCompletion, chatGLM.APIStreamCompletion)
+				apiChatGLMRouter.POST("/chat/completion/stream", openai2.ValidateChatCompletion, chatGLM.APIChatCompletionStream)
 			}
 		}
 	}
