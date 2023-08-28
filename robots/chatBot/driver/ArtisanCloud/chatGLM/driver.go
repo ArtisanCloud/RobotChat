@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"github.com/ArtisanCloud/RobotChat/rcconfig"
 	"github.com/ArtisanCloud/RobotChat/robots/chatBot/driver/ArtisanCloud"
+	"github.com/ArtisanCloud/RobotChat/robots/chatBot/model"
 	"github.com/ArtisanCloud/RobotChat/robots/kernel/logger"
 	model2 "github.com/ArtisanCloud/RobotChat/robots/kernel/model"
 	"github.com/artisancloud/httphelper"
@@ -54,7 +55,7 @@ func (d *Driver) CreateChatCompletion(ctx context.Context, message *model2.Messa
 
 }
 
-func (d *Driver) CreateChatCompletionStream(ctx context.Context, message *model2.Message, role model2.Role, processStreamData func(data string) error) (*model2.Message, error) {
+func (d *Driver) CreateChatCompletionStream(ctx context.Context, message *model2.Message, role model2.Role, processStreamData func(data string, status model.ChatStatus) error) (*model2.Message, error) {
 	return nil, nil
 }
 
@@ -64,7 +65,7 @@ func (d *Driver) CreateCompletion(ctx context.Context, message *model2.Message) 
 
 }
 
-func (d *Driver) CreateCompletionStream(ctx context.Context, message *model2.Message, role model2.Role, processStreamData func(data string) error) (*model2.Message, error) {
+func (d *Driver) CreateCompletionStream(ctx context.Context, message *model2.Message, role model2.Role, processStreamData func(data string, status model.ChatStatus) error) (*model2.Message, error) {
 	return nil, nil
 }
 

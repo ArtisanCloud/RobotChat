@@ -5,6 +5,7 @@ import (
 	"errors"
 	"github.com/ArtisanCloud/RobotChat/robots"
 	"github.com/ArtisanCloud/RobotChat/robots/chatBot/driver/contract"
+	model2 "github.com/ArtisanCloud/RobotChat/robots/chatBot/model"
 	"github.com/ArtisanCloud/RobotChat/robots/kernel/logger"
 	"github.com/ArtisanCloud/RobotChat/robots/kernel/model"
 	queue2 "github.com/ArtisanCloud/RobotChat/robots/kernel/queue"
@@ -59,7 +60,7 @@ func (bot *ChatBot) CreateCompletion(ctx context.Context, prompt *model.Message)
 	return bot.Client.CreateCompletion(ctx, prompt)
 }
 
-func (bot *ChatBot) CreateCompletionStream(ctx context.Context, message *model.Message, role model.Role, processStreamData func(data string) error) (*model.Message, error) {
+func (bot *ChatBot) CreateCompletionStream(ctx context.Context, message *model.Message, role model.Role, processStreamData func(data string, status model2.ChatStatus) error) (*model.Message, error) {
 	return bot.Client.CreateCompletionStream(ctx, message, role, processStreamData)
 }
 
@@ -68,6 +69,6 @@ func (bot *ChatBot) CreateChatCompletion(ctx context.Context, message *model.Mes
 	return bot.Client.CreateChatCompletion(ctx, message, role)
 }
 
-func (bot *ChatBot) CreateChatCompletionStream(ctx context.Context, message *model.Message, role model.Role, processStreamData func(data string) error) (*model.Message, error) {
+func (bot *ChatBot) CreateChatCompletionStream(ctx context.Context, message *model.Message, role model.Role, processStreamData func(data string, status model2.ChatStatus) error) (*model.Message, error) {
 	return bot.Client.CreateChatCompletionStream(ctx, message, role, processStreamData)
 }

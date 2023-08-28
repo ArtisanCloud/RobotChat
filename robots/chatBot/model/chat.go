@@ -2,6 +2,14 @@ package model
 
 import "github.com/ArtisanCloud/RobotChat/robots/kernel/model"
 
+type ChatStatus int
+
+const (
+	ChatStatusWaiting   ChatStatus = iota // 等待状态
+	ChatStatusInProcess                   // 生成状态
+	ChatStatusFinished                    // 结束状态
+)
+
 type ChatCompletionMessage struct {
 	Role    model.Role `json:"role"`
 	Content string     `json:"content"`
