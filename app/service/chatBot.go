@@ -189,7 +189,7 @@ func (srv *chatBotService) CompletionStream(ctx context.Context, req *model2.Cha
 		return nil, err
 	}
 
-	message, err = srv.chatBot.CreateCompletionStream(ctx, message, reqMsg.Role, func(data string) error {
+	message, err = srv.chatBot.CreateCompletionStream(ctx, message, reqMsg.Role, func(data string, status model2.ChatStatus) error {
 		fmt2.Dump(data)
 		return nil
 	})
@@ -218,7 +218,7 @@ func (srv *chatBotService) ChatCompletionStream(ctx context.Context, req *model2
 		return nil, err
 	}
 
-	message, err = srv.chatBot.CreateChatCompletionStream(ctx, message, reqMsg.Role, func(data string) error {
+	message, err = srv.chatBot.CreateChatCompletionStream(ctx, message, reqMsg.Role, func(data string, status model2.ChatStatus) error {
 		fmt2.Dump(data)
 		return nil
 	})

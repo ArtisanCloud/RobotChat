@@ -4,7 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	fmt "github.com/ArtisanCloud/RobotChat/pkg/printx"
 	"github.com/ArtisanCloud/RobotChat/rcconfig"
+	"github.com/ArtisanCloud/RobotChat/robots/chatBot/model"
 	model2 "github.com/ArtisanCloud/RobotChat/robots/kernel/model"
 	"github.com/kr/pretty"
 	"github.com/sashabaranov/go-openai"
@@ -64,7 +66,7 @@ func (d *Driver) CreateCompletion(ctx context.Context, message *model2.Message) 
 	}, nil
 }
 
-func (d *Driver) CreateCompletionStream(ctx context.Context, message *model2.Message, role model2.Role, processStreamData func(data string) error) (*model2.Message, error) {
+func (d *Driver) CreateCompletionStream(ctx context.Context, message *model2.Message, role model2.Role, processStreamData func(data string, status model.ChatStatus) error) (*model2.Message, error) {
 
 	gptModel := openai.GPT3Ada
 	if d.config.ChatGPT.Model != "" {
@@ -95,14 +97,15 @@ func (d *Driver) CreateCompletionStream(ctx context.Context, message *model2.Mes
 	for {
 		response, err := stream.Recv()
 		if errors.Is(err, io.EOF) {
+			_ = processStreamData("", model.ChatStatusFinished)
 			break
 		}
 		if err != nil {
 			return nil, pretty.Errorf("Stream error: %v", err)
 		}
-		//fmt.Dump(response.Choices)
+		fmt.Dump(response.Choices)
 		responseContent.WriteString(response.Choices[0].Text)
-		_ = processStreamData(response.Choices[0].Text)
+		_ = processStreamData(response.Choices[0].Text, model.ChatStatusInProcess)
 	}
 
 	return &model2.Message{
@@ -142,7 +145,7 @@ func (d *Driver) CreateChatCompletion(ctx context.Context, message *model2.Messa
 
 }
 
-func (d *Driver) CreateChatCompletionStream(ctx context.Context, message *model2.Message, role model2.Role, processStreamData func(data string) error) (*model2.Message, error) {
+func (d *Driver) CreateChatCompletionStream(ctx context.Context, message *model2.Message, role model2.Role, processStreamData func(data string, status model.ChatStatus) error) (*model2.Message, error) {
 	// 实现发送消息的逻辑
 	gptModel := openai.GPT3Dot5Turbo
 	if d.config.ChatGPT.Model != "" {
@@ -174,6 +177,7 @@ func (d *Driver) CreateChatCompletionStream(ctx context.Context, message *model2
 	for {
 		response, err := stream.Recv()
 		if errors.Is(err, io.EOF) {
+			_ = processStreamData("", model.ChatStatusFinished)
 			break
 		}
 		if err != nil {
@@ -181,7 +185,7 @@ func (d *Driver) CreateChatCompletionStream(ctx context.Context, message *model2
 		}
 		//fmt.Dump(response.Choices)
 		responseContent.WriteString(response.Choices[0].Delta.Content)
-		_ = processStreamData(response.Choices[0].Delta.Content)
+		_ = processStreamData(response.Choices[0].Delta.Content, model.ChatStatusInProcess)
 	}
 
 	return &model2.Message{

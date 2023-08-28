@@ -3,6 +3,7 @@ package contract
 import (
 	"context"
 	"github.com/ArtisanCloud/RobotChat/rcconfig"
+	model2 "github.com/ArtisanCloud/RobotChat/robots/chatBot/model"
 	"github.com/ArtisanCloud/RobotChat/robots/kernel/model"
 )
 
@@ -14,9 +15,9 @@ type ChatBotClientInterface interface {
 	SetConfig(config *rcconfig.ChatBot)
 
 	CreateCompletion(ctx context.Context, message *model.Message) (*model.Message, error)
-	CreateCompletionStream(ctx context.Context, message *model.Message, role model.Role, processStreamData func(data string) error) (*model.Message, error)
+	CreateCompletionStream(ctx context.Context, message *model.Message, role model.Role, processStreamData func(data string, status model2.ChatStatus) error) (*model.Message, error)
 	CreateChatCompletion(ctx context.Context, message *model.Message, role model.Role) (*model.Message, error)
-	CreateChatCompletionStream(ctx context.Context, message *model.Message, role model.Role, processStreamData func(data string) error) (*model.Message, error)
+	CreateChatCompletionStream(ctx context.Context, message *model.Message, role model.Role, processStreamData func(data string, status model2.ChatStatus) error) (*model.Message, error)
 
 	// SetTemperature 设置模型温度
 	SetTemperature(temperature float64) error
