@@ -34,7 +34,7 @@ func NewChatBotService(config *rcconfig.RCConfig) (abs *chatBotService) {
 	if configChannel == "" || configChannel == "thudm_glm" {
 		// 使用 ArtisanCloud SDK 作为 THUDM_GLM SDK驱动
 		driver = chatGLM.NewDriver(&config.ChatBot)
-	} else if configChannel == "chatgpt" {
+	} else if configChannel == "openai" {
 		// 使用 Go-OpenAI 作为 ChatGPT SDK驱动
 		driver = go_openai.NewDriver(&config.ChatBot)
 	}
