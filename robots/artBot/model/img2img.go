@@ -61,7 +61,7 @@ type Image2Image struct {
 	//  So I decided to reverse it. This set to true and "send_images": false and vice versa
 	DoNotSendImages bool `json:"send_images"`
 
-	SaveImages bool `json:"save_iamges,omitempty"`
+	SaveImages bool `json:"save_images,omitempty"`
 
 	SdModelHash string `json:"sd_model_hash"  binding:"required"`
 
