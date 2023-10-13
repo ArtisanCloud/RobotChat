@@ -3,7 +3,6 @@ package ArtisanCloud
 import (
 	"context"
 	"encoding/json"
-	fmt "github.com/ArtisanCloud/RobotChat/pkg/printx"
 	"github.com/ArtisanCloud/RobotChat/rcconfig"
 	model2 "github.com/ArtisanCloud/RobotChat/robots/artBot/model"
 	"github.com/ArtisanCloud/RobotChat/robots/artBot/model/controlNet"
@@ -218,7 +217,7 @@ func (d *Driver) GetSamplers(ctx context.Context) ([]*model2.Sampler, error) {
 	}
 
 	reply := []*model2.Sampler{}
-	fmt.Dump(string(res.Content))
+	//fmt.Dump(string(res.Content))
 	err = json.Unmarshal(res.Content, &reply)
 
 	return reply, err

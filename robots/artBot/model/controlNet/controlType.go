@@ -25,5 +25,6 @@ type ControlNetTypes struct {
 		IP2P      *ControlType `json:"IP2P"`
 		Reference *ControlType `json:"Reference"`
 		T2IA      *ControlType `json:"T2IA"`
+		IPAdapter *ControlType `json:"IP-Adapter"`
 	} `json:"control_types"`
 }
