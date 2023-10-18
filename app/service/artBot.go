@@ -173,7 +173,7 @@ func (srv *ArtBotService) Image2Image(ctx context.Context, req *model2.Image2Ima
 	return res, err
 }
 
-func (srv *ArtBotService) ChatTxt2Image(ctx context.Context, req *sd.ParaText2Image) (job *model.Job, err error) {
+func (srv *ArtBotService) ChatTxt2Image(ctx context.Context, jobType int, req *sd.ParaText2Image) (job *model.Job, err error) {
 
 	//conversation := srv.conversationManager.GetConversationByID(req.ConversationId)
 	//conversation.GetSessionById[req.SessionId]
@@ -183,12 +183,12 @@ func (srv *ArtBotService) ChatTxt2Image(ctx context.Context, req *sd.ParaText2Im
 		return nil, err
 	}
 
-	job, err = srv.artBot.Send(ctx, message)
+	job, err = srv.artBot.Send(ctx, jobType, message)
 
 	return job, err
 }
 
-func (srv *ArtBotService) ChatImage2Image(ctx context.Context, req *sd.ParaImage2Image) (job *model.Job, err error) {
+func (srv *ArtBotService) ChatImage2Image(ctx context.Context, jobType int, req *sd.ParaImage2Image) (job *model.Job, err error) {
 
 	//conversation := srv.conversationManager.GetConversationByID(req.ConversationId)
 	//conversation.GetSessionById[req.SessionId]
@@ -198,7 +198,7 @@ func (srv *ArtBotService) ChatImage2Image(ctx context.Context, req *sd.ParaImage
 		return nil, err
 	}
 
-	job, err = srv.artBot.Send(ctx, message)
+	job, err = srv.artBot.Send(ctx, jobType, message)
 
 	return job, err
 }

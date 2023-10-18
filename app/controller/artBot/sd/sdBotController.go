@@ -45,7 +45,7 @@ func APIChatTxt2Image(c *gin.Context) {
 	ctx := c.Request.Context()
 
 	req := param
-	job, err := service.Michelle.ChatTxt2Image(ctx, req)
+	job, err := service.Michelle.ChatTxt2Image(ctx, 0, req)
 	if err != nil {
 		panic(err)
 	}
@@ -62,7 +62,7 @@ func APIChatImage2Image(c *gin.Context) {
 	ctx := c.Request.Context()
 
 	req := param
-	job, err := service.Michelle.ChatImage2Image(ctx, req)
+	job, err := service.Michelle.ChatImage2Image(ctx, 0, req)
 	if err != nil {
 		panic(err)
 	}
