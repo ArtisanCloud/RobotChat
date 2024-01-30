@@ -87,7 +87,7 @@ func (bot *Robot) Start(ctx context.Context) error {
 	go func() {
 		for errReply := range bot.ErrorChan {
 			// 调用错误处理函数进行处理
-			if bot.ErrorHandler != nil {
+			if bot.ErrorHandler != nil && errReply != nil {
 				bot.ErrorHandler(errReply)
 			}
 		}

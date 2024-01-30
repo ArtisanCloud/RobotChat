@@ -1,7 +1,7 @@
 package logger
 
 import (
-	"github.com/ArtisanCloud/PowerLibs/v3/object"
+	"github.com/ArtisanCloud/RobotChat/rcconfig"
 	"net/http"
 	"os"
 	"testing"
@@ -20,10 +20,10 @@ func init() {
 
 func Test_Log_Info(t *testing.T) {
 	driver := "zap"
-	logger, err := NewLogger(driver, &object.HashMap{
-		"env":        "test",
-		"outputPath": strOutputPath,
-		"errorPath":  strErrorPath,
+	logger, err := NewLogger(driver, rcconfig.Log{
+		Env:      "test",
+		InfoLog:  strOutputPath,
+		ErrorLog: strErrorPath,
 	})
 	if err != nil {
 		t.Error(err)

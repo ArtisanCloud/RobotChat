@@ -46,7 +46,7 @@ func (bot *ArtBot) CheckSwitchModel(ctx context.Context, job *model.Job) (*model
 	if err != nil {
 		return job, err
 	}
-	if res.Options.SdModelCheckpoint == "" {
+	if res.Options == nil || res.Options.SdModelCheckpoint == "" {
 		return job, errors.New("current  model hash value invalid")
 	}
 
@@ -59,8 +59,13 @@ func (bot *ArtBot) CheckSwitchModel(ctx context.Context, job *model.Job) (*model
 		if err != nil {
 			return job, err
 		}
+		if len(sdModels) <= 0 {
+			return nil, errors.New("没有检测到系统大模型")
+		}
 		sdModel := GetModelNameFromHash(reqModelHash, sdModels)
-
+		if sdModel == nil {
+			return nil, errors.New("没有检测到选中的大模型")
+		}
 		reqOptions := &model2.OptionsRequest{
 			Options: &model2.Options{
 				SdModelCheckpoint: sdModel.ModelName,

@@ -15,6 +15,7 @@ require (
 	github.com/stretchr/testify v1.8.3
 	github.com/xuri/excelize/v2 v2.7.1
 	go.uber.org/zap v1.21.0
+	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 	gopkg.in/yaml.v2 v2.4.0
 	gorm.io/datatypes v1.2.0
 	gorm.io/gorm v1.24.7-0.20230306060331-85eaf9eeda11
