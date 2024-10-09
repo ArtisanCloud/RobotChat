@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"github.com/ArtisanCloud/RobotChat/robots/kernel/logger"
+	"github.com/ArtisanCloud/PowerLibs/v3/logger"
 	"github.com/ArtisanCloud/RobotChat/robots/kernel/model"
 	queue2 "github.com/ArtisanCloud/RobotChat/robots/kernel/queue"
 	"sync"
@@ -87,7 +87,7 @@ func (bot *Robot) Start(ctx context.Context) error {
 	go func() {
 		for errReply := range bot.ErrorChan {
 			// 调用错误处理函数进行处理
-			if bot.ErrorHandler != nil {
+			if bot.ErrorHandler != nil && errReply != nil {
 				bot.ErrorHandler(errReply)
 			}
 		}
@@ -137,11 +137,12 @@ func (bot *Robot) CreateMessage(messageType model.MessageType, content interface
 	return message, nil
 }
 
-func (bot *Robot) Send(ctx context.Context, message *model.Message) (*model.Job, error) {
+func (bot *Robot) Send(ctx context.Context, jobType int, message *model.Message) (*model.Job, error) {
 
 	job := &model.Job{
 		Id:      model.GenerateId(),
 		Payload: message,
+		Type:    jobType,
 	}
 
 	// 将消息传递给中间件处理
@@ -192,7 +193,8 @@ func (bot *Robot) Receive(ctx context.Context) {
 					}
 					bot.ErrorChan <- errReply
 					// 如果中间件返回错误，可以选择处理错误或直接返回
-					continue
+					//continue
+					break
 				}
 			}
 		}

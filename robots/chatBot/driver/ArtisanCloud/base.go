@@ -4,9 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"github.com/ArtisanCloud/PowerLibs/v3/logger"
+	"github.com/ArtisanCloud/PowerLibs/v3/logger/contract"
+	"github.com/ArtisanCloud/PowerLibs/v3/object"
 	"github.com/ArtisanCloud/RobotChat/rcconfig"
-	"github.com/ArtisanCloud/RobotChat/robots/kernel/logger"
-	contract2 "github.com/ArtisanCloud/RobotChat/robots/kernel/logger/contract"
 	"github.com/ArtisanCloud/RobotChat/robots/kernel/model"
 	request2 "github.com/ArtisanCloud/RobotChat/robots/kernel/request"
 	response2 "github.com/ArtisanCloud/RobotChat/robots/kernel/response"
@@ -20,14 +21,19 @@ import (
 type BaseDriver struct {
 	HttpClient httphelper.Helper
 	Config     *rcconfig.ChatBot
-	Logger     contract2.LoggerInterface
+	Logger     contract.LoggerInterface
 
-	GetMiddlewareOfLog func(logger contract2.LoggerInterface) dataflow.RequestMiddleware
+	GetMiddlewareOfLog func(logger contract.LoggerInterface) dataflow.RequestMiddleware
 	GetUrlFromEndpoint func(endpoint string) (string, error)
 }
 
 func NewDriver(config *rcconfig.ChatBot) *BaseDriver {
-	log, _ := logger.NewLogger(nil, config.Log)
+	log, _ := logger.NewLogger(nil, &object.HashMap{
+		"level":      "info",
+		"env":        "develop",
+		"outputPath": "./logs/info.log",
+		"errorPath":  "./logs/error.log",
+	})
 	return &BaseDriver{
 		Logger: log,
 	}
@@ -51,7 +57,7 @@ func (d *BaseDriver) RegisterHttpMiddlewares() {
 }
 
 func (d *BaseDriver) OverrideGetMiddlewareOfLog() {
-	d.GetMiddlewareOfLog = func(logger contract2.LoggerInterface) dataflow.RequestMiddleware {
+	d.GetMiddlewareOfLog = func(logger contract.LoggerInterface) dataflow.RequestMiddleware {
 		return dataflow.RequestMiddleware(func(handle dataflow.RequestHandle) dataflow.RequestHandle {
 			return func(request *http.Request, response *http.Response) (err error) {
 

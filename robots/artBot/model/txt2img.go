@@ -7,6 +7,26 @@ type SDResponse struct {
 	Errors string `json:"errors,omitempty"`
 }
 
+type ControlNetArg struct {
+	Model        bool `json:"model,omitempty"`
+	Module       bool `json:"module,omitempty"`
+	ResizeMode   bool `json:"resize_mode,omitempty"`
+	ControlMode  bool `json:"control_mode,omitempty"`
+	Weight       bool `json:"weight,omitempty"`
+	GuidanceEnd  bool `json:"guidance_end,omitempty"`
+	InputImage   bool `json:"input_image,omitempty"`
+	Enabled      bool `json:"enabled,omitempty"`
+	ProcessorRes bool `json:"processor_res,omitempty"`
+}
+
+type ControlNet struct {
+	Args []ControlNetArg `json:"args,omitempty"`
+}
+
+type AlwaysOnScripts struct {
+	ControlNet ControlNet `json:"controlnet,omitempty"`
+}
+
 type Text2Image struct {
 	EnableHR          bool    `json:"enable_hr,omitempty"`          // Hi-res fix.
 	DenoisingStrength float64 `json:"denoising_strength,omitempty"` // Hi-res fix option. Determines how little respect the algorithm should have for image's content. At 0, nothing will change, and at 1 you'll get an unrelated image.
@@ -81,13 +101,14 @@ type Text2Image struct {
 	// Save image(s) to `outputs` folder where Stable Diffusion Web UI is running
 	SaveImages bool `json:"save_images,omitempty"`
 
+	//AlwaysOnScripts AlwaysOnScripts `json:"alwayson_scripts,omitempty"`
 	AlwaysOnScripts map[string]any `json:"alwayson_scripts,omitempty"`
 
 	// If true, Will Decode Images after received response from API
 	DecodeAfterResult bool `json:"-"`
 
 	SdModelHash       string `json:"sd_model_hash" binding:"required"`
-	RefinerCheckpoint string `json:"refiner_checkpoint" binding:"required"`
+	RefinerCheckpoint string `json:"refiner_checkpoint,omitempty"`
 }
 
 type Text2ImageRequest struct {

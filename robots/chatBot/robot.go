@@ -3,10 +3,11 @@ package chatBot
 import (
 	"context"
 	"errors"
+	"github.com/ArtisanCloud/PowerLibs/v3/logger"
+	"github.com/ArtisanCloud/PowerLibs/v3/object"
 	"github.com/ArtisanCloud/RobotChat/robots"
 	"github.com/ArtisanCloud/RobotChat/robots/chatBot/driver/contract"
 	model2 "github.com/ArtisanCloud/RobotChat/robots/chatBot/model"
-	"github.com/ArtisanCloud/RobotChat/robots/kernel/logger"
 	"github.com/ArtisanCloud/RobotChat/robots/kernel/model"
 	queue2 "github.com/ArtisanCloud/RobotChat/robots/kernel/queue"
 )
@@ -44,7 +45,12 @@ func NewChatBot(client contract.ChatBotClientInterface) (*ChatBot, error) {
 	robot.Queue = q
 
 	// 初始化Logger
-	robot.Logger, err = logger.NewLogger(nil, conf.Log)
+	robot.Logger, err = logger.NewLogger(nil, &object.HashMap{
+		"level":      "info",
+		"env":        "develop",
+		"outputPath": "./logs/info.log",
+		"errorPath":  "./logs/error.log",
+	})
 	if err != nil {
 		return nil, err
 	}

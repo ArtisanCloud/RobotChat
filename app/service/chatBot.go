@@ -64,7 +64,7 @@ func (srv *chatBotService) Launch(ctx context.Context) error {
 
 	// 预处理请求消息
 	preProcess := func(ctx context.Context, job *model.Job) (*model.Job, error) {
-		srv.chatBot.Logger.Info(srv.chatBot.Name, fmt.Sprintf("I get your message:%s,%v", job.Id, job.Payload.Metadata))
+		srv.chatBot.Logger.Info(srv.chatBot.Name, fmt.Sprintf("I get your message:%s", job.Id))
 		return job, nil
 	}
 	srv.chatBot.SetMessagePreHandler(preProcess)

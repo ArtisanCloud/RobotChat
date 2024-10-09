@@ -3,11 +3,12 @@ package artBot
 import (
 	"context"
 	"errors"
+	"github.com/ArtisanCloud/PowerLibs/v3/logger"
+	"github.com/ArtisanCloud/PowerLibs/v3/object"
 	"github.com/ArtisanCloud/RobotChat/pkg/objectx"
 	"github.com/ArtisanCloud/RobotChat/robots"
 	"github.com/ArtisanCloud/RobotChat/robots/artBot/driver/contract"
 	model2 "github.com/ArtisanCloud/RobotChat/robots/artBot/model"
-	"github.com/ArtisanCloud/RobotChat/robots/kernel/logger"
 	"github.com/ArtisanCloud/RobotChat/robots/kernel/model"
 	queue2 "github.com/ArtisanCloud/RobotChat/robots/kernel/queue"
 )
@@ -51,7 +52,12 @@ func NewArtBot(client contract.ArtBotClientInterface) (*ArtBot, error) {
 	robot.Queue = q
 
 	// 初始化Logger
-	robot.Logger, err = logger.NewLogger(nil, conf.Log)
+	robot.Logger, err = logger.NewLogger(nil, &object.HashMap{
+		"level":      "info",
+		"env":        "develop",
+		"outputPath": "./logs/info.log",
+		"errorPath":  "./logs/error.log",
+	})
 	if err != nil {
 		return nil, err
 	}

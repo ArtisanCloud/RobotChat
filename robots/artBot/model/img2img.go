@@ -63,7 +63,8 @@ type Image2Image struct {
 
 	SaveImages bool `json:"save_images,omitempty"`
 
-	SdModelHash string `json:"sd_model_hash"  binding:"required"`
+	SdModelHash       string `json:"sd_model_hash"  binding:"required"`
+	RefinerCheckpoint string `json:"refiner_checkpoint"`
 
 	AlwaysOnScripts map[string]any `json:"alwayson_scripts,omitempty"`
 
