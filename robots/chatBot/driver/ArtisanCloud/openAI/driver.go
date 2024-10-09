@@ -5,7 +5,6 @@ import (
 	"github.com/ArtisanCloud/RobotChat/rcconfig"
 	"github.com/ArtisanCloud/RobotChat/robots/chatBot/driver/ArtisanCloud"
 	"github.com/ArtisanCloud/RobotChat/robots/chatBot/model"
-	"github.com/ArtisanCloud/RobotChat/robots/kernel/logger"
 	model2 "github.com/ArtisanCloud/RobotChat/robots/kernel/model"
 	"github.com/artisancloud/httphelper"
 	"net/url"
