@@ -3,10 +3,11 @@ package chatGLM
 import (
 	"context"
 	"encoding/json"
+	"github.com/ArtisanCloud/PowerLibs/v3/logger"
+	"github.com/ArtisanCloud/PowerLibs/v3/object"
 	"github.com/ArtisanCloud/RobotChat/rcconfig"
 	"github.com/ArtisanCloud/RobotChat/robots/chatBot/driver/ArtisanCloud"
 	"github.com/ArtisanCloud/RobotChat/robots/chatBot/model"
-	"github.com/ArtisanCloud/RobotChat/robots/kernel/logger"
 	model2 "github.com/ArtisanCloud/RobotChat/robots/kernel/model"
 	"github.com/artisancloud/httphelper"
 	"net/url"
@@ -26,7 +27,12 @@ func NewDriver(config *rcconfig.ChatBot) *Driver {
 	baseDriver.Config = config
 	baseDriver.HttpClient = httpClient
 
-	log, _ := logger.NewLogger(nil, config.Log)
+	log, _ := logger.NewLogger(nil, &object.HashMap{
+		"level":      "info",
+		"env":        "develop",
+		"outputPath": "./logs/info.log",
+		"errorPath":  "./logs/error.log",
+	})
 	baseDriver.Logger = log
 
 	driver := &Driver{
